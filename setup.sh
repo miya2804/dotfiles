@@ -1,8 +1,7 @@
 #!/bin/bash
 
-DOT_FILES=(.bashrc .emacs.d .gitignore .gitconfig)
-
-for file in ${DOT_FILES[@]}
+for file in .??*
 do
+    [[ "$file" == ".git" ]] && continue
     ln -s $HOME/dotfiles/$file $HOME/$file
 done
