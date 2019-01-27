@@ -7,3 +7,6 @@ alias shdir='cd ~/storage/downloads/data/termux'
 
 # pronpto
 export PS1="\u@\h:\w$ "
+
+# confirm deletion
+alias rm='rm -i'
