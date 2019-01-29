@@ -12,7 +12,7 @@
 ;; execution on or off
 (setq make-backup-files t)
 ;; change directory
-(setq backup-directory-alist '((".*" . "~/.emacs.d/.ehist")))
+(setq backup-directory-alist '((".*" . "~/.emacs.d/.ehist/")))
 ;; save multiple backupfiles
 (setq version-control     t) ;; exucution on or off
 (setq kept-new-versions   2) ;; latest number
@@ -29,7 +29,7 @@
 (setq delete-auto-save-files t) ;; successful completion
 ;; create auto-save file in ~/.emacs.d/.ehist
 (setq auto-save-file-name-transforms
-      `((".*" ,(expand-file-name "~/.emacs.d/.ehist") t)))
+      '((".*" "~/.emacs.d/.ehist/" t)))
 
 
 
