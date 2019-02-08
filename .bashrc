@@ -11,4 +11,4 @@ alias ll='ls -laF'
 alias l='ls'
 
 # change dir
-alias shdir='cd ~/storage/downloads/data/termux'
+alias w='cd ~/storage/downloads/data/termux'
