@@ -3,6 +3,7 @@
 ;; ++++++++++
 ;;(global-whitespace-mode 1) ;; visualization of space and tab
 (setq-default tab-width 4 indent-tabs-mode nil) ;; use space on tab
+(setq inhibit-startup-message t)
 
 
 
