@@ -1,4 +1,4 @@
-export PS1="\u@\h:\w$ "
+export PS1="[\u@\h:\w]$ "
 
 alias rm='rm -i '
 alias mv='mv -i '
