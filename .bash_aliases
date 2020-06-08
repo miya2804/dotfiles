@@ -1,6 +1,0 @@
-alias rm='rm -i'
-alias mv='mv -i'
-alias cp='cp -i'
-alias ll='ls -laF'
-alias la='ls -AF'
-alias l='ls -CF'
