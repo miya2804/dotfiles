@@ -1,10 +1,43 @@
 #!/bin/bash
 
-for file in .??*
+echo dotfiles setting.
+echo
+echo -------------- linking --------------
+for file_path in `\find $HOME/dotfiles/ln -mindepth 1 -maxdepth 1`;
 do
-    # ignorefile
-    [[ "$file" == ".git" ]] && continue
-
-    # linking
-    ln -s $HOME/dotfiles/$file $HOME/$file
+    read file_name < <(echo $file_path | sed -e "s:^$HOME/dotfiles/ln/::")
+    if [ -e $HOME/$file_name ]; then
+	    if [ -d $file_path ]; then
+	        echo "Directory exists: $HOME/$file_name"
+	    else
+	        echo "File exists: $HOME/$file_name"
+	    fi             
+    else
+	    if [ -d $file_path ]; then
+	        ln -s $file_path $HOME/$file_name && echo "'$file_path/' -> '$HOME/$file_name/'"
+	    else
+	        ln -s $file_path $HOME/$file_name && echo "'$file_path' -> '$HOME/$file_name'"
+	    fi
+    fi				
+done
+echo
+echo
+echo -------------- copying --------------
+for file_path in `\find $HOME/dotfiles/cp -mindepth 1 -maxdepth 1`;
+do
+    read file_name < <(echo $file_path | sed -e "s:^$HOME/dotfiles/cp/::")
+    if [ -e $HOME/$file_name ]; then
+	    if [ -d $file_path ]; then
+	        echo "Directory exists: $HOME/$file_name"
+	    else
+	        echo "File exists: $HOME/$file_name"
+	    fi
+    else
+	    if [ -d $file_path ]; then
+	        echo "CopyDir: $file_name ↓↓"
+	        cp -ibvr $file_path $HOME/$file_name | sed -e 's:^:\t:'
+	    else
+	        cp -ibvr $file_path $HOME/$file_name
+	    fi
+    fi				
 done
