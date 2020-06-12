@@ -1,4 +1,41 @@
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
+;; package settings
+;; ++++++++++++++++++++++++++++++++++++++++++++++++++
+(require 'package)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+;;(add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
+;;(add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
+;;(add-to-list 'package-archives '("maralade" . "https://marmalade-repo.org/packages/") t)
+(package-initialize)
+;;(package-refresh-contents)
+
+
+
+;; ++++++++++++++++++++++++++++++++++++++++++++++++++
+;; language settings
+;; ++++++++++++++++++++++++++++++++++++++++++++++++++
+;;(set-local-environment nil)
+;;(set-language-environment "Japanese")
+;;(set-terminal-coding-system 'utf-8)
+;;(set-keyboard-coding-system 'utf-8)
+;;(set-buffer-file-coding-system 'utf-8)
+;;(setq default-buffer-file-coding-system 'utf-8)
+;;(set-default-coding-system 'utf-8)
+;;(prefer-coding-system 'utf-8)
+
+
+
+;; ++++++++++++++++++++++++++++++++++++++++++++++++++
+;; appearance settings
+;; ++++++++++++++++++++++++++++++++++++++++++++++++++
+;; alpha
+(if window-system
+    (progn
+      (set-frame-parameter nil 'alpha 80)))
+
+
+
+;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 ;; etc
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 ;;(global-whitespace-mode 1) ;; visualization of space and tab
@@ -10,11 +47,15 @@
 (show-paren-mode 1) ;; illuminate corresponding brackets
 (setq frame-title-format "%f") ;; show full path in title
 (display-time-mode t)
+(transient-mark-mode 1) ;; region highlight
+(setq mouse-wheel-scroll-amount '(1 ((shift) . 5)))
+(setq mouse-wheel-progressive-speed nil)
+;;(setq url-proxy-services '(("http" . "proxy.hoge.com:8080"))) ;; proxy
+
 
 ;; windmove setting
 (windmove-default-keybindings) ;; use shift+arrow
 ;;(windmove-default-keybindings 'meta) ;; use alt+arrow
-
 
 
 
@@ -34,6 +75,7 @@
 (setq delete-old-versions t) ;; delete out of range
 
 
+
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 ;; auto-save setting (#xxx#)
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -46,11 +88,13 @@
       '((".*" "~/.emacs.d/.ehist/" t)))
 
 
+
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 ;; lockfile setting (.#xxx)
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 ;; execution on of off
 (setq create-lockfiles nil)
+
 
 
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
