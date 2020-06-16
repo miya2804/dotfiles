@@ -122,3 +122,8 @@ GIT_PS1_SHOWUPSTREAM=1
 GIT_PS1_SHOWUNTRACKEDFILES=1
 GIT_PS1_SHOWSTASHSTATE=1
 GIT_PS1_SHOWDIRTYSTATE=1
+
+# disable overwrite (redirect >)
+# if want to overwrite then use >|.
+# use "set +C" to enable.
+set -C
