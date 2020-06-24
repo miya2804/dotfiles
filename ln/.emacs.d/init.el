@@ -9,6 +9,8 @@
 (package-initialize)
 ;;(package-refresh-contents)
 
+(require 'tramp)
+(setq tramp-default-method "ssh")
 
 
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
