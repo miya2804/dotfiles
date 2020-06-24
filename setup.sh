@@ -8,15 +8,15 @@ do
     read file_name < <(echo $file_path | sed -e "s:^$HOME/dotfiles/ln/::")
     if [ -e $HOME/$file_name ]; then
 	    if [ -d $file_path ]; then
-	        echo "Directory exists: $HOME/$file_name"
+	        echo "[FAILED] Directory exists: $HOME/$file_name"
 	    else
-	        echo "File exists: $HOME/$file_name"
+	        echo "[FAILED] File exists: $HOME/$file_name"
 	    fi             
     else
 	    if [ -d $file_path ]; then
-	        ln -s $file_path $HOME/$file_name && echo "'$file_path/' -> '$HOME/$file_name/'"
+	        ln -s $file_path $HOME/$file_name && echo "[  OK  ] '$file_path/' -> '$HOME/$file_name/'"
 	    else
-	        ln -s $file_path $HOME/$file_name && echo "'$file_path' -> '$HOME/$file_name'"
+	        ln -s $file_path $HOME/$file_name && echo "[  OK  ] '$file_path' -> '$HOME/$file_name'"
 	    fi
     fi				
 done
@@ -28,16 +28,16 @@ do
     read file_name < <(echo $file_path | sed -e "s:^$HOME/dotfiles/cp/::")
     if [ -e $HOME/$file_name ]; then
 	    if [ -d $file_path ]; then
-	        echo "Directory exists: $HOME/$file_name"
+	        echo "[FAILED] Directory exists: $HOME/$file_name"
 	    else
-	        echo "File exists: $HOME/$file_name"
+	        echo "[FAILED] File exists: $HOME/$file_name"
 	    fi
     else
 	    if [ -d $file_path ]; then
-	        echo "CopyDir: $file_name ↓↓"
+	        echo "[  OK  ] $file_name/ "
 	        cp -ibvr $file_path $HOME/$file_name | sed -e 's:^:\t:'
 	    else
-	        cp -ibvr $file_path $HOME/$file_name
+	        cp -ibvr $file_path $HOME/$file_name | sed -e 's:^:[  OK  ] :'
 	    fi
     fi				
 done
