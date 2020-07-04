@@ -1,16 +1,25 @@
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
-;; package settings
+;; package install
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
+;; set package repositorys
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 ;;(add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
 ;;(add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
 ;;(add-to-list 'package-archives '("maralade" . "https://marmalade-repo.org/packages/") t)
 (package-initialize)
-;;(package-refresh-contents)
 
-(require 'tramp)
-(setq tramp-default-method "ssh")
+;; install packages
+(package-refresh-contents)
+(defvar my/packages
+        '(
+          web-mode
+          php-mode
+          ))
+(dolist (package my/packages)
+  (unless (package-installed-p package)
+    (package-install package)))
+
 
 
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -107,3 +116,25 @@
 (setq linum-format "%3d ")
 (line-number-mode t)
 
+
+
+;; ++++++++++++++++++++++++++++++++++++++++++++++++++
+;; package settings
+;; ++++++++++++++++++++++++++++++++++++++++++++++++++
+;; tramp
+(require 'tramp)
+(setq tramp-default-method "ssh")
+
+;; php-mode, web-mode
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages (quote (web-mode php-mode))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
