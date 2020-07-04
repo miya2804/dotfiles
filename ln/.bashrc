@@ -127,3 +127,6 @@ GIT_PS1_SHOWDIRTYSTATE=1
 # if want to overwrite then use >|.
 # use "set +C" to enable.
 set -C
+
+# local command path settings
+export PATH=$PATH:/usr/local/sbin
