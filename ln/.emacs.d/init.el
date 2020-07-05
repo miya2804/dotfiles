@@ -10,15 +10,16 @@
 (package-initialize)
 
 ;; install packages
-(package-refresh-contents)
-(defvar my/packages
-        '(
-          web-mode
-          php-mode
-          ))
-(dolist (package my/packages)
-  (unless (package-installed-p package)
-    (package-install package)))
+;; if you want to install the packages, uncomment below.
+;; (package-refresh-contents)
+;; (defvar my/packages
+;;         '(
+;;           web-mode
+;;           php-mode
+;;           ))
+;; (dolist (package my/packages)
+;;   (unless (package-installed-p package)
+;;     (package-install package)))
 
 
 
