@@ -62,6 +62,7 @@
 (transient-mark-mode 1) ;; region highlight
 (setq mouse-wheel-scroll-amount '(1 ((shift) . 5)))
 (setq mouse-wheel-progressive-speed nil)
+(global-hl-line-mode t) ;; line highlight
 ;;(setq url-proxy-services '(("http" . "proxy.hoge.com:8080"))) ;; proxy
 
 
@@ -122,11 +123,6 @@
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 ;; package settings
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
-;; tramp
-(require 'tramp)
-(setq tramp-default-method "ssh")
-
-;; php-mode, web-mode
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -138,4 +134,5 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(hl-line ((t (:background "color-236")))) ;; hi-line-mode
  )
