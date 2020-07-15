@@ -135,7 +135,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(font-lock-function-name-face ((t (:foreground "color-208"))))
- '(hl-line ((t (:background "color-236"))))
+ '(hl-line ((t (:background "gray25"))))
  '(web-mode-html-tag-bracket-face ((t (:foreground "white"))))
  '(web-mode-html-tag-face ((t (:foreground "brightblue")))))
 (set-face-background 'default "black")
