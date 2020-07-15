@@ -121,7 +121,7 @@
 
 
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
-;; package settings
+;; custom variables and faces settings
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -138,3 +138,5 @@
  '(hl-line ((t (:background "color-236"))))
  '(web-mode-html-tag-bracket-face ((t (:foreground "white"))))
  '(web-mode-html-tag-face ((t (:foreground "brightblue")))))
+(set-face-background 'default "black")
+(set-face-foreground 'default "ghost white")
