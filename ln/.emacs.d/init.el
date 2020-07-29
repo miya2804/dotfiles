@@ -55,7 +55,7 @@
 (setq inhibit-startup-message t) ;; hide startup message
 (setq initial-scratch-message "") ;; hide *scratch* buffer message
 (menu-bar-mode -1) ;; hide menu bar
-;;(tool-bar-mode 0) ;; hide tool bar
+(tool-bar-mode 0) ;; hide tool bar
 (show-paren-mode 1) ;; illuminate corresponding brackets
 (setq frame-title-format "%f") ;; show full path in title
 (display-time-mode t)
@@ -67,8 +67,8 @@
 
 
 ;; windmove setting
-(windmove-default-keybindings) ;; use shift+arrow
-;;(windmove-default-keybindings 'meta) ;; use alt+arrow
+;;(windmove-default-keybindings) ;; use shift+arrow
+(windmove-default-keybindings 'meta) ;; use alt+arrow
 
 
 
@@ -134,10 +134,9 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :stipple nil :background "color-236" :foreground "ghost white" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 1 :width normal :foundry "default" :family "default"))))
- '(font-lock-function-name-face ((t (:foreground "color-208"))))
+ '(font-lock-function-name-face ((t (:foreground "brightgreen"))))
  '(hl-line ((t (:background "gray25"))))
- '(web-mode-html-tag-bracket-face ((t (:foreground "white"))))
- '(web-mode-html-tag-face ((t (:foreground "brightblue")))))
-(set-face-background 'default "color-235")
+ '(web-mode-html-tag-bracket-face ((t (:foreground "ghost white"))))
+ '(web-mode-html-tag-face ((t (:foreground "pale green")))))
+(set-face-background 'default "gray13")
 (set-face-foreground 'default "ghost white")
