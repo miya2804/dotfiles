@@ -56,7 +56,7 @@
 (setq initial-scratch-message "") ;; hide *scratch* buffer message
 (menu-bar-mode -1) ;; hide menu bar
 (if window-system
-    (tool-bar-mode -1)
+    (tool-bar-mode -1) ;; hide tool bar
   )
 (show-paren-mode 1) ;; illuminate corresponding brackets
 (setq frame-title-format "%f") ;; show full path in title
@@ -67,10 +67,9 @@
 (global-hl-line-mode t) ;; line highlight
 ;;(setq url-proxy-services '(("http" . "proxy.hoge.com:8080"))) ;; proxy
 
-
 ;; windmove setting
-;;(windmove-default-keybindings) ;; use shift+arrow
-(windmove-default-keybindings 'meta) ;; use alt+arrow
+(windmove-default-keybindings) ;; use shift+arrow
+;;(windmove-default-keybindings 'meta) ;; use alt+arrow
 
 
 
