@@ -55,7 +55,9 @@
 (setq inhibit-startup-message t) ;; hide startup message
 (setq initial-scratch-message "") ;; hide *scratch* buffer message
 (menu-bar-mode -1) ;; hide menu bar
-(tool-bar-mode 0) ;; hide tool bar
+(if window-system
+    (tool-bar-mode -1)
+  )
 (show-paren-mode 1) ;; illuminate corresponding brackets
 (setq frame-title-format "%f") ;; show full path in title
 (display-time-mode t)
