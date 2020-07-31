@@ -1,7 +1,7 @@
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 ;; package install
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
-;; set package repositorys
+;;;; set package repositorys
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 ;;(add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
@@ -9,7 +9,7 @@
 ;;(add-to-list 'package-archives '("maralade" . "https://marmalade-repo.org/packages/") t)
 (package-initialize)
 
-;; install packages
+;;;; install packages
 ;; if you want to install the packages, uncomment below.
 ;; (package-refresh-contents)
 ;; (defvar my/packages
@@ -38,16 +38,6 @@
 
 
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
-;; appearance settings
-;; ++++++++++++++++++++++++++++++++++++++++++++++++++
-;; alpha
-(if window-system
-    (progn
-      (set-frame-parameter nil 'alpha 80)))
-
-
-
-;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 ;; etc
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 ;;(global-whitespace-mode 1) ;; visualization of space and tab
@@ -67,7 +57,7 @@
 (global-hl-line-mode t) ;; line highlight
 ;;(setq url-proxy-services '(("http" . "proxy.hoge.com:8080"))) ;; proxy
 
-;; windmove setting
+;;;; windmove setting
 (windmove-default-keybindings) ;; use shift+arrow
 ;;(windmove-default-keybindings 'meta) ;; use alt+arrow
 
@@ -76,13 +66,13 @@
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 ;; backup setting (xxx~)
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
-;; execution on or off
+;;;; execution on or off
 (setq make-backup-files t)
 
-;; change directory
+;;;; change directory
 (setq backup-directory-alist '((".*" . "~/.emacs.d/.ehist/")))
 
-;; save multiple backupfiles
+;;;; save multiple backupfiles
 (setq version-control     t) ;; exucution on or off
 (setq kept-new-versions   2) ;; latest number
 (setq kept-old-versions   1) ;; oldest number
@@ -97,7 +87,7 @@
 (setq auto-save-interval 100) ;; 100char (def:300)
 (setq delete-auto-save-files t) ;; successful completion
 
-;; create auto-save file in ~/.emacs.d/.ehist
+;;;; create auto-save file in ~/.emacs.d/.ehist
 (setq auto-save-file-name-transforms
       '((".*" "~/.emacs.d/.ehist/" t)))
 
@@ -106,7 +96,7 @@
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 ;; lockfile setting (.#xxx)
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
-;; execution on of off
+;;;; execution on of off
 (setq create-lockfiles nil)
 
 
@@ -145,9 +135,19 @@
 
 
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
+;; appearance settings
+;; ++++++++++++++++++++++++++++++++++++++++++++++++++
+;;;; alpha
+(if window-system
+    (progn
+      (set-frame-parameter nil 'alpha 80)))
+
+
+
+;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 ;; package settings
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
-;; web-mode
+;;;; web-mode
 (require 'web-mode)
 (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.php?\\'" . web-mode))
