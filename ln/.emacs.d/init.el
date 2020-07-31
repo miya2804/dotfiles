@@ -14,6 +14,7 @@
 ;; (package-refresh-contents)
 ;; (defvar my/packages
 ;;         '(
+;;           mozc
 ;;           web-mode
 ;;           php-mode
 ;;           ))
