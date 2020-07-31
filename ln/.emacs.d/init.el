@@ -141,3 +141,13 @@
  '(web-mode-html-tag-face ((t (:foreground "pale green")))))
 (set-face-background 'default "gray13")
 (set-face-foreground 'default "ghost white")
+
+
+
+;; ++++++++++++++++++++++++++++++++++++++++++++++++++
+;; package settings
+;; ++++++++++++++++++++++++++++++++++++++++++++++++++
+;; web-mode
+(require 'web-mode)
+(add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.php?\\'" . web-mode))
