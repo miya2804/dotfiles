@@ -1,5 +1,5 @@
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
-;; package install
+;; package settings
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 ;;;; set package repositorys
 (require 'package)
@@ -8,37 +8,6 @@
 ;;(add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
 ;;(add-to-list 'package-archives '("maralade" . "https://marmalade-repo.org/packages/") t)
 (package-initialize)
-
-;;;; install packages
-;; if you want to install the packages, uncomment below.
-;; (package-refresh-contents)
-;; (defvar my/packages
-;;         '(
-;;           mozc
-;;           web-mode
-;;           php-mode
-;;           ))
-;; (dolist (package my/packages)
-;;   (unless (package-installed-p package)
-;;     (package-install package)))
-
-
-
-;; ++++++++++++++++++++++++++++++++++++++++++++++++++
-;; language settings
-;; ++++++++++++++++++++++++++++++++++++++++++++++++++
-(require 'mozc)
-(set-language-environment "Japanese")
-(setq default-input-method "japanese-mozc")
-(prefer-coding-system 'utf-8)
-(set-fontset-font t 'japanese-jisx0208 "IPAGothic")
-;;(set-local-environment nil)
-;;(set-terminal-coding-system 'utf-8)
-;;(set-keyboard-coding-system 'utf-8)
-;;(set-buffer-file-coding-system 'utf-8)
-;;(setq default-buffer-file-coding-system 'utf-8)
-;;(set-default-coding-system 'utf-8)
-
 
 
 
@@ -65,6 +34,23 @@
 ;;;; windmove setting
 (windmove-default-keybindings) ;; use shift+arrow
 ;;(windmove-default-keybindings 'meta) ;; use alt+arrow
+
+
+
+;; ++++++++++++++++++++++++++++++++++++++++++++++++++
+;; language settings
+;; ++++++++++++++++++++++++++++++++++++++++++++++++++
+(require 'mozc)
+(set-language-environment "Japanese")
+(setq default-input-method "japanese-mozc")
+(prefer-coding-system 'utf-8)
+(set-fontset-font t 'japanese-jisx0208 "IPAGothic")
+;;(set-local-environment nil)
+;;(set-terminal-coding-system 'utf-8)
+;;(set-keyboard-coding-system 'utf-8)
+;;(set-buffer-file-coding-system 'utf-8)
+;;(setq default-buffer-file-coding-system 'utf-8)
+;;(set-default-coding-system 'utf-8)
 
 
 
@@ -124,7 +110,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages (quote (mozc web-mode php-mode))))
+ '(package-selected-packages (quote (markdown-mode mozc web-mode php-mode))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -156,3 +142,7 @@
 (require 'web-mode)
 (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.php?\\'" . web-mode))
+
+;;;; markdown-mode
+(require 'markdown-mode)
+(add-to-list 'auto-mode-alist '("\\.md?\\'" . markdown-mode))
