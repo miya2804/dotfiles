@@ -24,12 +24,16 @@
   )
 (show-paren-mode 1) ;; illuminate corresponding brackets
 (setq frame-title-format "%f") ;; show full path in title
-(display-time-mode t)
 (transient-mark-mode 1) ;; region highlight
 (setq mouse-wheel-scroll-amount '(1 ((shift) . 5)))
 (setq mouse-wheel-progressive-speed nil)
 (global-hl-line-mode t) ;; line highlight
 ;;(setq url-proxy-services '(("http" . "proxy.hoge.com:8080"))) ;; proxy
+
+;;;; display-time
+;;(setq display-time-day-and-date t) 
+(setq display-time-24hr-format t)
+(display-time)
 
 ;;;; windmove setting
 (windmove-default-keybindings) ;; use shift+arrow
