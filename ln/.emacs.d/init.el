@@ -48,7 +48,7 @@
 (set-language-environment "Japanese")
 (setq default-input-method "japanese-mozc")
 (prefer-coding-system 'utf-8)
-;;(set-fontset-font t 'japanese-jisx0208 "IPAGothic")
+(set-fontset-font t 'japanese-jisx0208 "IPAGothic")
 ;;(set-local-environment nil)
 ;;(set-terminal-coding-system 'utf-8)
 ;;(set-keyboard-coding-system 'utf-8)
