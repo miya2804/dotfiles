@@ -1,5 +1,5 @@
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
-;; package settings
+;; package installation settings
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 ;;;; set package repositorys
 (require 'package)
@@ -12,32 +12,106 @@
 
 
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
+;; user package settings
+;; ++++++++++++++++++++++++++++++++++++++++++++++++++
+;;;; web-mode
+(require 'web-mode)
+(add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.php\\'" . web-mode))
+
+;;;; markdown-mode
+(require 'markdown-mode)
+(add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
+(add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
+
+
+
+;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 ;; etc
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
-;;(global-whitespace-mode 1) ;; visualization of space and tab
-(setq-default tab-width 4 indent-tabs-mode nil) ;; use space on tab
-(setq inhibit-startup-message t) ;; hide startup message
-(setq initial-scratch-message "") ;; hide *scratch* buffer message
-(menu-bar-mode -1) ;; hide menu bar
-(if window-system
-    (tool-bar-mode -1) ;; hide tool bar
-  )
-(show-paren-mode 1) ;; illuminate corresponding brackets
-(setq frame-title-format "%f") ;; show full path in title
-(transient-mark-mode 1) ;; region highlight
+;;;; visualization of space and tab
+;;(global-whitespace-mode 1)
+
+;;;; use space on tab
+(setq-default tab-width 4 indent-tabs-mode nil)
+
+;;;; mouse wheel
 (setq mouse-wheel-scroll-amount '(1 ((shift) . 5)))
 (setq mouse-wheel-progressive-speed nil)
-(global-hl-line-mode t) ;; line highlight
+
+;;;; proxy
 ;;(setq url-proxy-services '(("http" . "proxy.hoge.com:8080"))) ;; proxy
+
+;;;; windmove setting
+(windmove-default-keybindings) ;; use shift+arrow
+;;(windmove-default-keybindings 'meta) ;; use alt+arrow
+
+
+
+;; ++++++++++++++++++++++++++++++++++++++++++++++++++
+;; appearance settings
+;; ++++++++++++++++++++++++++++++++++++++++++++++++++
+;;;; hide startup message
+(setq inhibit-startup-message t)
+
+;;;; hide *scratch* buffer message
+(setq initial-scratch-message "")
+
+;;;; hide menu bar
+(menu-bar-mode 0)
+
+;;;; hide tool bar
+(if window-system
+    (tool-bar-mode 0)
+  )
+
+;;;; illuminate corresponding brackets
+(show-paren-mode t)
+
+;;;; show full path in title
+(setq frame-title-format "%f")
+
+;;;; region highlight
+(transient-mark-mode t)
+
+;;;; alpha
+(if window-system
+    (progn
+      (set-frame-parameter nil 'alpha 50)))
+
+;;;; line highlight
+(global-hl-line-mode t)
+
+;;;; window size settings
+(defun set-frame-size-according-to-resolution ()
+  (interactive)
+  (if window-system
+  (progn
+    ;; use 120 char wide window for largeish displays
+    ;; and smaller 80 column windows for smaller displays
+    ;; pick whatever numbers make sense for you
+    (if (> (x-display-pixel-width) 1280)
+           (add-to-list 'default-frame-alist (cons 'width 120))
+           (add-to-list 'default-frame-alist (cons 'width 50)))
+    ;; for the height, subtract a couple hundred pixels
+    ;; from the screen height (for panels, menubars and
+    ;; whatnot), then divide by the height of a char to
+    ;; get the height we want
+    (add-to-list 'default-frame-alist
+         (cons 'height (/ (- (x-display-pixel-height) 200)
+                             (frame-char-height)))))))
+(set-frame-size-according-to-resolution)
+
+;;;; display line numbers
+(require 'linum)
+(global-linum-mode t)
+(setq linum-format "%3d ")
+(line-number-mode t)
 
 ;;;; display-time
 ;;(setq display-time-day-and-date t) 
 (setq display-time-24hr-format t)
 (display-time)
-
-;;;; windmove setting
-(windmove-default-keybindings) ;; use shift+arrow
-;;(windmove-default-keybindings 'meta) ;; use alt+arrow
 
 
 
@@ -97,16 +171,6 @@
 
 
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
-;; display line numbers
-;; ++++++++++++++++++++++++++++++++++++++++++++++++++
-(require 'linum)
-(global-linum-mode t)
-(setq linum-format "%3d ")
-(line-number-mode t)
-
-
-
-;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 ;; custom variables and faces settings
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 (custom-set-variables
@@ -126,28 +190,3 @@
  '(web-mode-html-tag-face ((t (:foreground "pale green")))))
 (set-face-background 'default "gray13")
 (set-face-foreground 'default "ghost white")
-
-
-
-;; ++++++++++++++++++++++++++++++++++++++++++++++++++
-;; appearance settings
-;; ++++++++++++++++++++++++++++++++++++++++++++++++++
-;;;; alpha
-(if window-system
-    (progn
-      (set-frame-parameter nil 'alpha 80)))
-
-
-
-;; ++++++++++++++++++++++++++++++++++++++++++++++++++
-;; package settings
-;; ++++++++++++++++++++++++++++++++++++++++++++++++++
-;;;; web-mode
-(require 'web-mode)
-(add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.php\\'" . web-mode))
-
-;;;; markdown-mode
-(require 'markdown-mode)
-(add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
-(add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
