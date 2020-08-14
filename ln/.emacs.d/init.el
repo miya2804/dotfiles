@@ -83,24 +83,24 @@
 (global-hl-line-mode t)
 
 ;;;; window size settings
-(defun set-frame-size-according-to-resolution ()
-  (interactive)
-  (if window-system
-  (progn
-    ;; use 120 char wide window for largeish displays
-    ;; and smaller 80 column windows for smaller displays
-    ;; pick whatever numbers make sense for you
-    (if (> (x-display-pixel-width) 1280)
-           (add-to-list 'default-frame-alist (cons 'width 120))
-           (add-to-list 'default-frame-alist (cons 'width 50)))
-    ;; for the height, subtract a couple hundred pixels
-    ;; from the screen height (for panels, menubars and
-    ;; whatnot), then divide by the height of a char to
-    ;; get the height we want
-    (add-to-list 'default-frame-alist
-         (cons 'height (/ (- (x-display-pixel-height) 200)
-                             (frame-char-height)))))))
-(set-frame-size-according-to-resolution)
+;; (defun set-frame-size-according-to-resolution ()
+;;   (interactive)
+;;   (if window-system
+;;   (progn
+;;     ;; use 120 char wide window for largeish displays
+;;     ;; and smaller 80 column windows for smaller displays
+;;     ;; pick whatever numbers make sense for you
+;;     (if (> (x-display-pixel-width) 1280)
+;;            (add-to-list 'default-frame-alist (cons 'width 120))
+;;            (add-to-list 'default-frame-alist (cons 'width 50)))
+;;     ;; for the height, subtract a couple hundred pixels
+;;     ;; from the screen height (for panels, menubars and
+;;     ;; whatnot), then divide by the height of a char to
+;;     ;; get the height we want
+;;     (add-to-list 'default-frame-alist
+;;          (cons 'height (/ (- (x-display-pixel-height) 200)
+;;                              (frame-char-height)))))))
+;; (set-frame-size-according-to-resolution)
 
 ;;;; display line numbers
 (require 'linum)
@@ -122,13 +122,25 @@
 (set-language-environment "Japanese")
 (setq default-input-method "japanese-mozc")
 (prefer-coding-system 'utf-8)
-(set-fontset-font t 'japanese-jisx0208 "IPAGothic")
 ;;(set-local-environment nil)
 ;;(set-terminal-coding-system 'utf-8)
 ;;(set-keyboard-coding-system 'utf-8)
 ;;(set-buffer-file-coding-system 'utf-8)
 ;;(setq default-buffer-file-coding-system 'utf-8)
 ;;(set-default-coding-system 'utf-8)
+
+
+
+;; ++++++++++++++++++++++++++++++++++++++++++++++++++
+;; font settings
+;; ++++++++++++++++++++++++++++++++++++++++++++++++++
+(when (x-list-fonts "SourceHanCodeJP")
+  ;;;; create fontset
+  (create-fontset-from-ascii-font "SourceHanCodeJp-9:weight=normal:slant=normal" nil "SourceHanCodeJp")
+  ;;;; set font
+  (set-fontset-font "fontset-SourceHanCodeJp" 'unicode "SourceHanCodeJp" nil 'append)
+  ;;;; apply fontset to frame
+  (add-to-list 'default-frame-alist '(font . "fontset-SourceHanCodeJp")))
 
 
 
