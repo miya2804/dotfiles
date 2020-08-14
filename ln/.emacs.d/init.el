@@ -134,13 +134,14 @@
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 ;; font settings
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
-(when (x-list-fonts "SourceHanCodeJP")
-  ;;;; create fontset
-  (create-fontset-from-ascii-font "SourceHanCodeJp-9:weight=normal:slant=normal" nil "SourceHanCodeJp")
-  ;;;; set font
-  (set-fontset-font "fontset-SourceHanCodeJp" 'unicode "SourceHanCodeJp" nil 'append)
-  ;;;; apply fontset to frame
-  (add-to-list 'default-frame-alist '(font . "fontset-SourceHanCodeJp")))
+(when window-system
+  (when (x-list-fonts "SourceHanCodeJP")
+    ;;;; create fontset
+    (create-fontset-from-ascii-font "SourceHanCodeJp-9:weight=normal:slant=normal" nil "SourceHanCodeJp")
+    ;;;; set font
+    (set-fontset-font "fontset-SourceHanCodeJp" 'unicode "SourceHanCodeJp" nil 'append)
+    ;;;; apply fontset to frame
+    (add-to-list 'default-frame-alist '(font . "fontset-SourceHanCodeJp"))))
 
 
 
