@@ -60,7 +60,8 @@
 ;;(setq url-proxy-services '(("http" . "proxy.hoge.com:8080"))) ;; proxy
 
 ;;;; windmove setting
-(windmove-default-keybindings) ;; use shift+arrow
+(global-set-key (kbd "C-o") (lambda () (interactive) (other-window -1)))
+;;(windmove-default-keybindings) ;; use shift+arrow
 ;;(windmove-default-keybindings 'meta) ;; use alt+arrow
 
 
