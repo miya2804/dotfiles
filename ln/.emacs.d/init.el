@@ -93,9 +93,6 @@
     (progn
       (set-frame-parameter nil 'alpha 50)))
 
-;;;; line highlight
-(global-hl-line-mode t)
-
 ;;;; window size settings
 ;; (defun set-frame-size-according-to-resolution ()
 ;;   (interactive)
@@ -190,6 +187,12 @@
 ;;;; mozc
 (require 'mozc)
 (setq default-input-method "japanese-mozc")
+
+;;;; line highlight
+(use-package hl-line
+  :init
+  (global-hl-line-mode t)
+  :bind ("M-o h" . global-hl-line-mode))
 
 
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
