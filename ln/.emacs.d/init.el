@@ -1,11 +1,13 @@
 (defconst emacs-start-time (current-time))
-(setq package-enable-at-startup nil)
+
+(setq package-enable-at-startup nil
+      auto-window-vscroll nil)
+
 
 
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 ;; Environment
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
-
 
 ;;;; install use-package
 (require 'package)
@@ -41,10 +43,10 @@
 ;;(setq url-proxy-services '(("http" . "proxy.hoge.com:8080"))) ;; proxy
 
 
+
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 ;; Settings
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
-
 
 ;; -------------------------------------
 ;; etc
@@ -69,7 +71,7 @@
 (setq inhibit-startup-message t)
 
 ;;;; hide *scratch* buffer message
-(setq initial-scratch-message "")
+(setq initial-scratch-message nil)
 
 ;;;; hide menu bar
 (menu-bar-mode 0)
@@ -94,6 +96,7 @@
       (set-frame-parameter nil 'alpha 50)))
 
 ;;;; window size settings
+(toggle-frame-maximized)
 ;; (defun set-frame-size-according-to-resolution ()
 ;;   (interactive)
 ;;   (if window-system
@@ -113,14 +116,8 @@
 ;;                              (frame-char-height)))))))
 ;; (set-frame-size-according-to-resolution)
 
-;;;; display line numbers
-(require 'linum)
-(global-linum-mode t)
-(setq linum-format "%3d ")
-(line-number-mode t)
-
 ;;;; display-time
-;;(setq display-time-day-and-date t) 
+(setq display-time-day-and-date nil)
 (setq display-time-24hr-format t)
 (display-time)
 
@@ -169,24 +166,48 @@
 (setq create-lockfiles nil)
 
 
+
+;; ++++++++++++++++++++++++++++++++++++++++++++++++++
+;; libraries
+;; ++++++++++++++++++++++++++++++++++++++++++++++++++
+
+(use-package use-package-ensure-system-package :ensure t)
+
+
+
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 ;; packages
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 
-
 ;;;; web-mode
-(require 'web-mode)
-(add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.php\\'" . web-mode))
+(use-package web-mode
+  :mode ("\\.phtml\\'"
+         "\\.tpl\\.php\\'"
+         "\\.[gj]sp\\'"
+         "\\.as[cp]x\\'"
+         "\\.erb\\'"
+         "\\.mustache\\'"
+         "\\.djhtml\\'"
+         "\\.html?\\'")
+  :config
+  (setq web-mode-engines-alist
+        '(("php" . "\\.phtml\\'")
+          ("blade" . "\\.blade\\'"))))
 
 ;;;; markdown-mode
-(require 'markdown-mode)
-(add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
-(add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
+(use-package markdown-mode
+  :mode ("\\.md\\'"
+         "\\.markdown\\'")
+  )
 
 ;;;; mozc
-(require 'mozc)
-(setq default-input-method "japanese-mozc")
+(use-package mozc
+  :ensure t
+  :ensure-system-package emacs-mozc-bin
+  :bind ("M-\\" . toggle-input-method)
+  :config
+  (setq default-input-method "japanese-mozc")
+  )
 
 ;;;; line highlight
 (use-package hl-line
@@ -194,11 +215,17 @@
   (global-hl-line-mode t)
   :bind ("M-o h" . global-hl-line-mode))
 
+;;;; display line numbers
+(use-package linum
+  :config
+  (global-linum-mode t)
+  (setq linum-format "%3d "))
+
+
 
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 ;; custom variables and faces settings
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
-
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -219,10 +246,10 @@
 (set-face-foreground 'default "ghost white")
 
 
+
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 ;; Finalization
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
-
 
 (let ((elapsed (float-time (time-subtract (current-time)
                                           emacs-start-time))))
@@ -235,6 +262,7 @@
                      (time-subtract (current-time) emacs-start-time))))
                (message "Loading %s...done (%.3fs) [after-init]"
                         ,load-file-name elapsed))) t)
+
 
 
 ;; init.el ends here
