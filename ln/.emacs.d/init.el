@@ -1,11 +1,13 @@
 (defconst emacs-start-time (current-time))
-
 (setq package-enable-at-startup nil)
 
 
-;; ++++++++++++++++++
+;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 ;; Environment
-;; ++++++++++++++++++
+;; ++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+;;;; install use-package
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 ;;(add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
@@ -19,6 +21,7 @@
 (eval-and-compile
   (require 'use-package)
 
+  ;;;; debug
   (if init-file-debug
       (setq use-package-verbose t
             use-package-expand-minimally nil
@@ -26,49 +29,42 @@
             debug-on-error t)
     (setq use-package-verbose nil)))
 
-
-
-;; ++++++++++++++++++++++++++++++++++++++++++++++++++
-;; user package settings
-;; ++++++++++++++++++++++++++++++++++++++++++++++++++
-;;;; web-mode
-(require 'web-mode)
-(add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.php\\'" . web-mode))
-
-;;;; markdown-mode
-(require 'markdown-mode)
-(add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
-(add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
-
-
-
-;; ++++++++++++++++++++++++++++++++++++++++++++++++++
-;; etc
-;; ++++++++++++++++++++++++++++++++++++++++++++++++++
-;;;; visualization of space and tab
-;;(global-whitespace-mode 1)
-
-;;;; use space on tab
-(setq-default tab-width 4 indent-tabs-mode nil)
-
-;;;; mouse wheel
-(setq mouse-wheel-scroll-amount '(1 ((shift) . 5)))
-(setq mouse-wheel-progressive-speed nil)
+;;;; language
+;; (set-language-environment "Japanese")
+;; (set-local-environment nil)
+;; (prefer-coding-system 'utf-8)
+;; (set-keyboard-coding-system 'utf-8)
+;; (set-terminal-coding-system 'utf-8)
+;; (set-default 'buffer-file-cording-system 'utf-8)
 
 ;;;; proxy
 ;;(setq url-proxy-services '(("http" . "proxy.hoge.com:8080"))) ;; proxy
+
+
+;; ++++++++++++++++++++++++++++++++++++++++++++++++++
+;; Settings
+;; ++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+;; -------------------------------------
+;; etc
+
+;;;; visualization of space and tab
+;;(global-whitespace-mode 1)
+
+(setq-default tab-width 4 indent-tabs-mode nil)
+
+(setq mouse-wheel-scroll-amount '(1 ((shift) . 5))
+      mouse-wheel-progressive-speed nil)
 
 ;;;; windmove setting
 (global-set-key (kbd "C-o") (lambda () (interactive) (other-window -1)))
 ;;(windmove-default-keybindings) ;; use shift+arrow
 ;;(windmove-default-keybindings 'meta) ;; use alt+arrow
 
+;; -------------------------------------
+;; appearance
 
-
-;; ++++++++++++++++++++++++++++++++++++++++++++++++++
-;; appearance settings
-;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 ;;;; hide startup message
 (setq inhibit-startup-message t)
 
@@ -91,6 +87,7 @@
 
 ;;;; region highlight
 (transient-mark-mode t)
+
 ;;;; alpha
 (if window-system
     (progn
@@ -130,27 +127,9 @@
 (setq display-time-24hr-format t)
 (display-time)
 
+;; -------------------------------------
+;; font
 
-
-;; ++++++++++++++++++++++++++++++++++++++++++++++++++
-;; language settings
-;; ++++++++++++++++++++++++++++++++++++++++++++++++++
-(require 'mozc)
-(set-language-environment "Japanese")
-(setq default-input-method "japanese-mozc")
-(prefer-coding-system 'utf-8)
-;;(set-local-environment nil)
-;;(set-terminal-coding-system 'utf-8)
-;;(set-keyboard-coding-system 'utf-8)
-;;(set-buffer-file-coding-system 'utf-8)
-;;(setq default-buffer-file-coding-system 'utf-8)
-;;(set-default-coding-system 'utf-8)
-
-
-
-;; ++++++++++++++++++++++++++++++++++++++++++++++++++
-;; font settings
-;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 (when window-system
   (when (x-list-fonts "SourceHanCodeJP")
     ;;;; create fontset
@@ -160,11 +139,9 @@
     ;;;; apply fontset to frame
     (add-to-list 'default-frame-alist '(font . "fontset-SourceHanCodeJp"))))
 
+;; -------------------------------------
+;; backup (xxx~)
 
-
-;; ++++++++++++++++++++++++++++++++++++++++++++++++++
-;; backup setting (xxx~)
-;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 ;;;; execution on or off
 (setq make-backup-files t)
 
@@ -177,11 +154,9 @@
 (setq kept-old-versions   1) ;; oldest number
 (setq delete-old-versions t) ;; delete out of range
 
+;; -------------------------------------
+;; auto-save (#xxx#)
 
-
-;; ++++++++++++++++++++++++++++++++++++++++++++++++++
-;; auto-save setting (#xxx#)
-;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 (setq auto-save-timeout 10) ;; 10sec (def:30)
 (setq auto-save-interval 100) ;; 100char (def:300)
 (setq delete-auto-save-files t) ;; successful completion
@@ -190,19 +165,38 @@
 (setq auto-save-file-name-transforms
       '((".*" "~/.emacs.d/.ehist/" t)))
 
+;; -------------------------------------
+;; lockfile (.#xxx)
 
-
-;; ++++++++++++++++++++++++++++++++++++++++++++++++++
-;; lockfile setting (.#xxx)
-;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 ;;;; execution on of off
 (setq create-lockfiles nil)
 
+
+;; ++++++++++++++++++++++++++++++++++++++++++++++++++
+;; packages
+;; ++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+;;;; web-mode
+(require 'web-mode)
+(add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.php\\'" . web-mode))
+
+;;;; markdown-mode
+(require 'markdown-mode)
+(add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
+(add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
+
+;;;; mozc
+(require 'mozc)
+(setq default-input-method "japanese-mozc")
 
 
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 ;; custom variables and faces settings
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -222,10 +216,10 @@
 (set-face-foreground 'default "ghost white")
 
 
-
-;; ++++++++++++++++++
+;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 ;; Finalization
-;; ++++++++++++++++++
+;; ++++++++++++++++++++++++++++++++++++++++++++++++++
+
 
 (let ((elapsed (float-time (time-subtract (current-time)
                                           emacs-start-time))))
@@ -238,7 +232,6 @@
                      (time-subtract (current-time) emacs-start-time))))
                (message "Loading %s...done (%.3fs) [after-init]"
                         ,load-file-name elapsed))) t)
-
 
 
 ;; init.el ends here
