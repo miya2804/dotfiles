@@ -6,6 +6,17 @@
 
 
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
+;; Functions
+;; ++++++++++++++++++++++++++++++++++++++++++++++++++
+
+(defun set-alpha (alpha-num)
+  "set frame parameter 'alpha"
+  (interactive "nAlpha: ")
+  (set-frame-parameter nil 'alpha (cons alpha-num '(90))))
+
+
+
+;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 ;; Environment
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -59,6 +70,8 @@
 (setq mouse-wheel-scroll-amount '(1 ((shift) . 5))
       mouse-wheel-progressive-speed nil)
 
+(setq scroll-step 1)
+
 ;;;; windmove setting
 (global-set-key (kbd "C-o") (lambda () (interactive) (other-window -1)))
 ;;(windmove-default-keybindings) ;; use shift+arrow
@@ -77,7 +90,7 @@
 (menu-bar-mode 0)
 
 ;;;; hide tool bar
-(if window-system
+(if (display-graphic-p)
     (tool-bar-mode 0)
   )
 
@@ -91,15 +104,13 @@
 (transient-mark-mode t)
 
 ;;;; alpha
-(if window-system
-    (progn
-      (set-frame-parameter nil 'alpha 50)))
+(if (display-graphic-p) (set-alpha 90))
 
 ;;;; window size settings
 (toggle-frame-maximized)
 ;; (defun set-frame-size-according-to-resolution ()
 ;;   (interactive)
-;;   (if window-system
+;;   (if (display-graphic-p)
 ;;   (progn
 ;;     ;; use 120 char wide window for largeish displays
 ;;     ;; and smaller 80 column windows for smaller displays
@@ -117,14 +128,22 @@
 ;; (set-frame-size-according-to-resolution)
 
 ;;;; display-time
-(setq display-time-day-and-date nil)
-(setq display-time-24hr-format t)
-(display-time)
+;; (setq display-time-day-and-date nil)
+;; (setq display-time-24hr-format t)
+;; (display-time)
+
+;;;; linum
+(global-linum-mode t)
+(setq linum-format "%3d ")
+
+;;;; hl-line
+(global-hl-line-mode t)
+(global-set-key (kbd "M-o h") 'global-hl-line-mode)
 
 ;; -------------------------------------
 ;; font
 
-(when window-system
+(when (display-graphic-p)
   (when (x-list-fonts "SourceHanCodeJP")
     ;;;; create fontset
     (create-fontset-from-ascii-font "SourceHanCodeJp-9:weight=normal:slant=normal" nil "SourceHanCodeJp")
@@ -171,13 +190,66 @@
 ;; libraries
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 
-(use-package use-package-ensure-system-package :ensure t)
+(use-package use-package-ensure-system-package :ensure t :defer t)
 
 
 
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 ;; packages
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
+
+;;;; all-the-icons
+;; Make dependent with doom-themes.
+;; Fonts install ->  "M-x all-the-icons-install-fonts"
+(with-eval-after-load 'doom-modeline
+  (use-package all-the-icons :ensure t :defer t))
+
+;;;; doom themes
+(use-package doom-themes
+  :config
+  ;; Global settings (defaults)
+  (setq doom-themes-enable-italic t
+        doom-themes-enable-bold t)
+  (load-theme 'doom-dracula t)
+  ;; Enable flashing mode-line on errors
+  (doom-themes-visual-bell-config))
+
+;;;; doom-modelfine
+;; Make dependent with doom-themes.
+(with-eval-after-load 'doom-themes
+  (use-package doom-modeline
+    :ensure t
+    :config
+    (doom-modeline-mode 1)
+    (line-number-mode 0)
+    (column-number-mode 1)
+    (setq doom-modeline-buffer-file-name-style 'truncate-with-project)
+    (setq doom-modeline-icon (display-graphic-p))
+    (setq doom-modeline-major-mode-icon nil)
+    (setq doom-modeline-minor-modes nil)))
+
+;;;; markdown-mode
+(use-package markdown-mode
+  :ensure t
+  :mode ("\\.md\\'"
+         "\\.markdown\\'"))
+
+;;;; mozc
+;; require external package -> "emacs-mozc-bin"
+(use-package mozc
+  :ensure t
+  ;;:ensure-system-package emacs-mozc-bin
+  :bind ("M-\\" . toggle-input-method)
+  :config
+  (setq default-input-method "japanese-mozc"))
+
+;;;; nyan-mode
+(use-package nyan-mode
+  :ensure t :demand t
+  :if (display-graphic-p)
+  :config
+  (nyan-mode)
+  (nyan-start-animation))
 
 ;;;; web-mode
 (use-package web-mode
@@ -194,33 +266,6 @@
         '(("php" . "\\.phtml\\'")
           ("blade" . "\\.blade\\'"))))
 
-;;;; markdown-mode
-(use-package markdown-mode
-  :mode ("\\.md\\'"
-         "\\.markdown\\'")
-  )
-
-;;;; mozc
-(use-package mozc
-  :ensure t
-  :ensure-system-package emacs-mozc-bin
-  :bind ("M-\\" . toggle-input-method)
-  :config
-  (setq default-input-method "japanese-mozc")
-  )
-
-;;;; line highlight
-(use-package hl-line
-  :init
-  (global-hl-line-mode t)
-  :bind ("M-o h" . global-hl-line-mode))
-
-;;;; display line numbers
-(use-package linum
-  :config
-  (global-linum-mode t)
-  (setq linum-format "%3d "))
-
 
 
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -233,17 +278,17 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages (quote (use-package markdown-mode mozc web-mode php-mode))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(font-lock-function-name-face ((t (:foreground "brightgreen"))))
- '(hl-line ((t (:background "gray25"))))
- '(web-mode-html-tag-bracket-face ((t (:foreground "ghost white"))))
- '(web-mode-html-tag-face ((t (:foreground "pale green")))))
-(set-face-background 'default "gray13")
-(set-face-foreground 'default "ghost white")
+;; (custom-set-faces
+;;  ;; custom-set-faces was added by Custom.
+;;  ;; If you edit it by hand, you could mess it up, so be careful.
+;;  ;; Your init file should contain only one such instance.
+;;  ;; If there is more than one, they won't work right.
+;;  '(font-lock-function-name-face ((t (:foreground "brightgreen"))))
+;; '(hl-line ((t (:background "gray25"))))
+;; '(web-mode-html-tag-bracket-face ((t (:foreground "ghost white"))))
+;; '(web-mode-html-tag-face ((t (:foreground "pale green")))))
+;; (set-face-background 'default "gray13")
+;; (set-face-foreground 'default "ghost white")
 
 
 
