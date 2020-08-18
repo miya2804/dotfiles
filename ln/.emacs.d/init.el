@@ -6,13 +6,26 @@
 
 
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
-;; Functions
+;; Functions and Variables
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 
 (defun set-alpha (alpha-num)
   "set frame parameter 'alpha"
   (interactive "nAlpha: ")
   (set-frame-parameter nil 'alpha (cons alpha-num '(90))))
+
+(defvar is-load-theme nil
+  "This var should be non-nil if an external theme is loaded.")
+
+(defun set-my-default-faces ()
+  "Can be used to set a default faces if the themes isn't installed."
+  (custom-set-faces
+   '(font-lock-function-name-face ((t (:foreground "brightgreen"))))
+   '(hl-line ((t (:background "gray25"))))
+   '(web-mode-html-tag-bracket-face ((t (:foreground "ghost white"))))
+   '(web-mode-html-tag-face ((t (:foreground "pale green")))))
+  (set-face-background 'default "gray13")
+  (set-face-foreground 'default "ghost white"))
 
 
 
@@ -40,7 +53,8 @@
             use-package-expand-minimally nil
             use-package-compute-statistics t
             debug-on-error t)
-    (setq use-package-verbose nil)))
+    (setq use-package-verbose nil
+          use-package-expand-minimally t)))
 
 ;;;; language
 ;; (set-language-environment "Japanese")
@@ -230,7 +244,8 @@
         doom-themes-enable-bold t)
   (load-theme 'doom-dracula t)
   ;; Enable flashing mode-line on errors
-  (doom-themes-visual-bell-config))
+  (doom-themes-visual-bell-config)
+  (setq is-load-theme t))
 
 ;;;; doom-modelfine
 ;; Make dependent with doom-themes.
@@ -291,6 +306,29 @@
 ;; Finalization
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 
+;;;; Check if any themes is installed.
+(if is-load-theme
+    (message "Checking if theme is loaded...OK")
+  (progn
+    (message "Checking if theme is loaded...FAILD")
+    (message "Load my-default-faces...done")
+    (set-my-default-faces)))
+
+;; (let (is-themes)
+;;   ;; Check the existence of the themes
+;;   ;; If install theme, add below.
+;;   (when (locate-library "doom-themes")
+;;     (setq is-themes t))
+
+;;   ;;If any theme is installed, set my-default-faces.
+;;   (if is-themes
+;;       (message "Checking existence of themes...Theme is exist.")
+;;     (progn
+;;       (message "Checking existence of themes...Theme isn't exist.")
+;;       (set-my-default-faces)
+;;       (message "Load my-default-faces."))))
+
+;;;; Load time mesurement of init.el
 (let ((elapsed (float-time (time-subtract (current-time)
                                           emacs-start-time))))
   (message "Loading %s...done (%.3fs)" load-file-name elapsed))
@@ -301,7 +339,7 @@
                     (float-time
                      (time-subtract (current-time) emacs-start-time))))
                (message "Loading %s...done (%.3fs) [after-init]"
-                        ,load-file-name elapsed))) t)
+                        load-file-name elapsed))) t)
 
 
 
