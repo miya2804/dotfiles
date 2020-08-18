@@ -53,6 +53,10 @@
 ;;;; proxy
 ;;(setq url-proxy-services '(("http" . "proxy.hoge.com:8080"))) ;; proxy
 
+;;;; custom file
+(setq custom-file (locate-user-emacs-file "custom.el"))
+;;(load custom-file)
+
 
 
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -204,7 +208,21 @@
 (with-eval-after-load 'doom-modeline
   (use-package all-the-icons :ensure t :defer t))
 
-;;;; doom themes
+;;;; anzu
+(use-package anzu
+  :ensure t
+  :init
+  (global-anzu-mode t)
+  :commands (anzu-query-replace-at-cursor)
+  :bind (("M-%" . anzu-query-replace)
+         ("C-M-%" . anzu-query-replace-regexp))
+  :config
+  (setq anzu-search-threshold 1000)
+  (setq anzu-minimum-input-length 1)
+  (if (locate-library "migemo")
+      (setq anzu-use-migemo t)))
+
+;;;; doom-themes
 (use-package doom-themes
   :config
   ;; Global settings (defaults)
@@ -266,30 +284,6 @@
   (setq web-mode-engines-alist
         '(("php" . "\\.phtml\\'")
           ("blade" . "\\.blade\\'"))))
-
-
-
-;; ++++++++++++++++++++++++++++++++++++++++++++++++++
-;; custom variables and faces settings
-;; ++++++++++++++++++++++++++++++++++++++++++++++++++
-
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages (quote (use-package markdown-mode mozc web-mode php-mode))))
-;; (custom-set-faces
-;;  ;; custom-set-faces was added by Custom.
-;;  ;; If you edit it by hand, you could mess it up, so be careful.
-;;  ;; Your init file should contain only one such instance.
-;;  ;; If there is more than one, they won't work right.
-;;  '(font-lock-function-name-face ((t (:foreground "brightgreen"))))
-;; '(hl-line ((t (:background "gray25"))))
-;; '(web-mode-html-tag-bracket-face ((t (:foreground "ghost white"))))
-;; '(web-mode-html-tag-face ((t (:foreground "pale green")))))
-;; (set-face-background 'default "gray13")
-;; (set-face-foreground 'default "ghost white")
 
 
 
