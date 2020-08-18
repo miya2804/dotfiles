@@ -156,7 +156,7 @@
 
 ;;;; hl-line
 (global-hl-line-mode t)
-(global-set-key (kbd "M-o h") 'global-hl-line-mode)
+(global-set-key (kbd "C-c hl") 'global-hl-line-mode)
 
 ;; -------------------------------------
 ;; font
