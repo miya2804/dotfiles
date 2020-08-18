@@ -6,6 +6,17 @@
 
 
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
+;; Functions
+;; ++++++++++++++++++++++++++++++++++++++++++++++++++
+
+(defun set-alpha (alpha-num)
+  "set frame parameter 'alpha"
+  (interactive "nAlpha: ")
+  (set-frame-parameter nil 'alpha (cons alpha-num '(90))))
+
+
+
+;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 ;; Environment
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -59,6 +70,8 @@
 (setq mouse-wheel-scroll-amount '(1 ((shift) . 5))
       mouse-wheel-progressive-speed nil)
 
+(setq scroll-step 1)
+
 ;;;; windmove setting
 (global-set-key (kbd "C-o") (lambda () (interactive) (other-window -1)))
 ;;(windmove-default-keybindings) ;; use shift+arrow
@@ -91,9 +104,7 @@
 (transient-mark-mode t)
 
 ;;;; alpha
-(if (display-graphic-p)
-    (progn
-      (set-frame-parameter nil 'alpha 50)))
+(if (display-graphic-p) (set-alpha 90))
 
 ;;;; window size settings
 (toggle-frame-maximized)
@@ -120,6 +131,14 @@
 ;; (setq display-time-day-and-date nil)
 ;; (setq display-time-24hr-format t)
 ;; (display-time)
+
+;;;; linum
+(global-linum-mode t)
+(setq linum-format "%3d ")
+
+;;;; hl-line
+(global-hl-line-mode t)
+(global-set-key (kbd "M-o h") 'global-hl-line-mode)
 
 ;; -------------------------------------
 ;; font
@@ -185,13 +204,6 @@
 (with-eval-after-load 'doom-modeline
   (use-package all-the-icons :ensure t :defer t))
 
-;;;; display line numbers
-(use-package linum
-  :ensure t :demand t
-  :config
-  (global-linum-mode t)
-  (setq linum-format "%3d "))
-
 ;;;; doom themes
 (use-package doom-themes
   :config
@@ -211,18 +223,10 @@
     (doom-modeline-mode 1)
     (line-number-mode 0)
     (column-number-mode 1)
-    (setq doom-modeline-buffer-file-name-style 'truncate-upto-project)
+    (setq doom-modeline-buffer-file-name-style 'truncate-with-project)
     (setq doom-modeline-icon (display-graphic-p))
     (setq doom-modeline-major-mode-icon nil)
     (setq doom-modeline-minor-modes nil)))
-
-;;;; line highlight
-(use-package hl-line
-  :ensure t :demand t
-  ;;:if (locate-library "hl-line")
-  :bind ("M-o h" . global-hl-line-mode)
-  :config
-  (global-hl-line-mode t))
 
 ;;;; markdown-mode
 (use-package markdown-mode
@@ -274,17 +278,17 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages (quote (use-package markdown-mode mozc web-mode php-mode))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(font-lock-function-name-face ((t (:foreground "brightgreen"))))
- '(hl-line ((t (:background "gray25"))))
- '(web-mode-html-tag-bracket-face ((t (:foreground "ghost white"))))
- '(web-mode-html-tag-face ((t (:foreground "pale green")))))
-(set-face-background 'default "gray13")
-(set-face-foreground 'default "ghost white")
+;; (custom-set-faces
+;;  ;; custom-set-faces was added by Custom.
+;;  ;; If you edit it by hand, you could mess it up, so be careful.
+;;  ;; Your init file should contain only one such instance.
+;;  ;; If there is more than one, they won't work right.
+;;  '(font-lock-function-name-face ((t (:foreground "brightgreen"))))
+;; '(hl-line ((t (:background "gray25"))))
+;; '(web-mode-html-tag-bracket-face ((t (:foreground "ghost white"))))
+;; '(web-mode-html-tag-face ((t (:foreground "pale green")))))
+;; (set-face-background 'default "gray13")
+;; (set-face-foreground 'default "ghost white")
 
 
 
