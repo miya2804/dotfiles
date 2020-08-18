@@ -77,7 +77,7 @@
 (menu-bar-mode 0)
 
 ;;;; hide tool bar
-(if window-system
+(if (display-graphic-p)
     (tool-bar-mode 0)
   )
 
@@ -91,7 +91,7 @@
 (transient-mark-mode t)
 
 ;;;; alpha
-(if window-system
+(if (display-graphic-p)
     (progn
       (set-frame-parameter nil 'alpha 50)))
 
@@ -99,7 +99,7 @@
 (toggle-frame-maximized)
 ;; (defun set-frame-size-according-to-resolution ()
 ;;   (interactive)
-;;   (if window-system
+;;   (if (display-graphic-p)
 ;;   (progn
 ;;     ;; use 120 char wide window for largeish displays
 ;;     ;; and smaller 80 column windows for smaller displays
@@ -124,7 +124,7 @@
 ;; -------------------------------------
 ;; font
 
-(when window-system
+(when (display-graphic-p)
   (when (x-list-fonts "SourceHanCodeJP")
     ;;;; create fontset
     (create-fontset-from-ascii-font "SourceHanCodeJp-9:weight=normal:slant=normal" nil "SourceHanCodeJp")
@@ -203,7 +203,7 @@
 ;;;; mozc
 (use-package mozc
   :ensure t
-  :ensure-system-package emacs-mozc-bin
+  ;;:ensure-system-package emacs-mozc-bin
   :bind ("M-\\" . toggle-input-method)
   :config
   (setq default-input-method "japanese-mozc")
@@ -211,6 +211,7 @@
 
 ;;;; line highlight
 (use-package hl-line
+  :if (locate-library "hl-line")
   :init
   (global-hl-line-mode t)
   :bind ("M-o h" . global-hl-line-mode))
@@ -220,6 +221,39 @@
   :config
   (global-linum-mode t)
   (setq linum-format "%3d "))
+
+;; (use-package all-the-icons
+;;   :ensure t
+;;   :custom
+;;   (all-the-icons-scale-factor 1.0))
+
+(use-package doom-themes
+  :ensure t
+  :config
+  ;; Global settings (defaults)
+  (setq doom-themes-enable-italic t
+        doom-themes-enable-bold t)
+  (load-theme 'doom-dracula t)
+  
+  ;; Enable flashing mode-line on errors
+  (doom-themes-visual-bell-config))
+
+;; (use-package doom-modeline
+;;   :commands (doom-modeline-def-modeline)
+;;   :custom
+;;   (doom-modeline-buffer-file-name-style 'truncate-with-project)
+;;   (doom-modeline-icon t)
+;;   (doom-modeline-major-mode-icon nil)
+;;   (doom-modeline-minor-modes nil)
+;;   :hook
+;;   (after-init . doom-modeline-mode)
+;;   :config
+;;   (line-number-mode 0)
+;;   (column-number-mode 0)
+;;   (doom-modeline-def-modeline
+;;     'main
+;;     '(bar workspace-number window-number evil-state ryo-modal xah-fly-keys matches buffer-info remote-host buffer-position parrot selection-info)
+;;     '(misc-info persp-name debug minor-modes input-method major-mode process vcs checker)))
 
 
 
