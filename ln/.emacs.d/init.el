@@ -253,6 +253,7 @@
 
 ;;;; web-mode
 (use-package web-mode
+  :ensure t
   :mode ("\\.phtml\\'"
          "\\.tpl\\.php\\'"
          "\\.[gj]sp\\'"
