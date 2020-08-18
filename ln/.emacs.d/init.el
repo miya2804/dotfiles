@@ -117,9 +117,9 @@
 ;; (set-frame-size-according-to-resolution)
 
 ;;;; display-time
-(setq display-time-day-and-date nil)
-(setq display-time-24hr-format t)
-(display-time)
+;; (setq display-time-day-and-date nil)
+;; (setq display-time-24hr-format t)
+;; (display-time)
 
 ;; -------------------------------------
 ;; font
@@ -171,13 +171,78 @@
 ;; libraries
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 
-(use-package use-package-ensure-system-package :ensure t)
+(use-package use-package-ensure-system-package :ensure t :defer t)
 
 
 
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 ;; packages
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
+
+;;;; all-the-icons
+;; Make dependent with doom-themes.
+;; Fonts install ->  "M-x all-the-icons-install-fonts"
+(with-eval-after-load 'doom-modeline
+  (use-package all-the-icons :ensure t :defer t))
+
+;;;; display line numbers
+(use-package linum
+  :ensure t :demand t
+  :config
+  (global-linum-mode t)
+  (setq linum-format "%3d "))
+
+;;;; doom themes
+(use-package doom-themes
+  :config
+  ;; Global settings (defaults)
+  (setq doom-themes-enable-italic t
+        doom-themes-enable-bold t)
+  (load-theme 'doom-dracula t)
+  ;; Enable flashing mode-line on errors
+  (doom-themes-visual-bell-config))
+
+;;;; doom-modelfine
+;; Make dependent with doom-themes.
+(with-eval-after-load 'doom-themes
+  (use-package doom-modeline
+    :ensure t
+    :config
+    (doom-modeline-mode 1)
+    (line-number-mode 0)
+    (setq doom-modeline-buffer-file-name-style 'truncate-upto-project)
+    (setq doom-modeline-icon (display-graphic-p))
+    (setq doom-modeline-major-mode-icon nil)
+    (setq doom-modeline-minor-modes nil)))
+
+;;;; line highlight
+(use-package hl-line
+  :ensure t :demand t
+  ;;:if (locate-library "hl-line")
+  :bind ("M-o h" . global-hl-line-mode)
+  :config
+  (global-hl-line-mode t))
+
+;;;; markdown-mode
+(use-package markdown-mode
+  :mode ("\\.md\\'"
+         "\\.markdown\\'"))
+
+;;;; mozc
+;; require external package -> "emacs-mozc-bin"
+(use-package mozc
+  :ensure t
+  ;;:ensure-system-package emacs-mozc-bin
+  :bind ("M-\\" . toggle-input-method)
+  :config
+  (setq default-input-method "japanese-mozc"))
+
+;;;; nyan-mode
+(use-package nyan-mode
+  :ensure t :demand t
+  :config
+  (nyan-mode)
+  (nyan-start-animation))
 
 ;;;; web-mode
 (use-package web-mode
@@ -193,67 +258,6 @@
   (setq web-mode-engines-alist
         '(("php" . "\\.phtml\\'")
           ("blade" . "\\.blade\\'"))))
-
-;;;; markdown-mode
-(use-package markdown-mode
-  :mode ("\\.md\\'"
-         "\\.markdown\\'")
-  )
-
-;;;; mozc
-(use-package mozc
-  :ensure t
-  ;;:ensure-system-package emacs-mozc-bin
-  :bind ("M-\\" . toggle-input-method)
-  :config
-  (setq default-input-method "japanese-mozc")
-  )
-
-;;;; line highlight
-(use-package hl-line
-  :if (locate-library "hl-line")
-  :init
-  (global-hl-line-mode t)
-  :bind ("M-o h" . global-hl-line-mode))
-
-;;;; display line numbers
-(use-package linum
-  :config
-  (global-linum-mode t)
-  (setq linum-format "%3d "))
-
-;; (use-package all-the-icons
-;;   :ensure t
-;;   :custom
-;;   (all-the-icons-scale-factor 1.0))
-
-(use-package doom-themes
-  :ensure t
-  :config
-  ;; Global settings (defaults)
-  (setq doom-themes-enable-italic t
-        doom-themes-enable-bold t)
-  (load-theme 'doom-dracula t)
-  
-  ;; Enable flashing mode-line on errors
-  (doom-themes-visual-bell-config))
-
-;; (use-package doom-modeline
-;;   :commands (doom-modeline-def-modeline)
-;;   :custom
-;;   (doom-modeline-buffer-file-name-style 'truncate-with-project)
-;;   (doom-modeline-icon t)
-;;   (doom-modeline-major-mode-icon nil)
-;;   (doom-modeline-minor-modes nil)
-;;   :hook
-;;   (after-init . doom-modeline-mode)
-;;   :config
-;;   (line-number-mode 0)
-;;   (column-number-mode 0)
-;;   (doom-modeline-def-modeline
-;;     'main
-;;     '(bar workspace-number window-number evil-state ryo-modal xah-fly-keys matches buffer-info remote-host buffer-position parrot selection-info)
-;;     '(misc-info persp-name debug minor-modes input-method major-mode process vcs checker)))
 
 
 
