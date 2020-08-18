@@ -224,14 +224,15 @@
 
 ;;;; anzu
 (use-package anzu
-  :ensure t
+  :ensure t :diminish t
   :init
   (global-anzu-mode t)
   :commands (anzu-query-replace-at-cursor)
-  :bind (("M-%" . anzu-query-replace)
-         ("C-M-%" . anzu-query-replace-regexp))
+  :bind (([remap query-replace] . anzu-query-replace)
+         ([remap query-replace-regexp] . anzu-query-replace-regexp))
   :config
   (setq anzu-search-threshold 1000)
+  (setq anzu-replace-threshold 1000)
   (setq anzu-minimum-input-length 1)
   (if (locate-library "migemo")
       (setq anzu-use-migemo t)))
