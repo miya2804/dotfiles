@@ -262,6 +262,13 @@
     (setq doom-modeline-major-mode-icon nil)
     (setq doom-modeline-minor-modes nil)))
 
+;;;; smart-newline
+(use-package smart-newline
+  :ensure t :diminish t
+  :bind (;;("RET" . smart-newline-mode)
+         ("C-m" . smart-newline-mode))
+  :hook (emacs-lisp-mode . smart-newline-mode))
+
 ;;;; markdown-mode
 (use-package markdown-mode
   :ensure t
