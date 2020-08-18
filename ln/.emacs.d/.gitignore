@@ -1,4 +1,6 @@
 /elpa/
+/.ehist/*
+/auto-save-list/*
 tramp
 kkcrc
-!.gitignore
+!.gitkeep
