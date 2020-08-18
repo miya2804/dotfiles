@@ -210,6 +210,7 @@
     :config
     (doom-modeline-mode 1)
     (line-number-mode 0)
+    (column-number-mode 1)
     (setq doom-modeline-buffer-file-name-style 'truncate-upto-project)
     (setq doom-modeline-icon (display-graphic-p))
     (setq doom-modeline-major-mode-icon nil)
@@ -225,6 +226,7 @@
 
 ;;;; markdown-mode
 (use-package markdown-mode
+  :ensure t
   :mode ("\\.md\\'"
          "\\.markdown\\'"))
 
@@ -240,6 +242,7 @@
 ;;;; nyan-mode
 (use-package nyan-mode
   :ensure t :demand t
+  :if (display-graphic-p)
   :config
   (nyan-mode)
   (nyan-start-animation))
