@@ -91,7 +91,7 @@
 (setq scroll-step 1)
 
 ;;;; windmove setting
-(global-set-key (kbd "C-o") (lambda () (interactive) (other-window -1)))
+(global-set-key (kbd "C-o") '(lambda () (interactive) (other-window -1)))
 ;;(windmove-default-keybindings) ;; use shift+arrow
 ;;(windmove-default-keybindings 'meta) ;; use alt+arrow
 
@@ -346,7 +346,7 @@
                     (float-time
                      (time-subtract (current-time) emacs-start-time))))
                (message "Loading %s...done (%.3fs) [after-init]"
-                        load-file-name elapsed))) t)
+                        ,load-file-name elapsed))) t)
 
 
 
