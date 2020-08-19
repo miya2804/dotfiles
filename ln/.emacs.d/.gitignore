@@ -1,4 +1,7 @@
 /elpa/
+/.ehist/
+/auto-save-list/
+custom.el
 tramp
 kkcrc
-!.gitignore
+!.gitkeep

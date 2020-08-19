@@ -6,13 +6,26 @@
 
 
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
-;; Functions
+;; Functions and Variables
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 
 (defun set-alpha (alpha-num)
   "set frame parameter 'alpha"
   (interactive "nAlpha: ")
   (set-frame-parameter nil 'alpha (cons alpha-num '(90))))
+
+(defvar is-load-theme nil
+  "This var should be non-nil if an external theme is loaded.")
+
+(defun set-my-default-faces ()
+  "Can be used to set a default faces if the themes isn't installed."
+  (custom-set-faces
+   '(font-lock-function-name-face ((t (:foreground "brightgreen"))))
+   '(hl-line ((t (:background "gray25"))))
+   '(web-mode-html-tag-bracket-face ((t (:foreground "ghost white"))))
+   '(web-mode-html-tag-face ((t (:foreground "pale green")))))
+  (set-face-background 'default "gray13")
+  (set-face-foreground 'default "ghost white"))
 
 
 
@@ -40,7 +53,8 @@
             use-package-expand-minimally nil
             use-package-compute-statistics t
             debug-on-error t)
-    (setq use-package-verbose nil)))
+    (setq use-package-verbose nil
+          use-package-expand-minimally t)))
 
 ;;;; language
 ;; (set-language-environment "Japanese")
@@ -52,6 +66,10 @@
 
 ;;;; proxy
 ;;(setq url-proxy-services '(("http" . "proxy.hoge.com:8080"))) ;; proxy
+
+;;;; custom file
+(setq custom-file (locate-user-emacs-file "custom.el"))
+;;(load custom-file)
 
 
 
@@ -138,7 +156,6 @@
 
 ;;;; hl-line
 (global-hl-line-mode t)
-(global-set-key (kbd "M-o h") 'global-hl-line-mode)
 
 ;; -------------------------------------
 ;; font
@@ -204,7 +221,22 @@
 (with-eval-after-load 'doom-modeline
   (use-package all-the-icons :ensure t :defer t))
 
-;;;; doom themes
+;;;; anzu
+(use-package anzu
+  :ensure t :diminish t
+  :init
+  (global-anzu-mode t)
+  :commands (anzu-query-replace-at-cursor)
+  :bind (([remap query-replace] . anzu-query-replace)
+         ([remap query-replace-regexp] . anzu-query-replace-regexp))
+  :config
+  (setq anzu-search-threshold 1000)
+  (setq anzu-replace-threshold 1000)
+  (setq anzu-minimum-input-length 1)
+  (if (locate-library "migemo")
+      (setq anzu-use-migemo t)))
+
+;;;; doom-themes
 (use-package doom-themes
   :config
   ;; Global settings (defaults)
@@ -212,7 +244,8 @@
         doom-themes-enable-bold t)
   (load-theme 'doom-dracula t)
   ;; Enable flashing mode-line on errors
-  (doom-themes-visual-bell-config))
+  (doom-themes-visual-bell-config)
+  (setq is-load-theme t))
 
 ;;;; doom-modelfine
 ;; Make dependent with doom-themes.
@@ -227,6 +260,13 @@
     (setq doom-modeline-icon (display-graphic-p))
     (setq doom-modeline-major-mode-icon nil)
     (setq doom-modeline-minor-modes nil)))
+
+;;;; smart-newline
+(use-package smart-newline
+  :ensure t :diminish t
+  :bind (;;("RET" . smart-newline-mode)
+         ("C-m" . smart-newline-mode))
+  :hook (emacs-lisp-mode . smart-newline-mode))
 
 ;;;; markdown-mode
 (use-package markdown-mode
@@ -270,33 +310,32 @@
 
 
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
-;; custom variables and faces settings
-;; ++++++++++++++++++++++++++++++++++++++++++++++++++
-
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages (quote (use-package markdown-mode mozc web-mode php-mode))))
-;; (custom-set-faces
-;;  ;; custom-set-faces was added by Custom.
-;;  ;; If you edit it by hand, you could mess it up, so be careful.
-;;  ;; Your init file should contain only one such instance.
-;;  ;; If there is more than one, they won't work right.
-;;  '(font-lock-function-name-face ((t (:foreground "brightgreen"))))
-;; '(hl-line ((t (:background "gray25"))))
-;; '(web-mode-html-tag-bracket-face ((t (:foreground "ghost white"))))
-;; '(web-mode-html-tag-face ((t (:foreground "pale green")))))
-;; (set-face-background 'default "gray13")
-;; (set-face-foreground 'default "ghost white")
-
-
-
-;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 ;; Finalization
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 
+;;;; Check if any themes is installed.
+(if is-load-theme
+    (message "Checking if theme is loaded...OK")
+  (progn
+    (message "Checking if theme is loaded...FAILD")
+    (message "Load my-default-faces...done")
+    (set-my-default-faces)))
+
+;; (let (is-themes)
+;;   ;; Check the existence of the themes
+;;   ;; If install theme, add below.
+;;   (when (locate-library "doom-themes")
+;;     (setq is-themes t))
+
+;;   ;;If any theme is installed, set my-default-faces.
+;;   (if is-themes
+;;       (message "Checking existence of themes...Theme is exist.")
+;;     (progn
+;;       (message "Checking existence of themes...Theme isn't exist.")
+;;       (set-my-default-faces)
+;;       (message "Load my-default-faces."))))
+
+;;;; Load time mesurement of init.el
 (let ((elapsed (float-time (time-subtract (current-time)
                                           emacs-start-time))))
   (message "Loading %s...done (%.3fs)" load-file-name elapsed))
@@ -307,7 +346,7 @@
                     (float-time
                      (time-subtract (current-time) emacs-start-time))))
                (message "Loading %s...done (%.3fs) [after-init]"
-                        ,load-file-name elapsed))) t)
+                        load-file-name elapsed))) t)
 
 
 
