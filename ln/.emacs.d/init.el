@@ -62,6 +62,10 @@
                (message "Quit")
                (throw 'end-flag t)))))))
 
+(defun swap-buffers-keep-focus ()
+  (interactive)
+  (swap-buffers t))
+
 
 
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -334,6 +338,12 @@
   :bind (;;("RET" . smart-newline-mode)
          ("C-m" . smart-newline-mode))
   :hook (emacs-lisp-mode . smart-newline-mode))
+
+;;;; swap-buffers
+(use-package swap-buffers
+  :ensure t
+  :bind ("<f2>" . swap-buffers-keep-focus)
+  )
 
 ;;;; markdown-mode
 (use-package markdown-mode
