@@ -178,15 +178,25 @@
 ;;;; org-mode
 (setq org-directory "~/Dropbox/document/org")
 (setq org-agenda-files '("~/Dropbox/document/org"))
+(setq org-default-notes-file (concat org-directory "/notes.org"))
 (setq org-startup-truncated nil)
-(setq org-default-notes-file "notes.org")
 (setq org-refile-targets ;; org-dir外のrefile設定(bufferで開いていれば指定可能)
       '((nil :maxlevel . 3)
           (mhatta/org-buffer-files :maxlevel . 1)
           (org-agenda-files :maxlevel . 3)))
 (setq org-capture-templates
-      '(("n" "Note" entry (file+headline "~/Dropbox/document/org/notes.org" "Notes")
-         "* %?\nEntered on %U\n%a")))
+      '(("a" "Memoｃ⌒っﾟωﾟ)っφ　ﾒﾓﾒﾓ..."
+         entry (file+headline "memo.org" "MEMOS")
+         "* %U\n  %?"
+         :empty-lines 1)
+        ("n" "Notes....φ(・ω・｀ )ｶｷｶｷ"
+         entry (file+headline org-default-notes-file "NOTES")
+         "* %?\n  Entered on %U\n  %a"
+         :empty-lines 1 :jump-to-captured 1)
+        ("m" "Minutes( ´・ω) (´・ω・) (・ω・｀) (ω・｀ )"
+         entry (file+datetree "minutes.org" "MINUTES")
+         "* %?\n  Entered on %T\n"
+         :empty-lines 1 :jump-to-captured 1)))
 (global-set-key (kbd "C-c c") 'org-capture)
 (global-set-key (kbd "C-M-^") '(lambda () (interactive) (show-org-buffer "notes.org")))
 
@@ -299,7 +309,9 @@
   :ensure t :diminish t
   :bind (;;("RET" . smart-newline-mode)
          ("C-m" . smart-newline-mode))
-  :hook (emacs-lisp-mode . smart-newline-mode))
+  :hook ((emacs-lisp-mode . smart-newline-mode)
+         (org-mode . smart-newline-mode))
+  )
 
 ;;;; markdown-mode
 (use-package markdown-mode
