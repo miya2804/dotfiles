@@ -309,7 +309,7 @@
 ;;;; elscreen
 (use-package elscreen
   :ensure t
-  :bind ("C-c b" . elscreen-next)
+  :bind ("C-c C-b" . elscreen-next)
   :config
   ;; Turn off peripheral functions of tab.
   (setq elscreen-display-tab nil
