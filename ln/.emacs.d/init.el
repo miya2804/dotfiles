@@ -312,7 +312,7 @@
 ;;;; elscreen
 (use-package elscreen
   :ensure t
-  :bind ("C-<tab>" . elscreen-next)
+  :bind ("C-c b" . elscreen-next)
   :config
   ;; Turn off peripheral functions of tab.
   (setq elscreen-display-tab nil
@@ -326,8 +326,8 @@
 ;;https://github.com/jrosdahl/iflipb
 (use-package iflipb
   :ensure t
-  :bind (("M-h" . iflipb-next-buffer)
-         ("M-H" . iflipb-previous-buffer))
+  :bind (("C-<tab>" . iflipb-next-buffer)
+         ("C-<iso-lefttab>" . iflipb-previous-buffer))
   :config
   (setq iflipb-ignore-buffers (list "^[*]")))
 
