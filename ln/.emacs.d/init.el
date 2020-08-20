@@ -188,12 +188,58 @@
 ;; (setq display-time-24hr-format t)
 ;; (display-time)
 
+;; -------------------------------------
+;; Built-in packages
+
 ;;;; linum
 (global-linum-mode t)
 (setq linum-format "%3d ")
 
 ;;;; hl-line
 (global-hl-line-mode t)
+
+;;;; org-mode
+(setq org-directory "~/Dropbox/document/org")
+(setq org-agenda-files '("~/Dropbox/document/org"))
+(setq org-default-notes-file (concat org-directory "/notes.org"))
+(setq org-startup-truncated nil)
+
+; org-dir外のrefile設定(bufferで開いていれば指定可能)
+; cf. https://www.emacswiki.org/emacs/OrgMode#toc21
+(defun mhatta/org-buffer-files ()
+  "Return list of opened Org mode buffer files"
+  (mapcar (function buffer-file-name)
+          (org-buffer-list 'files)))
+(setq org-refile-targets
+      '((nil :maxlevel . 3)
+          (mhatta/org-buffer-files :maxlevel . 1)
+          (org-agenda-files :maxlevel . 3)))
+(setq org-capture-templates
+      '(("a" "Memoｃ⌒っﾟωﾟ)っφ　ﾒﾓﾒﾓ..."
+         entry (file+headline "memo.org" "MEMOS")
+         "* %U\n  %?"
+         :empty-lines 1)
+        ("n" "Notes....φ(・ω・｀ )ｶｷｶｷ"
+         entry (file+headline org-default-notes-file "NOTES")
+         "* %?\n  Entered on %U\n  %a"
+         :empty-lines 1 :jump-to-captured 1)
+        ("m" "Minutes( ´・ω) (´・ω・) (・ω・｀) (ω・｀ )"
+         entry (file+datetree "minutes.org" "MINUTES")
+         "* %?\n  Entered on %T\n"
+         :empty-lines 1 :jump-to-captured 1)))
+
+(global-set-key (kbd "C-c c") 'org-capture)
+
+; notes.orgを確認できる関数定義,キーへのbind
+(defun show-org-buffer (file)
+  "Show an org-file FILE on the current buffer."
+  (interactive)
+  (if (get-buffer file)
+      (let ((buffer (get-buffer file)))
+        (switch-to-buffer buffer)
+        (message "%s" file))
+    (find-file (concat org-directory file))))
+(global-set-key (kbd "C-M-^") '(lambda () (interactive) (show-org-buffer "/notes.org")))
 
 ;; -------------------------------------
 ;; font
@@ -334,7 +380,9 @@
   :diminish smart-newline-mode
   :bind (;;("RET" . smart-newline-mode)
          ("C-m" . smart-newline-mode))
-  :hook (emacs-lisp-mode . smart-newline-mode))
+  :hook ((emacs-lisp-mode . smart-newline-mode)
+         (org-mode . smart-newline-mode))
+  )
 
 ;;;; swap-buffers
 (use-package swap-buffers
@@ -368,6 +416,15 @@
   :config
   (nyan-mode)
   (nyan-start-animation))
+
+;;;; org-bullets
+;; https://github.com/sabof/org-bullets
+(use-package org-bullets
+  :ensure t
+  :hook (org-mode . org-bullets-mode)
+  :config
+  ;;(setq org-bullets-bullet-list '("" "" "" "" "" "" "" "" "" ""))
+  )
 
 ;;;; web-mode
 (use-package web-mode
