@@ -63,10 +63,6 @@
                (message "Quit")
                (throw 'end-flag t)))))))
 
-(defun swap-buffers-keep-focus ()
-  (interactive)
-  (swap-buffers t))
-
 
 
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -343,8 +339,12 @@
 ;;;; swap-buffers
 (use-package swap-buffers
   :ensure t
-  :bind ("<f2>" . swap-buffers-keep-focus)
-  )
+  :bind (("<f2>" . swap-buffers-keep-focus)
+         ("S-<f2>" . swap-buffers))
+  :config
+  (defun swap-buffers-keep-focus ()
+    (interactive)
+    (swap-buffers t)))
 
 ;;;; markdown-mode
 (use-package markdown-mode
