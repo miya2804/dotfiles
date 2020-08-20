@@ -27,21 +27,6 @@
   (set-face-background 'default "gray13")
   (set-face-foreground 'default "ghost white"))
 
-(defun show-org-buffer (file)
-  "Show an org-file FILE on the current buffer."
-  (interactive)
-  (if (get-buffer file)
-      (let ((buffer (get-buffer file)))
-        (switch-to-buffer buffer)
-        (message "%s" file))
-    (find-file (concat "~/Dropbox/org/" file))))
-
-;; cf. https://www.emacswiki.org/emacs/OrgMode#toc21
-(defun mhatta/org-buffer-files ()
-  "Return list of opened Org mode buffer files"
-  (mapcar (function buffer-file-name)
-          (org-buffer-list 'files)))
-
 
 
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -180,7 +165,14 @@
 (setq org-agenda-files '("~/Dropbox/document/org"))
 (setq org-default-notes-file (concat org-directory "/notes.org"))
 (setq org-startup-truncated nil)
-(setq org-refile-targets ;; org-dir外のrefile設定(bufferで開いていれば指定可能)
+
+; org-dir外のrefile設定(bufferで開いていれば指定可能)
+; cf. https://www.emacswiki.org/emacs/OrgMode#toc21
+(defun mhatta/org-buffer-files ()
+  "Return list of opened Org mode buffer files"
+  (mapcar (function buffer-file-name)
+          (org-buffer-list 'files)))
+(setq org-refile-targets
       '((nil :maxlevel . 3)
           (mhatta/org-buffer-files :maxlevel . 1)
           (org-agenda-files :maxlevel . 3)))
@@ -197,8 +189,19 @@
          entry (file+datetree "minutes.org" "MINUTES")
          "* %?\n  Entered on %T\n"
          :empty-lines 1 :jump-to-captured 1)))
+
 (global-set-key (kbd "C-c c") 'org-capture)
-(global-set-key (kbd "C-M-^") '(lambda () (interactive) (show-org-buffer "notes.org")))
+
+; notes.orgを確認できる関数定義,キーへのbind
+(defun show-org-buffer (file)
+  "Show an org-file FILE on the current buffer."
+  (interactive)
+  (if (get-buffer file)
+      (let ((buffer (get-buffer file)))
+        (switch-to-buffer buffer)
+        (message "%s" file))
+    (find-file (concat org-directory file))))
+(global-set-key (kbd "C-M-^") '(lambda () (interactive) (show-org-buffer "/notes.org")))
 
 ;; -------------------------------------
 ;; font
