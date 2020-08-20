@@ -298,6 +298,15 @@
     (setq doom-modeline-major-mode-icon nil)
     (setq doom-modeline-minor-modes nil)))
 
+;;;; iflipb
+;;https://github.com/jrosdahl/iflipb
+(use-package iflipb
+  :ensure t
+  :bind (("M-h" . iflipb-next-buffer)
+         ("M-H" . iflipb-previous-buffer))
+  :config
+  (setq iflipb-ignore-buffers (list "^[*]")))
+
 ;;;; smart-newline
 (use-package smart-newline
   :ensure t :diminish t
