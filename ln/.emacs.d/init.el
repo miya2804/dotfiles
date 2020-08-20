@@ -36,6 +36,12 @@
         (message "%s" file))
     (find-file (concat "~/Dropbox/org/" file))))
 
+;; cf. https://www.emacswiki.org/emacs/OrgMode#toc21
+(defun mhatta/org-buffer-files ()
+  "Return list of opened Org mode buffer files"
+  (mapcar (function buffer-file-name)
+          (org-buffer-list 'files)))
+
 
 
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -170,10 +176,14 @@
 (global-hl-line-mode t)
 
 ;;;; org-mode
-(setq org-directory "~/Dropbox/document/org"
-      org-default-notes-file "notes.org"
-      org-refile-targets '((org-agenda-files :maxlevel . 3))
-      org-startup-truncated nil)
+(setq org-directory "~/Dropbox/document/org")
+(setq org-agenda-files '("~/Dropbox/document/org"))
+(setq org-startup-truncated nil)
+(setq org-default-notes-file "notes.org")
+(setq org-refile-targets ;; org-dir外のrefile設定(bufferで開いていれば指定可能)
+      '((nil :maxlevel . 3)
+          (mhatta/org-buffer-files :maxlevel . 1)
+          (org-agenda-files :maxlevel . 3)))
 (setq org-capture-templates
       '(("n" "Note" entry (file+headline "~/Dropbox/document/org/notes.org" "Notes")
          "* %?\nEntered on %U\n%a")))
