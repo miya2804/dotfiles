@@ -19,6 +19,7 @@
 
 (defun set-my-default-faces ()
   "Can be used to set a default faces if the themes isn't installed."
+  (interactive)
   (custom-set-faces
    '(font-lock-function-name-face ((t (:foreground "brightgreen"))))
    '(hl-line ((t (:background "gray25"))))
