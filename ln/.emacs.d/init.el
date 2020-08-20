@@ -275,6 +275,11 @@
   (if (locate-library "migemo")
       (setq anzu-use-migemo t)))
 
+;;;; dashborad
+(use-package dashboard
+  :ensure t
+  :hook (after-init . dashboard-setup-startup-hook))
+
 ;;;; doom-themes
 (use-package doom-themes
   :config
