@@ -162,7 +162,7 @@
 (if (display-graphic-p) (set-alpha 90))
 
 ;;;; window size settings
-(toggle-frame-maximized)
+(add-to-list 'initial-frame-alist '(fullscreen . maximized))
 ;; (defun set-frame-size-according-to-resolution ()
 ;;   (interactive)
 ;;   (if (display-graphic-p)
