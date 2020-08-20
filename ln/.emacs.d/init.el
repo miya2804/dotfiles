@@ -27,6 +27,15 @@
   (set-face-background 'default "gray13")
   (set-face-foreground 'default "ghost white"))
 
+(defun show-org-buffer (file)
+  "Show an org-file FILE on the current buffer."
+  (interactive)
+  (if (get-buffer file)
+      (let ((buffer (get-buffer file)))
+        (switch-to-buffer buffer)
+        (message "%s" file))
+    (find-file (concat "~/Dropbox/org/" file))))
+
 
 
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -150,12 +159,26 @@
 ;; (setq display-time-24hr-format t)
 ;; (display-time)
 
+;; -------------------------------------
+;; Built-in packages
+
 ;;;; linum
 (global-linum-mode t)
 (setq linum-format "%3d ")
 
 ;;;; hl-line
 (global-hl-line-mode t)
+
+;;;; org-mode
+(setq org-directory "~/Dropbox/document/org"
+      org-default-notes-file "notes.org"
+      org-refile-targets '((org-agenda-files :maxlevel . 3))
+      org-startup-truncated nil)
+(setq org-capture-templates
+      '(("n" "Note" entry (file+headline "~/Dropbox/document/org/notes.org" "Notes")
+         "* %?\nEntered on %U\n%a")))
+(global-set-key (kbd "C-c c") 'org-capture)
+(global-set-key (kbd "C-M-^") '(lambda () (interactive) (show-org-buffer "notes.org")))
 
 ;; -------------------------------------
 ;; font
