@@ -244,6 +244,7 @@
 ;; libraries
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 
+(use-package diminish :ensure t :demand t)
 (use-package use-package-ensure-system-package :ensure t :defer t)
 
 
@@ -260,7 +261,8 @@
 
 ;;;; anzu
 (use-package anzu
-  :ensure t :diminish t
+  :ensure t
+  :diminish anzu-mode
   :init
   (global-anzu-mode t)
   :commands (anzu-query-replace-at-cursor)
@@ -309,7 +311,8 @@
 
 ;;;; smart-newline
 (use-package smart-newline
-  :ensure t :diminish t
+  :ensure t
+  :diminish smart-newline-mode
   :bind (;;("RET" . smart-newline-mode)
          ("C-m" . smart-newline-mode))
   :hook (emacs-lisp-mode . smart-newline-mode))
