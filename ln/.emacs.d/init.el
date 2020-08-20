@@ -314,6 +314,15 @@
   (nyan-mode)
   (nyan-start-animation))
 
+;;;; org-bullets
+;; https://github.com/sabof/org-bullets
+(use-package org-bullets
+  :ensure t
+  :hook (org-mode . org-bullets-mode)
+  :config
+  ;;(setq org-bullets-bullet-list '("" "" "" "" "" "" "" "" "" ""))
+  )
+
 ;;;; web-mode
 (use-package web-mode
   :ensure t
