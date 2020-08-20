@@ -298,6 +298,19 @@
     (setq doom-modeline-major-mode-icon nil)
     (setq doom-modeline-minor-modes nil)))
 
+;;;; elscreen
+(use-package elscreen
+  :ensure t
+  :bind ("C-<tab>" . elscreen-next)
+  :config
+  ;; Turn off peripheral functions of tab.
+  (setq elscreen-display-tab nil
+        elscreen-tab-display-kill-screen nil
+        elscreen-tab-display-control nil)
+  ;; init
+  (elscreen-start)
+  (elscreen-create))
+
 ;;;; iflipb
 ;;https://github.com/jrosdahl/iflipb
 (use-package iflipb
