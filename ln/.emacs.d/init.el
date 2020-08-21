@@ -441,6 +441,14 @@
   ;;(setq org-bullets-bullet-list '("" "" "" "" "" "" "" "" "" ""))
   )
 
+;;;; volatile-highlights
+(use-package volatile-highlights
+  :ensure t
+  :diminish volatile-highlights-mode
+  :hook (after-init . volatile-highlights-mode)
+  :custom-face
+  (vhl/default-face ((nil (:foreground "#FF3333" :background "#FFCDCD")))))
+
 ;;;; web-mode
 (use-package web-mode
   :ensure t
