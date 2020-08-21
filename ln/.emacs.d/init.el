@@ -261,10 +261,6 @@
 (setq show-paren-style 'mixed)
 (setq show-paren-when-point-inside-paren t)
 (setq show-paren-when-point-in-periphery t)
-;; custom-face
-(with-eval-after-load 'doom-themes
-  (custom-set-faces
-   '(show-paren-match ((nil (:background "#44475a" :foreground "#f1fa8c"))))))
 
 ;; -------------------------------------
 ;; Fonts
@@ -450,7 +446,12 @@
         doom-themes-enable-bold t)
   (load-theme 'doom-dracula t)
   ;; Enable flashing mode-line on errors
-  (doom-themes-visual-bell-config))
+  (doom-themes-visual-bell-config)
+  ;; custom-face
+  ;; paren
+  (with-eval-after-load 'doom-dracula-theme
+    (custom-set-faces
+     '(show-paren-match ((nil (:background "#44475a" :foreground "#f1fa8c")))))))
 
 ;;;; ice-berg-theme
 (use-package iceberg-theme :disabled
