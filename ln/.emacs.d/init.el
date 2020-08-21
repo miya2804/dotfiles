@@ -345,7 +345,6 @@
 
 
 ;;;; doom-modeline
-;; https://github.com/seagle0128/doom-modeline
 ;; Make dependent with doom-themes.
 (with-eval-after-load 'doom-themes
   (use-package doom-modeline
