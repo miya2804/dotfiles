@@ -298,23 +298,6 @@
 ;; Packages
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 
-;; -------------------------------------
-;; themes
-
-;;;; doom-themes
-(use-package doom-themes
-  :config
-  ;; Global settings (defaults)
-  (setq doom-themes-enable-italic t
-        doom-themes-enable-bold t)
-  (load-theme 'doom-dracula t)
-  ;; Enable flashing mode-line on errors
-  (doom-themes-visual-bell-config)
-  (setq is-load-theme t))
-
-;; -------------------------------------
-;; others
-
 ;;;; all-the-icons
 ;; Make dependent with doom-themes.
 ;; Fonts install ->  "M-x all-the-icons-install-fonts"
@@ -466,6 +449,7 @@
 
 ;;;; doom-themes
 (use-package doom-themes
+  :disabled
   :config
   ;; Global settings (defaults)
   (setq doom-themes-enable-italic t
@@ -475,7 +459,12 @@
   (doom-themes-visual-bell-config)
   (setq is-load-theme t))
 
-
+;;;; ice-berg-theme
+(use-package iceberg-theme
+  :disabled
+  :config
+  (iceberg-theme-create-theme-file)
+  (load-theme 'solarized-iceberg-dark t))
 
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 ;; Finalization
