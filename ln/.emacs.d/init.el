@@ -441,14 +441,17 @@
 ;;;; doom-themes
 (use-package doom-themes
   :config
-  ;; Global settings (defaults)
   (setq doom-themes-enable-italic t
         doom-themes-enable-bold t)
   (load-theme 'doom-dracula t)
-  ;; Enable flashing mode-line on errors
   (doom-themes-visual-bell-config)
+  ;;(doom-themes-neotree-config)
+  (doom-themes-org-config)
+  ;; -------------------------------------
   ;; custom-face
-  ;; paren
+  ;;
+  ;; * doom-dracula-theme
+  ;; ** paren
   (with-eval-after-load 'doom-dracula-theme
     (custom-set-faces
      '(show-paren-match ((nil (:background "#44475a" :foreground "#f1fa8c")))))))
@@ -468,12 +471,13 @@
 ;;;; Check if any enabled themes.
 ;;;; If nothing enabled themes, load my-default-faces.
 (if custom-enabled-themes
-    (progn
+    (when init-file-debug
       (message "Loading themes...done")
       (message "Enabled themes: %s" custom-enabled-themes))
   (progn
-    (message "Loading themes...Nothing")
-    (message "Loading my-default-faces...done")
+    (when init-file-debug
+      (message "Loading themes...Nothing")
+      (message "Loading my-default-faces...done"))
     (set-my-default-faces)))
 
 ;;;; Load time mesurement of init.el
