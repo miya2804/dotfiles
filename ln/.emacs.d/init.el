@@ -150,9 +150,6 @@
     (tool-bar-mode 0)
   )
 
-;;;; illuminate corresponding brackets
-(show-paren-mode t)
-
 ;;;; show full path in title
 (setq frame-title-format "%f")
 
@@ -240,6 +237,19 @@
         (message "%s" file))
     (find-file (concat org-directory file))))
 (global-set-key (kbd "C-M-^") '(lambda () (interactive) (show-org-buffer "/notes.org")))
+
+;;;; paren
+;; illuminate corresponding brackets
+(add-hook 'after-init-hook 'show-paren-mode)
+(setq show-paren-style 'mixed)
+(setq show-paren-when-point-inside-paren t)
+(setq show-paren-when-point-in-periphery t)
+;; custom-face
+(with-eval-after-load 'doom-themes
+  (custom-set-faces
+   '(show-paren-match ((nil (:background "#44475a" :foreground "#f1fa8c"))))))
+
+
 
 ;; -------------------------------------
 ;; font
