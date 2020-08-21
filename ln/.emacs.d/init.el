@@ -344,19 +344,39 @@
   )
 
 
-;;;; doom-modelfine
+;;;; doom-modeline
 ;; Make dependent with doom-themes.
 (with-eval-after-load 'doom-themes
   (use-package doom-modeline
     :ensure t
+    :hook (after-init . doom-modeline-mode)
     :config
-    (doom-modeline-mode 1)
     (line-number-mode 0)
     (column-number-mode 1)
     (setq doom-modeline-buffer-file-name-style 'truncate-with-project)
+    (setq doom-modeline-minor-modes nil)
+    (setq doom-modeline-buffer-encoding t)
+    ;; display env version
+    (setq doom-modeline-env-version t)
+    (setq doom-modeline-env-load-string "...")
+    ;; icon
     (setq doom-modeline-icon (display-graphic-p))
-    (setq doom-modeline-major-mode-icon nil)
-    (setq doom-modeline-minor-modes nil)))
+    (setq doom-modeline-major-mode-icon t)
+    (setq doom-modeline-major-mode-color-icon t)
+    (setq doom-modeline-buffer-state-icon t)
+    (setq doom-modeline-buffer-midification-icon t)
+    (setq doom-modeline-persp-icon t)
+    (setq doom-modeline-modal-icon t)
+    (setq doom-modeline-unicode-fallback t)
+    ;; persp
+    ;;(setq doom-modeline-persp-name t)
+    ;;(setq doom-modeline-display-default-persp-name nil)
+    ;; lsp
+    ;;(setq doom-modeline-lsp t)
+    ;; github ;; requires ghub
+    ;;(setq doom-modeline-github nil)
+    ;;(setq doom-modeline-github-interval (* 30 60))
+    ))
 
 ;;;; elscreen
 (use-package elscreen
