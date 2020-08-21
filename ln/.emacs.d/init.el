@@ -14,9 +14,6 @@
   (interactive "nAlpha: ")
   (set-frame-parameter nil 'alpha (cons alpha-num '(90))))
 
-(defvar is-load-theme nil
-  "This var should be non-nil if an external theme is loaded.")
-
 (defun set-my-default-faces ()
   "Can be used to set a default faces if the themes isn't installed."
   (interactive)
@@ -94,21 +91,19 @@
     (setq use-package-verbose nil
           use-package-expand-minimally t))
 
-;;;; language
-;; (set-language-environment "Japanese")
-;; (set-local-environment nil)
-;; (prefer-coding-system 'utf-8)
-;; (set-keyboard-coding-system 'utf-8)
-;; (set-terminal-coding-system 'utf-8)
-;; (set-default 'buffer-file-cording-system 'utf-8)
+  ;;;; language
+  ;; (set-language-environment "Japanese")
+  ;; (set-local-environment nil)
+  ;; (prefer-coding-system 'utf-8)
+  ;; (set-keyboard-coding-system 'utf-8)
+  ;; (set-terminal-coding-system 'utf-8)
+  ;; (set-default 'buffer-file-cording-system 'utf-8)
 
-;;;; proxy
-;;(setq url-proxy-services '(("http" . "proxy.hoge.com:8080"))) ;; proxy
+  ;;;; proxy
+  ;;(setq url-proxy-services '(("http" . "proxy.hoge.com:8080"))) ;; proxy
 
-;;;; custom file
-(setq custom-file (locate-user-emacs-file "custom.el"))
-;;(load custom-file)
-)
+  ;;;; custom file
+  (setq custom-file (locate-user-emacs-file "custom.el")))
 
 
 
@@ -266,10 +261,6 @@
 (setq show-paren-style 'mixed)
 (setq show-paren-when-point-inside-paren t)
 (setq show-paren-when-point-in-periphery t)
-;; custom-face
-(with-eval-after-load 'doom-themes
-  (custom-set-faces
-   '(show-paren-match ((nil (:background "#44475a" :foreground "#f1fa8c"))))))
 
 ;; -------------------------------------
 ;; Fonts
@@ -297,23 +288,6 @@
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 ;; Packages
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
-
-;; -------------------------------------
-;; themes
-
-;;;; doom-themes
-(use-package doom-themes
-  :config
-  ;; Global settings (defaults)
-  (setq doom-themes-enable-italic t
-        doom-themes-enable-bold t)
-  (load-theme 'doom-dracula t)
-  ;; Enable flashing mode-line on errors
-  (doom-themes-visual-bell-config)
-  (setq is-load-theme t))
-
-;; -------------------------------------
-;; others
 
 ;;;; all-the-icons
 ;; Make dependent with doom-themes.
@@ -375,7 +349,7 @@
   :hook (prog-mode . rainbow-delimiters-mode))
 
 ;;;; iflipb
-;;https://github.com/jrosdahl/iflipb
+;; https://github.com/jrosdahl/iflipb
 (use-package iflipb
   :ensure t
   :bind (("C-<tab>" . iflipb-next-buffer)
@@ -467,13 +441,26 @@
 ;;;; doom-themes
 (use-package doom-themes
   :config
-  ;; Global settings (defaults)
   (setq doom-themes-enable-italic t
         doom-themes-enable-bold t)
   (load-theme 'doom-dracula t)
-  ;; Enable flashing mode-line on errors
   (doom-themes-visual-bell-config)
-  (setq is-load-theme t))
+  ;;(doom-themes-neotree-config)
+  (doom-themes-org-config)
+  ;; -------------------------------------
+  ;; custom-face
+  ;;
+  ;; * doom-dracula-theme
+  ;; ** paren
+  (with-eval-after-load 'doom-dracula-theme
+    (custom-set-faces
+     '(show-paren-match ((nil (:background "#44475a" :foreground "#f1fa8c")))))))
+
+;;;; ice-berg-theme
+(use-package iceberg-theme :disabled
+  :config
+  (iceberg-theme-create-theme-file)
+  (load-theme 'solarized-iceberg-dark t))
 
 
 
@@ -481,27 +468,17 @@
 ;; Finalization
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 
-;;;; Check if any themes is installed.
-(if is-load-theme
-    (message "Checking if theme is loaded...OK")
+;;;; Check if any enabled themes.
+;;;; If nothing enabled themes, load my-default-faces.
+(if custom-enabled-themes
+    (when init-file-debug
+      (message "Loading themes...done")
+      (message "Enabled themes: %s" custom-enabled-themes))
   (progn
-    (message "Checking if theme is loaded...FAILD")
-    (message "Load my-default-faces...done")
+    (when init-file-debug
+      (message "Loading themes...Nothing")
+      (message "Loading my-default-faces...done"))
     (set-my-default-faces)))
-
-;; (let (is-themes)
-;;   ;; Check the existence of the themes
-;;   ;; If install theme, add below.
-;;   (when (locate-library "doom-themes")
-;;     (setq is-themes t))
-
-;;   ;;If any theme is installed, set my-default-faces.
-;;   (if is-themes
-;;       (message "Checking existence of themes...Theme is exist.")
-;;     (progn
-;;       (message "Checking existence of themes...Theme isn't exist.")
-;;       (set-my-default-faces)
-;;       (message "Load my-default-faces."))))
 
 ;;;; Load time mesurement of init.el
 (let ((elapsed (float-time (time-subtract (current-time)
