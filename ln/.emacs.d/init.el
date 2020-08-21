@@ -314,7 +314,35 @@
 ;;;; dashborad
 (use-package dashboard
   :ensure t
-  :hook (after-init . dashboard-setup-startup-hook))
+  :hook (after-init . dashboard-setup-startup-hook)
+  :config
+  ;; set the title
+  (setq dashboard-banner-logo-title
+        (concat "Welcome to Emacs " emacs-version))
+  ;; set the bunner
+  ;; value can be
+  ;; 'official which displays the official emacs logo
+  ;; 'logo which displays an alternative emacs logo
+  ;; 1, 2 or 3 which displays one of the text banners
+  ;; "path/to/your/image.png" which displays whatever image you would prefer
+  (setq dashboard-startup-banner 'logo)
+  ;; centering
+  (setq dashboard-center-content t)
+  ;; use icons
+  (setq dashboard-set-heading-icons t)
+  (setq dashboard-set-file-icons t)
+  ;; init-info (default: init time)
+  (setq dashboard-set-init-info t)
+  ;;(setq dashboard-init-info "This is an init message!")
+  ;; footer
+  (setq dashboard-set-footer t)
+  ;;(setq dashboard-footer-messages '("Dashboard is pretty cool!"))
+  ;;(setq dashboard-footer-icon (all-the-icons-octicon "dashboard"
+  ;;                                                   :height 1.1
+  ;;                                                   :v-adjust -0.05
+  ;;                                                   :face 'font-lock-keyword-face))
+  )
+
 
 ;;;; doom-modelfine
 ;; Make dependent with doom-themes.
