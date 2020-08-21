@@ -117,7 +117,7 @@
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 
 ;; -------------------------------------
-;; etc
+;; Etc
 
 ;;;; visualization of space and tab
 ;;(global-whitespace-mode 1)
@@ -160,7 +160,7 @@
 (setq create-lockfiles nil)
 
 ;; -------------------------------------
-;; appearance
+;; Appearance
 
 ;;;; hide startup message
 (setq inhibit-startup-message t)
@@ -272,7 +272,7 @@
    '(show-paren-match ((nil (:background "#44475a" :foreground "#f1fa8c"))))))
 
 ;; -------------------------------------
-;; font
+;; Fonts
 
 (when (display-graphic-p)
   (when (x-list-fonts "SourceHanCodeJP")
@@ -286,7 +286,7 @@
 
 
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
-;; libraries
+;; Libraries
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 
 (use-package diminish :ensure t :demand t)
@@ -295,7 +295,7 @@
 
 
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
-;; packages
+;; Packages
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 
 ;; -------------------------------------
@@ -457,6 +457,23 @@
   (setq web-mode-engines-alist
         '(("php" . "\\.phtml\\'")
           ("blade" . "\\.blade\\'"))))
+
+
+
+;; ++++++++++++++++++++++++++++++++++++++++++++++++++
+;; Themes
+;; ++++++++++++++++++++++++++++++++++++++++++++++++++
+
+;;;; doom-themes
+(use-package doom-themes
+  :config
+  ;; Global settings (defaults)
+  (setq doom-themes-enable-italic t
+        doom-themes-enable-bold t)
+  (load-theme 'doom-dracula t)
+  ;; Enable flashing mode-line on errors
+  (doom-themes-visual-bell-config)
+  (setq is-load-theme t))
 
 
 
