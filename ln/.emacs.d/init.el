@@ -365,6 +365,11 @@
   (elscreen-start)
   (elscreen-create))
 
+;;;; rainbow-delimiters
+(use-package rainbow-delimiters
+  :ensure t
+  :hook (prog-mode . rainbow-delimiters-mode))
+
 ;;;; iflipb
 ;;https://github.com/jrosdahl/iflipb
 (use-package iflipb
