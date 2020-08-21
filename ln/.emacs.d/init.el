@@ -92,7 +92,7 @@
             use-package-compute-statistics t
             debug-on-error t)
     (setq use-package-verbose nil
-          use-package-expand-minimally t)))
+          use-package-expand-minimally t))
 
 ;;;; language
 ;; (set-language-environment "Japanese")
@@ -108,6 +108,7 @@
 ;;;; custom file
 (setq custom-file (locate-user-emacs-file "custom.el"))
 ;;(load custom-file)
+)
 
 
 
@@ -135,6 +136,29 @@
 
 (global-set-key (kbd "C-c r") 'window-resizer)
 
+;;;; backup (xxx~)
+;; execution on or off
+(setq make-backup-files t)
+;; change directory
+(setq backup-directory-alist '((".*" . "~/.emacs.d/.ehist/")))
+;; save multiple backupfiles
+(setq version-control     t) ;; exucution on or off
+(setq kept-new-versions   2) ;; latest number
+(setq kept-old-versions   1) ;; oldest number
+(setq delete-old-versions t) ;; delete out of range
+
+;;;; auto-save (#xxx#)
+(setq auto-save-timeout 10) ;; 10sec (def:30)
+(setq auto-save-interval 100) ;; 100char (def:300)
+(setq delete-auto-save-files t) ;; successful completion
+;;;; create auto-save file in ~/.emacs.d/.ehist
+(setq auto-save-file-name-transforms
+      '((".*" "~/.emacs.d/.ehist/" t)))
+
+;;;; lockfile (.#xxx)
+;; execution on of off
+(setq create-lockfiles nil)
+
 ;; -------------------------------------
 ;; appearance
 
@@ -149,8 +173,7 @@
 
 ;;;; hide tool bar
 (if (display-graphic-p)
-    (tool-bar-mode 0)
-  )
+    (tool-bar-mode 0))
 
 ;;;; show full path in title
 (setq frame-title-format "%f")
@@ -248,8 +271,6 @@
   (custom-set-faces
    '(show-paren-match ((nil (:background "#44475a" :foreground "#f1fa8c"))))))
 
-
-
 ;; -------------------------------------
 ;; font
 
@@ -261,38 +282,6 @@
     (set-fontset-font "fontset-SourceHanCodeJp" 'unicode "SourceHanCodeJp" nil 'append)
     ;;;; apply fontset to frame
     (add-to-list 'default-frame-alist '(font . "fontset-SourceHanCodeJp"))))
-
-;; -------------------------------------
-;; backup (xxx~)
-
-;;;; execution on or off
-(setq make-backup-files t)
-
-;;;; change directory
-(setq backup-directory-alist '((".*" . "~/.emacs.d/.ehist/")))
-
-;;;; save multiple backupfiles
-(setq version-control     t) ;; exucution on or off
-(setq kept-new-versions   2) ;; latest number
-(setq kept-old-versions   1) ;; oldest number
-(setq delete-old-versions t) ;; delete out of range
-
-;; -------------------------------------
-;; auto-save (#xxx#)
-
-(setq auto-save-timeout 10) ;; 10sec (def:30)
-(setq auto-save-interval 100) ;; 100char (def:300)
-(setq delete-auto-save-files t) ;; successful completion
-
-;;;; create auto-save file in ~/.emacs.d/.ehist
-(setq auto-save-file-name-transforms
-      '((".*" "~/.emacs.d/.ehist/" t)))
-
-;; -------------------------------------
-;; lockfile (.#xxx)
-
-;;;; execution on of off
-(setq create-lockfiles nil)
 
 
 
@@ -308,6 +297,23 @@
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 ;; packages
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
+
+;; -------------------------------------
+;; themes
+
+;;;; doom-themes
+(use-package doom-themes
+  :config
+  ;; Global settings (defaults)
+  (setq doom-themes-enable-italic t
+        doom-themes-enable-bold t)
+  (load-theme 'doom-dracula t)
+  ;; Enable flashing mode-line on errors
+  (doom-themes-visual-bell-config)
+  (setq is-load-theme t))
+
+;; -------------------------------------
+;; others
 
 ;;;; all-the-icons
 ;; Make dependent with doom-themes.
@@ -335,17 +341,6 @@
 (use-package dashboard
   :ensure t
   :hook (after-init . dashboard-setup-startup-hook))
-
-;;;; doom-themes
-(use-package doom-themes
-  :config
-  ;; Global settings (defaults)
-  (setq doom-themes-enable-italic t
-        doom-themes-enable-bold t)
-  (load-theme 'doom-dracula t)
-  ;; Enable flashing mode-line on errors
-  (doom-themes-visual-bell-config)
-  (setq is-load-theme t))
 
 ;;;; doom-modelfine
 ;; Make dependent with doom-themes.
@@ -395,8 +390,7 @@
   :bind (;;("RET" . smart-newline-mode)
          ("C-m" . smart-newline-mode))
   :hook ((emacs-lisp-mode . smart-newline-mode)
-         (org-mode . smart-newline-mode))
-  )
+         (org-mode . smart-newline-mode)))
 
 ;;;; swap-buffers
 (use-package swap-buffers
