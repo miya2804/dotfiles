@@ -394,7 +394,10 @@
 ;;;; nyan-mode
 (use-package nyan-mode
   :ensure t
-  :if (display-graphic-p)
+  :custom
+  (nyan-bar-length 15)
+  (nyan-cat-face-number 4)
+  (nyan-minimum-window-width 50)
   :config
   (nyan-mode)
   (nyan-start-animation))
