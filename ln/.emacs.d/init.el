@@ -14,11 +14,9 @@
   (interactive "nAlpha: ")
   (set-frame-parameter nil 'alpha (cons alpha-num '(90))))
 
-(defvar is-load-theme nil
-  "This var should be non-nil if an external theme is loaded.")
-
 (defun set-my-default-faces ()
   "Can be used to set a default faces if the themes isn't installed."
+  (interactive)
   (custom-set-faces
    '(font-lock-function-name-face ((t (:foreground "brightgreen"))))
    '(hl-line ((t (:background "gray25"))))
@@ -80,6 +78,8 @@
   (package-install 'use-package))
 
 (eval-and-compile
+  (setq load-path (cons "~/.emacs.d/elisp" load-path))
+
   (require 'use-package)
 
   ;;;; debug
@@ -89,22 +89,21 @@
             use-package-compute-statistics t
             debug-on-error t)
     (setq use-package-verbose nil
-          use-package-expand-minimally t)))
+          use-package-expand-minimally t))
 
-;;;; language
-;; (set-language-environment "Japanese")
-;; (set-local-environment nil)
-;; (prefer-coding-system 'utf-8)
-;; (set-keyboard-coding-system 'utf-8)
-;; (set-terminal-coding-system 'utf-8)
-;; (set-default 'buffer-file-cording-system 'utf-8)
+  ;;;; language
+  ;; (set-language-environment "Japanese")
+  ;; (set-local-environment nil)
+  ;; (prefer-coding-system 'utf-8)
+  ;; (set-keyboard-coding-system 'utf-8)
+  ;; (set-terminal-coding-system 'utf-8)
+  ;; (set-default 'buffer-file-cording-system 'utf-8)
 
-;;;; proxy
-;;(setq url-proxy-services '(("http" . "proxy.hoge.com:8080"))) ;; proxy
+  ;;;; proxy
+  ;;(setq url-proxy-services '(("http" . "proxy.hoge.com:8080"))) ;; proxy
 
-;;;; custom file
-(setq custom-file (locate-user-emacs-file "custom.el"))
-;;(load custom-file)
+  ;;;; custom file
+  (setq custom-file (locate-user-emacs-file "custom.el")))
 
 
 
@@ -113,7 +112,7 @@
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 
 ;; -------------------------------------
-;; etc
+;; Etc
 
 ;;;; visualization of space and tab
 ;;(global-whitespace-mode 1)
@@ -132,8 +131,31 @@
 
 (global-set-key (kbd "C-c r") 'window-resizer)
 
+;;;; backup (xxx~)
+;; execution on or off
+(setq make-backup-files t)
+;; change directory
+(setq backup-directory-alist '((".*" . "~/.emacs.d/.ehist/")))
+;; save multiple backupfiles
+(setq version-control     t) ;; exucution on or off
+(setq kept-new-versions   2) ;; latest number
+(setq kept-old-versions   1) ;; oldest number
+(setq delete-old-versions t) ;; delete out of range
+
+;;;; auto-save (#xxx#)
+(setq auto-save-timeout 10) ;; 10sec (def:30)
+(setq auto-save-interval 100) ;; 100char (def:300)
+(setq delete-auto-save-files t) ;; successful completion
+;;;; create auto-save file in ~/.emacs.d/.ehist
+(setq auto-save-file-name-transforms
+      '((".*" "~/.emacs.d/.ehist/" t)))
+
+;;;; lockfile (.#xxx)
+;; execution on of off
+(setq create-lockfiles nil)
+
 ;; -------------------------------------
-;; appearance
+;; Appearance
 
 ;;;; hide startup message
 (setq inhibit-startup-message t)
@@ -146,11 +168,7 @@
 
 ;;;; hide tool bar
 (if (display-graphic-p)
-    (tool-bar-mode 0)
-  )
-
-;;;; illuminate corresponding brackets
-(show-paren-mode t)
+    (tool-bar-mode 0))
 
 ;;;; show full path in title
 (setq frame-title-format "%f")
@@ -187,6 +205,9 @@
 ;; (setq display-time-24hr-format t)
 ;; (display-time)
 
+;; -------------------------------------
+;; Built-in packages
+
 ;;;; linum
 (global-linum-mode t)
 (setq linum-format "%3d ")
@@ -194,8 +215,55 @@
 ;;;; hl-line
 (global-hl-line-mode t)
 
+;;;; org-mode
+(setq org-directory "~/Dropbox/document/org")
+(setq org-agenda-files '("~/Dropbox/document/org"))
+(setq org-default-notes-file (concat org-directory "/notes.org"))
+(setq org-startup-truncated nil)
+;; org-dir外のrefile設定(bufferで開いていれば指定可能)
+;; cf. https://www.emacswiki.org/emacs/OrgMode#toc21
+(defun mhatta/org-buffer-files ()
+  "Return list of opened Org mode buffer files"
+  (mapcar (function buffer-file-name)
+          (org-buffer-list 'files)))
+(setq org-refile-targets
+      '((nil :maxlevel . 3)
+          (mhatta/org-buffer-files :maxlevel . 1)
+          (org-agenda-files :maxlevel . 3)))
+(setq org-capture-templates
+      '(("a" "Memoｃ⌒っﾟωﾟ)っφ　ﾒﾓﾒﾓ..."
+         entry (file+headline "memo.org" "MEMOS")
+         "* %U\n  %?"
+         :empty-lines 1)
+        ("n" "Notes....φ(・ω・｀ )ｶｷｶｷ"
+         entry (file+headline org-default-notes-file "NOTES")
+         "* %?\n  Entered on %U\n  %a"
+         :empty-lines 1 :jump-to-captured 1)
+        ("m" "Minutes( ´・ω) (´・ω・) (・ω・｀) (ω・｀ )"
+         entry (file+datetree "minutes.org" "MINUTES")
+         "* %?\n  Entered on %T\n"
+         :empty-lines 1 :jump-to-captured 1)))
+(global-set-key (kbd "C-c c") 'org-capture)
+;; notes.orgを確認できる関数定義,キーへのbind
+(defun show-org-buffer (file)
+  "Show an org-file FILE on the current buffer."
+  (interactive)
+  (if (get-buffer file)
+      (let ((buffer (get-buffer file)))
+        (switch-to-buffer buffer)
+        (message "%s" file))
+    (find-file (concat org-directory file))))
+(global-set-key (kbd "C-M-^") '(lambda () (interactive) (show-org-buffer "/notes.org")))
+
+;;;; paren
+;; illuminate corresponding brackets
+(add-hook 'after-init-hook 'show-paren-mode)
+(setq show-paren-style 'mixed)
+(setq show-paren-when-point-inside-paren t)
+(setq show-paren-when-point-in-periphery t)
+
 ;; -------------------------------------
-;; font
+;; Fonts
 
 (when (display-graphic-p)
   (when (x-list-fonts "SourceHanCodeJP")
@@ -206,42 +274,10 @@
     ;;;; apply fontset to frame
     (add-to-list 'default-frame-alist '(font . "fontset-SourceHanCodeJp"))))
 
-;; -------------------------------------
-;; backup (xxx~)
-
-;;;; execution on or off
-(setq make-backup-files t)
-
-;;;; change directory
-(setq backup-directory-alist '((".*" . "~/.emacs.d/.ehist/")))
-
-;;;; save multiple backupfiles
-(setq version-control     t) ;; exucution on or off
-(setq kept-new-versions   2) ;; latest number
-(setq kept-old-versions   1) ;; oldest number
-(setq delete-old-versions t) ;; delete out of range
-
-;; -------------------------------------
-;; auto-save (#xxx#)
-
-(setq auto-save-timeout 10) ;; 10sec (def:30)
-(setq auto-save-interval 100) ;; 100char (def:300)
-(setq delete-auto-save-files t) ;; successful completion
-
-;;;; create auto-save file in ~/.emacs.d/.ehist
-(setq auto-save-file-name-transforms
-      '((".*" "~/.emacs.d/.ehist/" t)))
-
-;; -------------------------------------
-;; lockfile (.#xxx)
-
-;;;; execution on of off
-(setq create-lockfiles nil)
-
 
 
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
-;; libraries
+;; Libraries
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 
 (use-package diminish :ensure t :demand t)
@@ -250,7 +286,7 @@
 
 
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
-;; packages
+;; Packages
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 
 ;;;; all-the-icons
@@ -280,17 +316,6 @@
   :ensure t
   :hook (after-init . dashboard-setup-startup-hook))
 
-;;;; doom-themes
-(use-package doom-themes
-  :config
-  ;; Global settings (defaults)
-  (setq doom-themes-enable-italic t
-        doom-themes-enable-bold t)
-  (load-theme 'doom-dracula t)
-  ;; Enable flashing mode-line on errors
-  (doom-themes-visual-bell-config)
-  (setq is-load-theme t))
-
 ;;;; doom-modelfine
 ;; Make dependent with doom-themes.
 (with-eval-after-load 'doom-themes
@@ -308,7 +333,7 @@
 ;;;; elscreen
 (use-package elscreen
   :ensure t
-  :bind ("C-<tab>" . elscreen-next)
+  :bind ("C-c C-b" . elscreen-next)
   :config
   ;; Turn off peripheral functions of tab.
   (setq elscreen-display-tab nil
@@ -318,12 +343,17 @@
   (elscreen-start)
   (elscreen-create))
 
+;;;; rainbow-delimiters
+(use-package rainbow-delimiters
+  :ensure t
+  :hook (prog-mode . rainbow-delimiters-mode))
+
 ;;;; iflipb
-;;https://github.com/jrosdahl/iflipb
+;; https://github.com/jrosdahl/iflipb
 (use-package iflipb
   :ensure t
-  :bind (("M-h" . iflipb-next-buffer)
-         ("M-H" . iflipb-previous-buffer))
+  :bind (("C-<tab>" . iflipb-next-buffer)
+         ("C-<iso-lefttab>" . iflipb-previous-buffer))
   :config
   (setq iflipb-ignore-buffers (list "^[*]")))
 
@@ -333,7 +363,18 @@
   :diminish smart-newline-mode
   :bind (;;("RET" . smart-newline-mode)
          ("C-m" . smart-newline-mode))
-  :hook (emacs-lisp-mode . smart-newline-mode))
+  :hook ((emacs-lisp-mode . smart-newline-mode)
+         (org-mode . smart-newline-mode)))
+
+;;;; swap-buffers
+(use-package swap-buffers
+  :ensure t
+  :bind (("<f2>" . swap-buffers-keep-focus)
+         ("S-<f2>" . swap-buffers))
+  :config
+  (defun swap-buffers-keep-focus ()
+    (interactive)
+    (swap-buffers t)))
 
 ;;;; markdown-mode
 (use-package markdown-mode
@@ -352,11 +393,28 @@
 
 ;;;; nyan-mode
 (use-package nyan-mode
-  :ensure t :demand t
+  :ensure t
   :if (display-graphic-p)
   :config
   (nyan-mode)
   (nyan-start-animation))
+
+;;;; org-bullets
+;; https://github.com/sabof/org-bullets
+(use-package org-bullets
+  :ensure t
+  :hook (org-mode . org-bullets-mode)
+  :config
+  ;;(setq org-bullets-bullet-list '("" "" "" "" "" "" "" "" "" ""))
+  )
+
+;;;; volatile-highlights
+(use-package volatile-highlights
+  :ensure t
+  :diminish volatile-highlights-mode
+  :hook (after-init . volatile-highlights-mode)
+  :custom-face
+  (vhl/default-face ((nil (:foreground "#FF3333" :background "#FFCDCD")))))
 
 ;;;; web-mode
 (use-package web-mode
@@ -377,30 +435,50 @@
 
 
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
+;; Themes
+;; ++++++++++++++++++++++++++++++++++++++++++++++++++
+
+;;;; doom-themes
+(use-package doom-themes
+  :config
+  (setq doom-themes-enable-italic t
+        doom-themes-enable-bold t)
+  (load-theme 'doom-dracula t)
+  (doom-themes-visual-bell-config)
+  ;;(doom-themes-neotree-config)
+  (doom-themes-org-config)
+  ;; -------------------------------------
+  ;; custom-face
+  ;;
+  ;; * doom-dracula-theme
+  ;; ** paren
+  (with-eval-after-load 'doom-dracula-theme
+    (custom-set-faces
+     '(show-paren-match ((nil (:background "#44475a" :foreground "#f1fa8c")))))))
+
+;;;; ice-berg-theme
+(use-package iceberg-theme :disabled
+  :config
+  (iceberg-theme-create-theme-file)
+  (load-theme 'solarized-iceberg-dark t))
+
+
+
+;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 ;; Finalization
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 
-;;;; Check if any themes is installed.
-(if is-load-theme
-    (message "Checking if theme is loaded...OK")
+;;;; Check if any enabled themes.
+;;;; If nothing enabled themes, load my-default-faces.
+(if custom-enabled-themes
+    (when init-file-debug
+      (message "Loading themes...done")
+      (message "Enabled themes: %s" custom-enabled-themes))
   (progn
-    (message "Checking if theme is loaded...FAILD")
-    (message "Load my-default-faces...done")
+    (when init-file-debug
+      (message "Loading themes...Nothing")
+      (message "Loading my-default-faces...done"))
     (set-my-default-faces)))
-
-;; (let (is-themes)
-;;   ;; Check the existence of the themes
-;;   ;; If install theme, add below.
-;;   (when (locate-library "doom-themes")
-;;     (setq is-themes t))
-
-;;   ;;If any theme is installed, set my-default-faces.
-;;   (if is-themes
-;;       (message "Checking existence of themes...Theme is exist.")
-;;     (progn
-;;       (message "Checking existence of themes...Theme isn't exist.")
-;;       (set-my-default-faces)
-;;       (message "Load my-default-faces."))))
 
 ;;;; Load time mesurement of init.el
 (let ((elapsed (float-time (time-subtract (current-time)
