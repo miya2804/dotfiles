@@ -94,21 +94,19 @@
     (setq use-package-verbose nil
           use-package-expand-minimally t))
 
-;;;; language
-;; (set-language-environment "Japanese")
-;; (set-local-environment nil)
-;; (prefer-coding-system 'utf-8)
-;; (set-keyboard-coding-system 'utf-8)
-;; (set-terminal-coding-system 'utf-8)
-;; (set-default 'buffer-file-cording-system 'utf-8)
+  ;;;; language
+  ;; (set-language-environment "Japanese")
+  ;; (set-local-environment nil)
+  ;; (prefer-coding-system 'utf-8)
+  ;; (set-keyboard-coding-system 'utf-8)
+  ;; (set-terminal-coding-system 'utf-8)
+  ;; (set-default 'buffer-file-cording-system 'utf-8)
 
-;;;; proxy
-;;(setq url-proxy-services '(("http" . "proxy.hoge.com:8080"))) ;; proxy
+  ;;;; proxy
+  ;;(setq url-proxy-services '(("http" . "proxy.hoge.com:8080"))) ;; proxy
 
-;;;; custom file
-(setq custom-file (locate-user-emacs-file "custom.el"))
-;;(load custom-file)
-)
+  ;;;; custom file
+  (setq custom-file (locate-user-emacs-file "custom.el")))
 
 
 
@@ -358,7 +356,7 @@
   :hook (prog-mode . rainbow-delimiters-mode))
 
 ;;;; iflipb
-;;https://github.com/jrosdahl/iflipb
+;; https://github.com/jrosdahl/iflipb
 (use-package iflipb
   :ensure t
   :bind (("C-<tab>" . iflipb-next-buffer)
@@ -465,6 +463,8 @@
   :config
   (iceberg-theme-create-theme-file)
   (load-theme 'solarized-iceberg-dark t))
+
+
 
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 ;; Finalization
