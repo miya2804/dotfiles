@@ -14,9 +14,6 @@
   (interactive "nAlpha: ")
   (set-frame-parameter nil 'alpha (cons alpha-num '(90))))
 
-(defvar is-load-theme nil
-  "This var should be non-nil if an external theme is loaded.")
-
 (defun set-my-default-faces ()
   "Can be used to set a default faces if the themes isn't installed."
   (interactive)
@@ -447,19 +444,16 @@
 
 ;;;; doom-themes
 (use-package doom-themes
-  :disabled
   :config
   ;; Global settings (defaults)
   (setq doom-themes-enable-italic t
         doom-themes-enable-bold t)
   (load-theme 'doom-dracula t)
   ;; Enable flashing mode-line on errors
-  (doom-themes-visual-bell-config)
-  (setq is-load-theme t))
+  (doom-themes-visual-bell-config))
 
 ;;;; ice-berg-theme
-(use-package iceberg-theme
-  :disabled
+(use-package iceberg-theme :disabled
   :config
   (iceberg-theme-create-theme-file)
   (load-theme 'solarized-iceberg-dark t))
@@ -470,27 +464,16 @@
 ;; Finalization
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 
-;;;; Check if any themes is installed.
-(if is-load-theme
-    (message "Checking if theme is loaded...OK")
+;;;; Check if any enabled themes.
+;;;; If nothing enabled themes, load my-default-faces.
+(if custom-enabled-themes
+    (progn
+      (message "Loading themes...done")
+      (message "Enabled themes: %s" custom-enabled-themes))
   (progn
-    (message "Checking if theme is loaded...FAILD")
-    (message "Load my-default-faces...done")
+    (message "Loading themes...Nothing")
+    (message "Loading my-default-faces...done")
     (set-my-default-faces)))
-
-;; (let (is-themes)
-;;   ;; Check the existence of the themes
-;;   ;; If install theme, add below.
-;;   (when (locate-library "doom-themes")
-;;     (setq is-themes t))
-
-;;   ;;If any theme is installed, set my-default-faces.
-;;   (if is-themes
-;;       (message "Checking existence of themes...Theme is exist.")
-;;     (progn
-;;       (message "Checking existence of themes...Theme isn't exist.")
-;;       (set-my-default-faces)
-;;       (message "Load my-default-faces."))))
 
 ;;;; Load time mesurement of init.el
 (let ((elapsed (float-time (time-subtract (current-time)
