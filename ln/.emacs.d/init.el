@@ -219,9 +219,8 @@
 (if (version<= "26.0.50" emacs-version)
     (progn
       (add-hook 'after-init-hook 'global-display-line-numbers-mode)
-      (with-eval-after-load global-display-line-numbers-mode
-        (setq-default indicate-empty-lines nil)
-        (setq-default indicate-buffer-boundaries 'left)))
+      (setq-default indicate-empty-lines nil)
+      (setq-default indicate-buffer-boundaries 'left))
   (progn
     ;;;; linum
     (add-hook 'after-init-hook 'global-linum-mode)
