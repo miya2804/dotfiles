@@ -423,10 +423,11 @@
 ;; https://github.com/jrosdahl/iflipb
 (use-package iflipb
   :ensure t
-  :bind (("C-<tab>" . iflipb-next-buffer)
-         ("C-<iso-lefttab>" . iflipb-previous-buffer))
+  :bind (("M-o" . iflipb-next-buffer)
+         ("M-O" . iflipb-previous-buffer))
   :config
-  (setq iflipb-ignore-buffers (list "^[*]")))
+  (setq iflipb-ignore-buffers (list "^[*]"))
+  (setq iflipb-wrap-around t))
 
 ;;;; smart-newline
 (use-package smart-newline
