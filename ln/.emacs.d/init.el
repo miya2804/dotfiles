@@ -466,13 +466,13 @@
 ;;;; nyan-mode
 (use-package nyan-mode
   :ensure t
-  :custom
-  (nyan-bar-length 15)
-  (nyan-cat-face-number 4)
-  (nyan-minimum-window-width 50)
+  :hook
+  (after-init . nyan-mode)
+  (nyan-mode . nyan-start-animation)
   :config
-  (nyan-mode)
-  (nyan-start-animation))
+  (setq nyan-bar-length 15)
+  (setq nyan-cat-face-number 4)
+  (setq nyan-minimum-window-width 50))
 
 ;;;; org-bullets
 ;; https://github.com/sabof/org-bullets
