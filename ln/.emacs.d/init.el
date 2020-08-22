@@ -119,10 +119,11 @@
 
 (setq-default tab-width 4 indent-tabs-mode nil)
 
-(setq mouse-wheel-scroll-amount '(1 ((shift) . 5))
+;;;; scroll
+(setq mouse-wheel-scroll-amount '(1 ((shift) . 5) ((control . 40)))
       mouse-wheel-progressive-speed nil)
-
-(setq scroll-step 1)
+(setq scroll-conservatively 1)
+(setq scroll-margin 5)
 
 ;;;; windmove setting
 (global-set-key (kbd "C-o") '(lambda () (interactive) (other-window -1)))
@@ -153,6 +154,12 @@
 ;;;; lockfile (.#xxx)
 ;; execution on of off
 (setq create-lockfiles nil)
+
+;;;; open bufferlist on current window
+(global-set-key (kbd "C-x C-b") 'buffer-menu)
+
+;;;; new frame
+(global-set-key (kbd "M-n") 'make-frame)
 
 ;; -------------------------------------
 ;; Appearance
@@ -208,14 +215,23 @@
 ;; -------------------------------------
 ;; Built-in packages
 
-;;;; linum
-(global-linum-mode t)
-(setq linum-format "%3d ")
+;;;; display line number
+(if (version<= "26.0.50" emacs-version)
+    (progn
+      (add-hook 'after-init-hook 'global-display-line-numbers-mode)
+      (with-eval-after-load global-display-line-numbers-mode
+        (setq-default indicate-empty-lines nil)
+        (setq-default indicate-buffer-boundaries 'left)))
+  (progn
+    ;;;; linum
+    (add-hook 'after-init-hook 'global-linum-mode)
+    (with-eval-after-load global-linum-mode (setq linum-format "%3d "))))
 
 ;;;; hl-line
-(global-hl-line-mode t)
+(add-hook 'after-init-hook 'global-hl-line-mode)
 
 ;;;; org-mode
+(global-set-key (kbd "C-c c") 'org-capture)
 (setq org-directory "~/Dropbox/document/org")
 (setq org-agenda-files '("~/Dropbox/document/org"))
 (setq org-default-notes-file (concat org-directory "/notes.org"))
@@ -230,6 +246,7 @@
       '((nil :maxlevel . 3)
           (mhatta/org-buffer-files :maxlevel . 1)
           (org-agenda-files :maxlevel . 3)))
+;; templates
 (setq org-capture-templates
       '(("a" "Memoｃ⌒っﾟωﾟ)っφ　ﾒﾓﾒﾓ..."
          entry (file+headline "memo.org" "MEMOS")
@@ -243,7 +260,6 @@
          entry (file+datetree "minutes.org" "MINUTES")
          "* %?\n  Entered on %T\n"
          :empty-lines 1 :jump-to-captured 1)))
-(global-set-key (kbd "C-c c") 'org-capture)
 ;; notes.orgを確認できる関数定義,キーへのbind
 (defun show-org-buffer (file)
   "Show an org-file FILE on the current buffer."
@@ -261,6 +277,11 @@
 (setq show-paren-style 'mixed)
 (setq show-paren-when-point-inside-paren t)
 (setq show-paren-when-point-in-periphery t)
+;; custom-face
+(with-eval-after-load 'doom-dracula-theme
+  (custom-set-faces
+   '(show-paren-match ((nil (:background "#44475a" :foreground "#f1fa8c"))))
+   ))
 
 ;; -------------------------------------
 ;; Fonts
@@ -281,7 +302,7 @@
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 
 (use-package diminish :ensure t :demand t)
-(use-package use-package-ensure-system-package :ensure t :defer t)
+(use-package use-package-ensure-system-package :ensure t :demand t)
 
 
 
@@ -299,26 +320,27 @@
 (use-package anzu
   :ensure t
   :diminish anzu-mode
-  :init
-  (global-anzu-mode t)
-  :commands (anzu-query-replace-at-cursor)
+  :hook (after-init . global-anzu-mode)
   :bind (([remap query-replace] . anzu-query-replace)
          ([remap query-replace-regexp] . anzu-query-replace-regexp))
   :config
   (setq anzu-search-threshold 1000)
   (setq anzu-replace-threshold 1000)
-  (setq anzu-minimum-input-length 1)
-  (if (locate-library "migemo")
-      (setq anzu-use-migemo t)))
+  (setq anzu-minimum-input-length 3)
+  (with-eval-after-load 'migemo
+    (setq anzu-use-migemo t)))
 
 ;;;; dashborad
 (use-package dashboard
   :ensure t
-  :hook (after-init . dashboard-setup-startup-hook)
   :config
+  (dashboard-setup-startup-hook)
   ;; set the title
-  (setq dashboard-banner-logo-title
-        (concat "Welcome to Emacs " emacs-version))
+  (when (eq system-type 'gnu/linux)
+    (setq dashboard-banner-logo-title
+          (concat "Welcome to Emacs " emacs-version
+                  " - "
+                  "Kernel " (shell-command-to-string "uname -smo"))))
   ;; set the bunner
   ;; value can be
   ;; 'official which displays the official emacs logo
@@ -342,7 +364,6 @@
   ;;                                                   :v-adjust -0.05
   ;;                                                   :face 'font-lock-keyword-face))
   )
-
 
 ;;;; doom-modeline
 ;; https://github.com/seagle0128/doom-modeline
@@ -401,10 +422,11 @@
 ;; https://github.com/jrosdahl/iflipb
 (use-package iflipb
   :ensure t
-  :bind (("C-<tab>" . iflipb-next-buffer)
-         ("C-<iso-lefttab>" . iflipb-previous-buffer))
+  :bind (("M-o" . iflipb-next-buffer)
+         ("M-O" . iflipb-previous-buffer))
   :config
-  (setq iflipb-ignore-buffers (list "^[*]")))
+  (setq iflipb-ignore-buffers (list "^[*]"))
+  (setq iflipb-wrap-around t))
 
 ;;;; smart-newline
 (use-package smart-newline
@@ -418,8 +440,8 @@
 ;;;; swap-buffers
 (use-package swap-buffers
   :ensure t
-  :bind (("<f2>" . swap-buffers-keep-focus)
-         ("S-<f2>" . swap-buffers))
+  :bind (("C-M-o" . swap-buffers-keep-focus)
+         ("C-M-O" . swap-buffers))
   :config
   (defun swap-buffers-keep-focus ()
     (interactive)
@@ -434,22 +456,21 @@
 ;;;; mozc
 ;; require external package -> "emacs-mozc-bin"
 (use-package mozc
-  :ensure t
+  :ensure t :defer t
   ;;:ensure-system-package emacs-mozc-bin
-  :bind ("M-\\" . toggle-input-method)
   :config
   (setq default-input-method "japanese-mozc"))
 
 ;;;; nyan-mode
 (use-package nyan-mode
   :ensure t
-  :custom
-  (nyan-bar-length 15)
-  (nyan-cat-face-number 4)
-  (nyan-minimum-window-width 50)
+  :hook
+  (after-init . nyan-mode)
+  (nyan-mode . nyan-start-animation)
   :config
-  (nyan-mode)
-  (nyan-start-animation))
+  (setq nyan-bar-length 15)
+  (setq nyan-cat-face-number 4)
+  (setq nyan-minimum-window-width 50))
 
 ;;;; org-bullets
 ;; https://github.com/sabof/org-bullets
@@ -465,8 +486,12 @@
   :ensure t
   :diminish volatile-highlights-mode
   :hook (after-init . volatile-highlights-mode)
-  :custom-face
-  (vhl/default-face ((nil (:foreground "#FF3333" :background "#FFCDCD")))))
+  :config
+  ;; custom-face
+  (with-eval-after-load 'doom-dracula-theme
+    (custom-set-faces
+     '(vhl/default-face ((nil (:foreground "#FF3333" :background "#FFCDCD"))))
+     )))
 
 ;;;; web-mode
 (use-package web-mode
@@ -498,15 +523,7 @@
   (load-theme 'doom-dracula t)
   (doom-themes-visual-bell-config)
   ;;(doom-themes-neotree-config)
-  (doom-themes-org-config)
-  ;; -------------------------------------
-  ;; custom-face
-  ;;
-  ;; * doom-dracula-theme
-  ;; ** paren
-  (with-eval-after-load 'doom-dracula-theme
-    (custom-set-faces
-     '(show-paren-match ((nil (:background "#44475a" :foreground "#f1fa8c")))))))
+  (doom-themes-org-config))
 
 ;;;; ice-berg-theme
 (use-package iceberg-theme :disabled
