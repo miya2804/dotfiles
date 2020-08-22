@@ -155,6 +155,12 @@
 ;; execution on of off
 (setq create-lockfiles nil)
 
+;;;; open bufferlist on current window
+(global-set-key (kbd "C-x C-b") 'buffer-menu)
+
+;;;; new frame
+(global-set-key (kbd "M-n") 'make-frame)
+
 ;; -------------------------------------
 ;; Appearance
 
