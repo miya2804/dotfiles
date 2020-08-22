@@ -333,11 +333,14 @@
 ;;;; dashborad
 (use-package dashboard
   :ensure t
-  :hook (after-init . dashboard-setup-startup-hook)
   :config
+  (dashboard-setup-startup-hook)
   ;; set the title
-  (setq dashboard-banner-logo-title
-        (concat "Welcome to Emacs " emacs-version))
+  (when (eq system-type 'gnu/linux)
+    (setq dashboard-banner-logo-title
+          (concat "Welcome to Emacs " emacs-version
+                  " - "
+                  "Kernel " (shell-command-to-string "uname -smo"))))
   ;; set the bunner
   ;; value can be
   ;; 'official which displays the official emacs logo
