@@ -320,17 +320,15 @@
 (use-package anzu
   :ensure t
   :diminish anzu-mode
-  :init
-  (global-anzu-mode t)
-  :commands (anzu-query-replace-at-cursor)
+  :hook (after-init . global-anzu-mode)
   :bind (([remap query-replace] . anzu-query-replace)
          ([remap query-replace-regexp] . anzu-query-replace-regexp))
   :config
   (setq anzu-search-threshold 1000)
   (setq anzu-replace-threshold 1000)
-  (setq anzu-minimum-input-length 1)
-  (if (locate-library "migemo")
-      (setq anzu-use-migemo t)))
+  (setq anzu-minimum-input-length 3)
+  (with-eval-after-load 'migemo
+    (setq anzu-use-migemo t)))
 
 ;;;; dashborad
 (use-package dashboard
