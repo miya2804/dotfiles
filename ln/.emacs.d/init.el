@@ -277,6 +277,11 @@
 (setq show-paren-style 'mixed)
 (setq show-paren-when-point-inside-paren t)
 (setq show-paren-when-point-in-periphery t)
+;; custom-face
+(with-eval-after-load 'doom-dracula-theme
+  (custom-set-faces
+   '(show-paren-match ((nil (:background "#44475a" :foreground "#f1fa8c"))))
+   ))
 
 ;; -------------------------------------
 ;; Fonts
@@ -481,8 +486,12 @@
   :ensure t
   :diminish volatile-highlights-mode
   :hook (after-init . volatile-highlights-mode)
-  :custom-face
-  (vhl/default-face ((nil (:foreground "#FF3333" :background "#FFCDCD")))))
+  :config
+  ;; custom-face
+  (with-eval-after-load 'doom-dracula-theme
+    (custom-set-faces
+     '(vhl/default-face ((nil (:foreground "#FF3333" :background "#FFCDCD"))))
+     )))
 
 ;;;; web-mode
 (use-package web-mode
@@ -514,15 +523,7 @@
   (load-theme 'doom-dracula t)
   (doom-themes-visual-bell-config)
   ;;(doom-themes-neotree-config)
-  (doom-themes-org-config)
-  ;; -------------------------------------
-  ;; custom-face
-  ;;
-  ;; * doom-dracula-theme
-  ;; ** paren
-  (with-eval-after-load 'doom-dracula-theme
-    (custom-set-faces
-     '(show-paren-match ((nil (:background "#44475a" :foreground "#f1fa8c")))))))
+  (doom-themes-org-config))
 
 ;;;; ice-berg-theme
 (use-package iceberg-theme :disabled
