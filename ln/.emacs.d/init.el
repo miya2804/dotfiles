@@ -119,10 +119,11 @@
 
 (setq-default tab-width 4 indent-tabs-mode nil)
 
-(setq mouse-wheel-scroll-amount '(1 ((shift) . 5))
+;;;; scroll
+(setq mouse-wheel-scroll-amount '(1 ((shift) . 5) ((control . 40)))
       mouse-wheel-progressive-speed nil)
-
-(setq scroll-step 1)
+(setq scroll-conservatively 1)
+(setq scroll-margin 5)
 
 ;;;; windmove setting
 (global-set-key (kbd "C-o") '(lambda () (interactive) (other-window -1)))
