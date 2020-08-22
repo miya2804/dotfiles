@@ -230,9 +230,10 @@
 (add-hook 'after-init-hook 'global-hl-line-mode)
 
 ;;;; org-mode
+(add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
 (global-set-key (kbd "C-c c") 'org-capture)
 (setq org-directory "~/Dropbox/document/org")
-(setq org-agenda-files '("~/Dropbox/document/org"))
+(setq org-agenda-files '("~/Dropbox/document/org/agenda/"))
 (setq org-default-notes-file (concat org-directory "/notes.org"))
 (setq org-startup-truncated nil)
 ;; org-dir外のrefile設定(bufferで開いていれば指定可能)
@@ -248,13 +249,13 @@
 ;; templates
 (setq org-capture-templates
       '(("a" "Memoｃ⌒っﾟωﾟ)っφ　ﾒﾓﾒﾓ..."
-         entry (file+headline "memo.org" "MEMOS")
+         entry (file+headline "memos.org" "MEMOS")
          "* %U\n  %?"
          :empty-lines 1)
         ("n" "Notes....φ(・ω・｀ )ｶｷｶｷ"
          entry (file+headline org-default-notes-file "NOTES")
          "* %?\n  Entered on %U\n  %a"
-         :empty-lines 1 :jump-to-captured 1)
+         :empty-lines 1)
         ("m" "Minutes( ´・ω) (´・ω・) (・ω・｀) (ω・｀ )"
          entry (file+datetree "minutes.org" "MINUTES")
          "* %?\n  Entered on %T\n"
