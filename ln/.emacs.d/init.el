@@ -441,8 +441,8 @@
 ;;;; swap-buffers
 (use-package swap-buffers
   :ensure t
-  :bind (("<f2>" . swap-buffers-keep-focus)
-         ("S-<f2>" . swap-buffers))
+  :bind (("C-M-o" . swap-buffers-keep-focus)
+         ("C-M-O" . swap-buffers))
   :config
   (defun swap-buffers-keep-focus ()
     (interactive)
