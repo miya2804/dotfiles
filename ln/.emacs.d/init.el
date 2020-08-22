@@ -251,7 +251,7 @@
       '(("a" "Memoｃ⌒っﾟωﾟ)っφ　ﾒﾓﾒﾓ..."
          entry (file+headline "memos.org" "MEMOS")
          "* %U\n  %?"
-         :empty-lines 1)
+         :empty-lines 1 :jump-to-captured 1)
         ("n" "Notes....φ(・ω・｀ )ｶｷｶｷ"
          entry (file+headline org-default-notes-file "NOTES")
          "* %?\n  Entered on %U\n  %a"
@@ -480,6 +480,22 @@
   :config
   ;;(setq org-bullets-bullet-list '("" "" "" "" "" "" "" "" "" ""))
   )
+
+;;;; org-journal
+(use-package org-journal
+  :ensure t
+  :bind ("C-c j" . org-journal-new-entry)
+  :config
+  (setq org-journal-dir "~/Dropbox/document/org/journal")
+  (setq org-journal-date-format "%Y-%m-%d %A")
+  ;;(setq org-journal-time-format "%R")
+  (setq org-journal-file-format "%Y%m%d.org")
+  (setq org-journal-find-file 'find-file)
+  (setq org-extend-today-until '3)
+  ;; 折返しが起こったときの挙動の修正
+  (add-hook 'visual-line-mode-hook
+            '(lambda()
+               (setq word-wrap nil))))
 
 ;;;; volatile-highlights
 (use-package volatile-highlights
