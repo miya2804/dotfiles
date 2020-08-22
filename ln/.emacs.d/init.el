@@ -302,7 +302,7 @@
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 
 (use-package diminish :ensure t :demand t)
-(use-package use-package-ensure-system-package :ensure t :defer t)
+(use-package use-package-ensure-system-package :ensure t :demand t)
 
 
 
@@ -364,7 +364,6 @@
   ;;                                                   :v-adjust -0.05
   ;;                                                   :face 'font-lock-keyword-face))
   )
-
 
 ;;;; doom-modeline
 ;; https://github.com/seagle0128/doom-modeline
@@ -457,9 +456,8 @@
 ;;;; mozc
 ;; require external package -> "emacs-mozc-bin"
 (use-package mozc
-  :ensure t
+  :ensure t :defer t
   ;;:ensure-system-package emacs-mozc-bin
-  :bind ("M-\\" . toggle-input-method)
   :config
   (setq default-input-method "japanese-mozc"))
 
