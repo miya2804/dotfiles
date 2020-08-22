@@ -215,14 +215,23 @@
 ;; -------------------------------------
 ;; Built-in packages
 
-;;;; linum
-(global-linum-mode t)
-(setq linum-format "%3d ")
+;;;; display line number
+(if (version<= "26.0.50" emacs-version)
+    (progn
+      (add-hook 'after-init-hook 'global-display-line-numbers-mode)
+      (with-eval-after-load global-display-line-numbers-mode
+        (setq-default indicate-empty-lines nil)
+        (setq-default indicate-buffer-boundaries 'left)))
+  (progn
+    ;;;; linum
+    (add-hook 'after-init-hook 'global-linum-mode)
+    (with-eval-after-load global-linum-mode (setq linum-format "%3d "))))
 
 ;;;; hl-line
-(global-hl-line-mode t)
+(add-hook 'after-init-hook 'global-hl-line-mode)
 
 ;;;; org-mode
+(global-set-key (kbd "C-c c") 'org-capture)
 (setq org-directory "~/Dropbox/document/org")
 (setq org-agenda-files '("~/Dropbox/document/org"))
 (setq org-default-notes-file (concat org-directory "/notes.org"))
@@ -237,6 +246,7 @@
       '((nil :maxlevel . 3)
           (mhatta/org-buffer-files :maxlevel . 1)
           (org-agenda-files :maxlevel . 3)))
+;; templates
 (setq org-capture-templates
       '(("a" "Memoｃ⌒っﾟωﾟ)っφ　ﾒﾓﾒﾓ..."
          entry (file+headline "memo.org" "MEMOS")
@@ -250,7 +260,6 @@
          entry (file+datetree "minutes.org" "MINUTES")
          "* %?\n  Entered on %T\n"
          :empty-lines 1 :jump-to-captured 1)))
-(global-set-key (kbd "C-c c") 'org-capture)
 ;; notes.orgを確認できる関数定義,キーへのbind
 (defun show-org-buffer (file)
   "Show an org-file FILE on the current buffer."
