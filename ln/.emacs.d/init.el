@@ -126,11 +126,13 @@
 (setq scroll-margin 5)
 
 ;;;; windmove setting
-(global-set-key (kbd "C-o") '(lambda () (interactive) (other-window -1)))
 ;;(windmove-default-keybindings) ;; use shift+arrow
 ;;(windmove-default-keybindings 'meta) ;; use alt+arrow
 
-(global-set-key (kbd "C-c r") 'window-resizer)
+;;;; my-keybind
+(global-set-key (kbd "C-o") 'other-window)
+(global-set-key (kbd "C-c C-r") 'window-resizer)
+(global-set-key (kbd "<zenkaku-hankaku>") 'toggle-input-method)
 
 ;;;; backup (xxx~)
 ;; execution on or off
@@ -403,7 +405,7 @@
 ;;;; elscreen
 (use-package elscreen
   :ensure t
-  :bind ("C-c C-b" . elscreen-next)
+  :bind ("<f1>" . elscreen-next)
   :config
   ;; Turn off peripheral functions of tab.
   (setq elscreen-display-tab nil
