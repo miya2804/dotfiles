@@ -60,6 +60,12 @@
                (message "Quit")
                (throw 'end-flag t)))))))
 
+(defun other-window-or-split ()
+  (interactive)
+  (when (one-window-p)
+    (split-window-horizontally))
+  (other-window 1))
+
 
 
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -130,7 +136,7 @@
 ;;(windmove-default-keybindings 'meta) ;; use alt+arrow
 
 ;;;; my-keybind
-(global-set-key (kbd "C-o") 'other-window)
+(global-set-key (kbd "C-o") 'other-window-or-split)
 (global-set-key (kbd "C-c C-r") 'window-resizer)
 (global-set-key (kbd "<zenkaku-hankaku>") 'toggle-input-method)
 
