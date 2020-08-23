@@ -1,4 +1,10 @@
 /elpa/
+/.ehist/
+/auto-save-list/
+/themes/
+custom.el
 tramp
 kkcrc
-!.gitignore
+recentf
+bookmarks
+!.gitkeep
