@@ -318,6 +318,13 @@
 ;; Packages
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 
+;;;; ace-isearch
+(use-package ace-isearch
+  :ensure t
+  :requires (ace-jump-mode helm-swoop)
+  :config
+  (global-ace-isearch-mode 1))
+
 ;;;; all-the-icons
 ;; Make dependent with doom-themes.
 ;; Fonts install ->  "M-x all-the-icons-install-fonts"
