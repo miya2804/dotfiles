@@ -539,6 +539,8 @@
 ;; Themes
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 
+(message "Loading themes...")
+
 ;;;; doom-themes
 (use-package doom-themes
   :config
@@ -555,23 +557,20 @@
   (iceberg-theme-create-theme-file)
   (load-theme 'solarized-iceberg-dark t))
 
-
-
-;; ++++++++++++++++++++++++++++++++++++++++++++++++++
-;; Finalization
-;; ++++++++++++++++++++++++++++++++++++++++++++++++++
-
 ;;;; Check if any enabled themes.
 ;;;; If nothing enabled themes, load my-default-faces.
 (if custom-enabled-themes
     (when init-file-debug
-      (message "Loading themes...done")
       (message "Enabled themes: %s" custom-enabled-themes))
   (progn
     (when init-file-debug
-      (message "Loading themes...Nothing")
+      (message "Enabled themes is noghing!")
       (message "Loading my-default-faces...done"))
     (set-my-default-faces)))
+
+;; ++++++++++++++++++++++++++++++++++++++++++++++++++
+;; Finalization
+;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 
 ;;;; Load time mesurement of init.el
 (let ((elapsed (float-time (time-subtract (current-time)
