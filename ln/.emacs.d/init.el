@@ -389,6 +389,10 @@
   ;; init-info (default: init time)
   (setq dashboard-set-init-info t)
   ;;(setq dashboard-init-info "This is an init message!")
+  ;; dashboard items
+  (setq dashboard-items '((recents  . 10)
+                        (bookmarks . 5)
+                        (agenda . 5)))
   ;; footer
   (setq dashboard-set-footer t)
   ;;(setq dashboard-footer-messages '("Dashboard is pretty cool!"))
