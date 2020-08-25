@@ -137,7 +137,7 @@
 
 ;;;; my-keybind
 (global-set-key (kbd "C-o") 'other-window-or-split)
-(global-set-key (kbd "C-c C-r") 'window-resizer)
+(global-set-key (kbd "C-c r") 'window-resizer)
 (global-set-key (kbd "<zenkaku-hankaku>") 'toggle-input-method)
 
 ;;;; backup (xxx~)
@@ -167,7 +167,7 @@
 (global-set-key (kbd "C-x C-b") 'buffer-menu)
 
 ;;;; new frame
-(global-set-key (kbd "M-n") 'make-frame)
+(global-set-key (kbd "C-c n") 'make-frame)
 
 ;; -------------------------------------
 ;; Appearance
@@ -427,7 +427,7 @@
 ;;;; elscreen
 (use-package elscreen
   :ensure t
-  :bind ("<f1>" . elscreen-next)
+  :bind ("C-c e" . elscreen-next)
   :config
   ;; Turn off peripheral functions of tab.
   (setq elscreen-display-tab nil
@@ -441,6 +441,41 @@
 (use-package rainbow-delimiters
   :ensure t
   :hook (prog-mode . rainbow-delimiters-mode))
+
+;;;; helm
+(use-package helm
+  :ensure t
+  :bind (("C-x C-f" . helm-find-files)
+         ("C-c h" . helm-command-prefix)
+         ("C-x b" . helm-for-files)
+         ("M-x" . helm-M-x)
+         ("M-y" . helm-show-kill-ring))
+  :config
+  (require 'helm-config)
+  (with-eval-after-load 'migemo
+    (helm-migemo-mode 1))
+  ;; helm-map keybinds
+  (bind-keys :map helm-map
+             ("<tab>" . helm-execute-persistent-action)
+             ("C-c C-k" . helm-kill-selection-and-quit)
+             ("C-i" . helm-execute-persistent-action)
+             ("C-z" . helm-select-action))
+  ;; fuzzy matting
+  (setq helm-M-x-fuzzy-match t
+        helm-buffers-fuzzy-matching t
+        helm-recentf-fuzzy-match t
+        helm-apropos-fuzzy-match t
+        helm-lisp-fuzzy-completion t)
+  ;; helm-for-files
+  (setq helm-for-files-preferred-list
+        '(helm-source-buffers-list
+          helm-source-recentf
+          helm-source-bookmarks
+          helm-source-file-cache
+          helm-source-files-in-current-dir
+          helm-source-bookmark-set
+          ;;helm-source-locate
+          )))
 
 ;;;; iflipb
 ;; https://github.com/jrosdahl/iflipb
@@ -476,6 +511,21 @@
   :ensure t
   :mode ("\\.md\\'"
          "\\.markdown\\'"))
+
+;;;; migemo
+;; require external package -> "cmigemo"
+(when (executable-find "cmigemo")
+  (use-package migemo
+    :ensure t
+    :config
+    (setq migemo-command "cmigemo")
+    (setq migemo-dictionary "/usr/share/cmigemo/utf-8/migemo-dict")
+    (setq migemo-options '("-q" "--emacs"))
+    (setq migemo-coding-system 'utf-8-unix)
+    (setq migemo-user-dictionary nil)
+    (setq migemo-regex-dictionary nil)
+    (load-library "migemo")
+    (migemo-init)))
 
 ;;;; mozc
 ;; require external package -> "emacs-mozc-bin"
@@ -521,6 +571,14 @@
             '(lambda()
                (setq word-wrap nil))))
 
+;;;; recentf-ext
+(use-package recentf-ext
+  :ensure t
+  :config
+  (setq resentf-max-saved-items 500)
+  (setq recentf-exclude
+        '("/TAGS$" "/var/tmp/")))
+
 ;;;; volatile-highlights
 (use-package volatile-highlights
   :ensure t
@@ -555,6 +613,8 @@
 ;; Themes
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 
+(message "Loading themes...")
+
 ;;;; doom-themes
 (use-package doom-themes
   :config
@@ -571,23 +631,20 @@
   (iceberg-theme-create-theme-file)
   (load-theme 'solarized-iceberg-dark t))
 
-
-
-;; ++++++++++++++++++++++++++++++++++++++++++++++++++
-;; Finalization
-;; ++++++++++++++++++++++++++++++++++++++++++++++++++
-
 ;;;; Check if any enabled themes.
 ;;;; If nothing enabled themes, load my-default-faces.
 (if custom-enabled-themes
     (when init-file-debug
-      (message "Loading themes...done")
       (message "Enabled themes: %s" custom-enabled-themes))
   (progn
     (when init-file-debug
-      (message "Loading themes...Nothing")
+      (message "Enabled themes is noghing!")
       (message "Loading my-default-faces...done"))
     (set-my-default-faces)))
+
+;; ++++++++++++++++++++++++++++++++++++++++++++++++++
+;; Finalization
+;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 
 ;;;; Load time mesurement of init.el
 (let ((elapsed (float-time (time-subtract (current-time)
