@@ -505,6 +505,14 @@
             '(lambda()
                (setq word-wrap nil))))
 
+;;;; recentf-ext
+(use-package recentf-ext
+  :ensure t
+  :config
+  (setq resentf-max-saved-items 500)
+  (setq recentf-exclude
+        '("/TAGS$" "/var/tmp/")))
+
 ;;;; volatile-highlights
 (use-package volatile-highlights
   :ensure t
