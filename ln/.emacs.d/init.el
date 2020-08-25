@@ -426,6 +426,41 @@
   :ensure t
   :hook (prog-mode . rainbow-delimiters-mode))
 
+;;;; helm
+(use-package helm
+  :ensure t
+  :bind (("C-x C-f" . helm-find-files)
+         ("C-c h" . helm-command-prefix)
+         ("C-x b" . helm-for-files)
+         ("M-x" . helm-M-x)
+         ("M-y" . helm-show-kill-ring))
+  :config
+  (require 'helm-config)
+  (with-eval-after-load 'migemo
+    (helm-migemo-mode 1))
+  ;; helm-map keybinds
+  (bind-keys :map helm-map
+             ("<tab>" . helm-execute-persistent-action)
+             ("C-c C-k" . helm-kill-selection-and-quit)
+             ("C-i" . helm-execute-persistent-action)
+             ("C-z" . helm-select-action))
+  ;; fuzzy matting
+  (setq helm-M-x-fuzzy-match t
+        helm-buffers-fuzzy-matching t
+        helm-recentf-fuzzy-match t
+        helm-apropos-fuzzy-match t
+        helm-lisp-fuzzy-completion t)
+  ;; helm-for-files
+  (setq helm-for-files-preferred-list
+        '(helm-source-buffers-list
+          helm-source-recentf
+          helm-source-bookmarks
+          helm-source-file-cache
+          helm-source-files-in-current-dir
+          helm-source-bookmark-set
+          ;;helm-source-locate
+          )))
+
 ;;;; iflipb
 ;; https://github.com/jrosdahl/iflipb
 (use-package iflipb
@@ -519,6 +554,14 @@
   (add-hook 'visual-line-mode-hook
             '(lambda()
                (setq word-wrap nil))))
+
+;;;; recentf-ext
+(use-package recentf-ext
+  :ensure t
+  :config
+  (setq resentf-max-saved-items 500)
+  (setq recentf-exclude
+        '("/TAGS$" "/var/tmp/")))
 
 ;;;; volatile-highlights
 (use-package volatile-highlights
