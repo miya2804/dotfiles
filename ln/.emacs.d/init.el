@@ -429,16 +429,17 @@
 ;;;; helm
 (use-package helm
   :ensure t
-  :bind (("<tab>" . helm-execute-persistent-action)
-         ("C-x b" . helm-for-files)
+  :bind (("C-x C-f" . helm-find-files)
          ("C-c h" . helm-command-prefix)
-         ("C-x C-f" . helm-find-files)
-         ("C-i" . helm-execute-persistent-action)
-         ("C-z" . helm-select-action)
+         ("C-x b" . helm-for-files)
          ("M-x" . helm-M-x)
          ("M-y" . helm-show-kill-ring))
   :config
   (require 'helm-config)
+  (bind-keys :map helm-map
+             ("<tab>" . helm-execute-persistent-action)
+             ("C-i" . helm-execute-persistent-action)
+             ("C-z" . helm-select-action))
   (with-eval-after-load 'migemo
     (helm-migemo-mode 1))
   ;; fuzzy matting
