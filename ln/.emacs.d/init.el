@@ -137,7 +137,7 @@
 
 ;;;; my-keybind
 (global-set-key (kbd "C-o") 'other-window-or-split)
-(global-set-key (kbd "C-c C-r") 'window-resizer)
+(global-set-key (kbd "C-c r") 'window-resizer)
 (global-set-key (kbd "<zenkaku-hankaku>") 'toggle-input-method)
 
 ;;;; backup (xxx~)
@@ -167,7 +167,7 @@
 (global-set-key (kbd "C-x C-b") 'buffer-menu)
 
 ;;;; new frame
-(global-set-key (kbd "M-n") 'make-frame)
+(global-set-key (kbd "C-c n") 'make-frame)
 
 ;; -------------------------------------
 ;; Appearance
@@ -411,7 +411,7 @@
 ;;;; elscreen
 (use-package elscreen
   :ensure t
-  :bind ("<f1>" . elscreen-next)
+  :bind ("C-c e" . elscreen-next)
   :config
   ;; Turn off peripheral functions of tab.
   (setq elscreen-display-tab nil
