@@ -461,6 +461,21 @@
   :mode ("\\.md\\'"
          "\\.markdown\\'"))
 
+;;;; migemo
+;; require external package -> "cmigemo"
+(when (executable-find "cmigemo")
+  (use-package migemo
+    :ensure t
+    :config
+    (setq migemo-command "cmigemo")
+    (setq migemo-dictionary "/usr/share/cmigemo/utf-8/migemo-dict")
+    (setq migemo-options '("-q" "--emacs"))
+    (setq migemo-coding-system 'utf-8-unix)
+    (setq migemo-user-dictionary nil)
+    (setq migemo-regex-dictionary nil)
+    (load-library "migemo")
+    (migemo-init)))
+
 ;;;; mozc
 ;; require external package -> "emacs-mozc-bin"
 (use-package mozc
