@@ -426,6 +426,38 @@
   :ensure t
   :hook (prog-mode . rainbow-delimiters-mode))
 
+;;;; helm
+(use-package helm
+  :ensure t
+  :bind (("<tab>" . helm-execute-persistent-action)
+         ("C-x b" . helm-for-files)
+         ("C-c h" . helm-command-prefix)
+         ("C-x C-f" . helm-find-files)
+         ("C-i" . helm-execute-persistent-action)
+         ("C-z" . helm-select-action)
+         ("M-x" . helm-M-x)
+         ("M-y" . helm-show-kill-ring))
+  :config
+  (require 'helm-config)
+  (with-eval-after-load 'migemo
+    (helm-migemo-mode 1))
+  ;; fuzzy matting
+  (setq helm-M-x-fuzzy-match t
+        helm-buffers-fuzzy-matching t
+        helm-recentf-fuzzy-match t
+        helm-apropos-fuzzy-match t
+        helm-lisp-fuzzy-completion t)
+  ;; helm-for-files
+  (setq helm-for-files-preferred-list
+        '(helm-source-buffers-list
+          helm-source-recentf
+          helm-source-bookmarks
+          helm-source-file-cache
+          helm-source-files-in-current-dir
+          helm-source-bookmark-set
+          ;;helm-source-locate
+          )))
+
 ;;;; iflipb
 ;; https://github.com/jrosdahl/iflipb
 (use-package iflipb
