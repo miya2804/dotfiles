@@ -352,6 +352,16 @@
   (with-eval-after-load 'migemo
     (setq anzu-use-migemo t)))
 
+;;;; beacon
+(use-package beacon
+  :ensure t
+  :hook (after-init . beacon-mode)
+  :config
+  (with-eval-after-load 'doom-dracula-theme
+    (setq beacon-color "yellow"
+          beacon-size 20
+          beacon-blink-duration 0.2)))
+
 ;;;; dashborad
 (use-package dashboard
   :ensure t
