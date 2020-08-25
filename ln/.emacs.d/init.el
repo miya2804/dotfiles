@@ -318,6 +318,20 @@
 ;; Packages
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 
+;;;; ace-isearch
+(use-package ace-isearch
+  :ensure t
+  :hook (after-init . global-ace-isearch-mode))
+
+;;;; ace-jump-mode
+(use-package ace-jump-mode
+  :ensure t :defer t
+  :config
+  (setq ace-jump-mode-move-keys
+        (append "asdfghjkl;:]qwertyuiop@zxcvbnm,." nil))
+  ;; ace-jump-word-modeのとき文字を尋ねないようにする
+  (setq ace-jump-word-mode-use-query-char nil))
+
 ;;;; all-the-icons
 ;; Make dependent with doom-themes.
 ;; Fonts install ->  "M-x all-the-icons-install-fonts"
@@ -460,6 +474,14 @@
           helm-source-bookmark-set
           ;;helm-source-locate
           )))
+
+;;;; helm-swoop
+(use-package helm-swoop
+  :ensure t
+  :requires helm
+  :commands (helm-swoop helm-multi-swoop)
+  :config
+  (setq helm-swoop-move-to-line-cycle nil))
 
 ;;;; iflipb
 ;; https://github.com/jrosdahl/iflipb
