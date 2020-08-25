@@ -319,15 +319,13 @@
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 
 ;;;; ace-isearch
-(use-package ace-isearch :disabled
+(use-package ace-isearch
   :ensure t
-  :requires (ace-jump-mode helm-swoop)
-  :config
-  (global-ace-isearch-mode 1))
+  :hook (after-init . global-ace-isearch-mode))
 
 ;;;; ace-jump-mode
 (use-package ace-jump-mode
-  :ensure t
+  :ensure t :defer t
   :config
   (setq ace-jump-mode-move-keys
         (append "asdfghjkl;:]qwertyuiop@zxcvbnm,." nil))
@@ -476,6 +474,14 @@
           helm-source-bookmark-set
           ;;helm-source-locate
           )))
+
+;;;; helm-swoop
+(use-package helm-swoop
+  :ensure t
+  :requires helm
+  :commands (helm-swoop helm-multi-swoop)
+  :config
+  (setq helm-swoop-move-to-line-cycle nil))
 
 ;;;; iflipb
 ;; https://github.com/jrosdahl/iflipb
