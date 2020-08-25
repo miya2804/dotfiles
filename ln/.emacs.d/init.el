@@ -321,7 +321,8 @@
 ;;;; ace-isearch
 (use-package ace-isearch
   :ensure t
-  :hook (after-init . global-ace-isearch-mode))
+  :hook (after-init . global-ace-isearch-mode)
+  :config (ace-isearch-jump-delay 1))
 
 ;;;; ace-jump-mode
 (use-package ace-jump-mode
