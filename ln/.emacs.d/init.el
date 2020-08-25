@@ -436,12 +436,14 @@
          ("M-y" . helm-show-kill-ring))
   :config
   (require 'helm-config)
-  (bind-keys :map helm-map
-             ("<tab>" . helm-execute-persistent-action)
-             ("C-i" . helm-execute-persistent-action)
-             ("C-z" . helm-select-action))
   (with-eval-after-load 'migemo
     (helm-migemo-mode 1))
+  ;; helm-map keybinds
+  (bind-keys :map helm-map
+             ("<tab>" . helm-execute-persistent-action)
+             ("C-c C-k" . helm-kill-selection-and-quit)
+             ("C-i" . helm-execute-persistent-action)
+             ("C-z" . helm-select-action))
   ;; fuzzy matting
   (setq helm-M-x-fuzzy-match t
         helm-buffers-fuzzy-matching t
