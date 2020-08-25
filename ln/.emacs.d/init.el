@@ -164,7 +164,7 @@
 (setq create-lockfiles nil)
 
 ;;;; open bufferlist on current window
-(global-set-key (kbd "C-x C-b") 'buffer-menu)
+;;(global-set-key (kbd "C-x C-b") 'buffer-menu)
 
 ;;;; new frame
 (global-set-key (kbd "C-c n") 'make-frame)
@@ -445,7 +445,7 @@
   :ensure t
   :bind (("C-x C-f" . helm-find-files)
          ("C-c h" . helm-command-prefix)
-         ("C-x b" . helm-for-files)
+         ("C-x C-b" . helm-for-files)
          ("M-x" . helm-M-x)
          ("M-y" . helm-show-kill-ring))
   :config
