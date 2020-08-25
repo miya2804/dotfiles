@@ -450,11 +450,6 @@
   (elscreen-start)
   (elscreen-create))
 
-;;;; rainbow-delimiters
-(use-package rainbow-delimiters
-  :ensure t
-  :hook (prog-mode . rainbow-delimiters-mode))
-
 ;;;; helm
 (use-package helm
   :ensure t
@@ -507,25 +502,6 @@
   :config
   (setq iflipb-ignore-buffers (list "^[*]"))
   (setq iflipb-wrap-around t))
-
-;;;; smart-newline
-(use-package smart-newline
-  :ensure t
-  :diminish smart-newline-mode
-  :bind (;;("RET" . smart-newline-mode)
-         ("C-m" . smart-newline-mode))
-  :hook ((emacs-lisp-mode . smart-newline-mode)
-         (org-mode . smart-newline-mode)))
-
-;;;; swap-buffers
-(use-package swap-buffers
-  :ensure t
-  :bind (("C-M-o" . swap-buffers-keep-focus)
-         ("C-M-O" . swap-buffers))
-  :config
-  (defun swap-buffers-keep-focus ()
-    (interactive)
-    (swap-buffers t)))
 
 ;;;; markdown-mode
 (use-package markdown-mode
@@ -592,6 +568,11 @@
             '(lambda()
                (setq word-wrap nil))))
 
+;;;; rainbow-delimiters
+(use-package rainbow-delimiters
+  :ensure t
+  :hook (prog-mode . rainbow-delimiters-mode))
+
 ;;;; recentf-ext
 (use-package recentf-ext
   :ensure t
@@ -599,6 +580,25 @@
   (setq resentf-max-saved-items 500)
   (setq recentf-exclude
         '("/TAGS$" "/var/tmp/")))
+
+;;;; smart-newline
+(use-package smart-newline
+  :ensure t
+  :diminish smart-newline-mode
+  :bind (;;("RET" . smart-newline-mode)
+         ("C-m" . smart-newline-mode))
+  :hook ((emacs-lisp-mode . smart-newline-mode)
+         (org-mode . smart-newline-mode)))
+
+;;;; swap-buffers
+(use-package swap-buffers
+  :ensure t
+  :bind (("C-M-o" . swap-buffers-keep-focus)
+         ("C-M-O" . swap-buffers))
+  :config
+  (defun swap-buffers-keep-focus ()
+    (interactive)
+    (swap-buffers t)))
 
 ;;;; volatile-highlights
 (use-package volatile-highlights
