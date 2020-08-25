@@ -319,11 +319,20 @@
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 
 ;;;; ace-isearch
-(use-package ace-isearch
+(use-package ace-isearch :disabled
   :ensure t
   :requires (ace-jump-mode helm-swoop)
   :config
   (global-ace-isearch-mode 1))
+
+;;;; ace-jump-mode
+(use-package ace-jump-mode
+  :ensure t
+  :config
+  (setq ace-jump-mode-move-keys
+        (append "asdfghjkl;:]qwertyuiop@zxcvbnm,." nil))
+  ;; ace-jump-word-modeのとき文字を尋ねないようにする
+  (setq ace-jump-word-mode-use-query-char nil))
 
 ;;;; all-the-icons
 ;; Make dependent with doom-themes.
