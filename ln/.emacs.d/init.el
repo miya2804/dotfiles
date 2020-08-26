@@ -532,6 +532,15 @@
   :config
   (setq default-input-method "japanese-mozc"))
 
+;;;; neotree
+(use-package neotree
+  :ensure t
+  :bind ("C-q" . neotree-toggle)
+  :config
+  (setq neo-theme
+        (if (display-graphic-p) 'nerd2 'arrow))
+  (setq neo-show-hidden-files t))
+
 ;;;; nyan-mode
 (use-package nyan-mode
   :ensure t
@@ -643,7 +652,7 @@
         doom-themes-enable-bold t)
   (load-theme 'doom-dracula t)
   (doom-themes-visual-bell-config)
-  ;;(doom-themes-neotree-config)
+  (doom-themes-neotree-config)
   (doom-themes-org-config))
 
 ;;;; ice-berg-theme
