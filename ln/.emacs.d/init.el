@@ -510,6 +510,16 @@
   :config
   (setq helm-swoop-move-to-line-cycle nil))
 
+;;;; highlight-indent-guides
+(use-package highlight-indent-guides
+  :ensure t
+  :diminish highlight-indent-guides-mode
+  :hook (prog-mode . highlight-indent-guides-mode)
+  :config
+  (setq highlight-indent-guides-auto-enabled t)
+  (setq highlight-indent-guides-responsive t)
+  (setq highlight-indent-guides-method 'bitmap))
+
 ;;;; hydra
 (use-package hydra
   :ensure t :defer t
