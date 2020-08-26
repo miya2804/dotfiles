@@ -321,6 +321,7 @@
 ;;;; ace-isearch
 (use-package ace-isearch
   :ensure t
+  :diminish ace-isearch-mode
   :hook (after-init . global-ace-isearch-mode)
   :config (setq ace-isearch-jump-delay 0.7))
 
@@ -356,6 +357,7 @@
 ;;;; beacon
 (use-package beacon
   :ensure t
+  :diminish beacon-mode
   :hook (after-init . beacon-mode)
   :config
   (with-eval-after-load 'doom-dracula-theme
@@ -453,6 +455,7 @@
 ;;;; helm
 (use-package helm
   :ensure t
+  :diminish helm-migemo-mode
   :bind (("C-x C-f" . helm-find-files)
          ("C-c h" . helm-command-prefix)
          ("C-x C-b" . helm-for-files)
@@ -640,7 +643,7 @@
 ;;;; which-key
 (use-package which-key
   :ensure t
-  :diminish whichi-key-mode
+  :diminish which-key-mode
   :hook (after-init . which-key-mode))
 
 
