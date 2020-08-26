@@ -452,6 +452,20 @@
   (elscreen-start)
   (elscreen-create))
 
+;;;; git-gutter
+(use-package git-gutter
+  :ensure t
+  :diminish git-gutter-mode
+  :hook (after-init . global-git-gutter-mode)
+  :custom-face
+  (git-gutter:modified ((t (:background "#f1fa8c"))))
+  (git-gutter:added    ((t (:background "#50fa7b"))))
+  (git-gutter:deleted  ((t (:background "#ff79c6"))))
+  :config
+  (setq git-gutter:modified-sign "~")
+  (setq git-gutter:added-sign    "+")
+  (setq git-gutter:deleted-sign  "-"))
+
 ;;;; helm
 (use-package helm
   :ensure t
