@@ -510,6 +510,20 @@
   :config
   (setq helm-swoop-move-to-line-cycle nil))
 
+;;;; hydra
+(use-package hydra
+  :ensure t :defer t
+  :config
+  (with-eval-after-load 'git-gutter
+    (global-set-key (kbd "C-c g") 'hydra-git-gutter/body)
+    (defhydra hydra-git-gutter nil
+      "git hunk"
+      ("p" git-gutter:previous-hunk "previous")
+      ("n" git-gutter:next-hunk "next")
+      ("s" git-gutter:stage-hunk "stage")
+      ("r" git-gutter:revert-hunk "revert")
+      ("SPC" git-gutter:popup-hunk "diffinfo"))))
+
 ;;;; iflipb
 ;; https://github.com/jrosdahl/iflipb
 (use-package iflipb
