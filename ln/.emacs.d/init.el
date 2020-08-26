@@ -637,6 +637,12 @@
         '(("php" . "\\.phtml\\'")
           ("blade" . "\\.blade\\'"))))
 
+;;;; which-key
+(use-package which-key
+  :ensure t
+  :diminish whichi-key-mode
+  :hook (after-init . which-key-mode))
+
 
 
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
