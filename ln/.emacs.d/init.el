@@ -630,6 +630,13 @@
   (setq recentf-exclude
         '("/TAGS$" "/var/tmp/")))
 
+;;;; redo+
+(require 'redo+)
+(global-set-key (kbd "C-M-/") 'redo)
+;; (use-package redo+
+;;   :ensure t
+;;   :bind ("C-M-/" . redo))
+
 ;;;; smart-newline
 (use-package smart-newline
   :ensure t
