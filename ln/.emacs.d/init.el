@@ -707,6 +707,11 @@
   (iceberg-theme-create-theme-file)
   (load-theme 'solarized-iceberg-dark t))
 
+;;;; zenburn-theme
+(use-package zenburn-theme :disabled
+  :config
+  (load-theme 'zenburn t))
+
 ;;;; Check if any enabled themes.
 ;;;; If nothing enabled themes, load my-default-faces.
 (if custom-enabled-themes
