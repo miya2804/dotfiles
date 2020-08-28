@@ -212,19 +212,16 @@
 ;; (setq display-time-24hr-format t)
 ;; (display-time)
 
-;; -------------------------------------
-;; Built-in packages
+;;;; indicater
+(setq-default indicate-empty-lines nil)
+(setq-default indicate-buffer-boundaries 'left)
 
 ;;;; display line number
 (if (version<= "26.0.50" emacs-version)
-    (progn
-      (add-hook 'after-init-hook 'global-display-line-numbers-mode)
-      (setq-default indicate-empty-lines nil)
-      (setq-default indicate-buffer-boundaries 'left))
+    (global-display-line-numbers-mode)
   (progn
-    ;;;; linum
-    (add-hook 'after-init-hook 'global-linum-mode)
-    (with-eval-after-load global-linum-mode (setq linum-format "%3d "))))
+    (global-linum-mode)
+    (setq linum-format "%3d ")))
 
 ;;;; hl-line
 (add-hook 'after-init-hook 'global-hl-line-mode)
