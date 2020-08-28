@@ -125,6 +125,14 @@
 ;;;; visualization of space and tab
 ;;(global-whitespace-mode 1)
 
+;;;; 行末の空白表示
+(setq-default show-trailing-whitespace nil)
+(defun turn-on-show-trailing-whitespace  () (interactive) (setq show-trailing-whitespace t))
+(defun turn-off-show-trailing-whitespace () (interactive) (setq show-trailing-whitespace nil))
+(defun toggle-show-trailing-whitespace () (interactive) (callf null show-trailing-whitespace))
+(add-hook 'prog-mode-hook 'turn-on-show-trailing-whitespace)
+(add-hook 'org-mode-hook 'turn-on-show-trailing-whitespace)
+
 (setq-default tab-width 4 indent-tabs-mode nil)
 
 ;;;; scroll
