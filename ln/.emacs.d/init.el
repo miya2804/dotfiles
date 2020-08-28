@@ -2,7 +2,7 @@
 (message (format "[Startup time: %s]" (format-time-string "%Y/%m/%d %H:%M:%S")))
 
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
-;; Functions and Variables
+;; Functions and Variables and Macros
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 
 (defun set-alpha (alpha-num)
