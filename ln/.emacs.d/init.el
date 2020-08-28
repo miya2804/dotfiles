@@ -74,44 +74,69 @@
 ;; Environment
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 
-;;;; install use-package
-(require 'package)
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-;;(add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
-;;(add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
-;;(add-to-list 'package-archives '("maralade" . "https://marmalade-repo.org/packages/") t)
-(package-initialize)
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
-
 (eval-and-compile
+
+  ;;;; Package Manager
+  ;; package.el
+  (when (require 'package nil t)
+    (set-variable
+     'package-archives
+     '(("melpa" . "https://melpa.org/packages/")
+       ;;("melpa-stable" . "https://stable.melpa.org/packages/")
+       ;;("org" . "https://orgmode.org/elpa/")
+       ;;("maralade" . "https://marmalade-repo.org/packages/")
+       ))
+    (package-initialize)
+    (set-variable 'package-enable-at-startup nil))
+
+  ;;;; load-path
   (setq load-path (cons "~/.emacs.d/elisp" load-path))
 
-  (require 'use-package)
+  ;;;; proxy
+  ;; ~/.emacs.d/elisp/myproxy.elにプロキシ設定を書き込む
+  ;; ignore error.
+  (load "myproxy" t)
 
   ;;;; debug
   (if init-file-debug
-      (setq use-package-verbose t
-            use-package-expand-minimally nil
-            use-package-compute-statistics t
-            debug-on-error t)
-    (setq use-package-verbose nil
-          use-package-expand-minimally t))
+      (progn
+        (setq debug-on-error t)
+        (set-variable 'use-package-verbose t)
+	    (set-variable 'use-package-expand-minimally nil)
+	    (set-variable 'use-package-compute-statistics t))
+    (progn
+      (set-variable 'use-package-verbose nil)
+      (set-variable 'use-package-expand-minimally t))))
 
-  ;;;; language
-  ;; (set-language-environment "Japanese")
-  ;; (set-local-environment nil)
-  ;; (prefer-coding-system 'utf-8)
-  ;; (set-keyboard-coding-system 'utf-8)
-  ;; (set-terminal-coding-system 'utf-8)
-  ;; (set-default 'buffer-file-cording-system 'utf-8)
+;;;; use-package
+;; - https://github.com/jwiegley/use-package
+;;   非標準パッケージは use-package で管理する。（標準ライブラリは use-package では管理しない）
+;; - 起動時の use-package の抑止
+;;   init.el を外部に持ちだした時など、use-package を抑止したいときはEmacs を、オプション "--qq" で起動する。
+;; - use-package が未インストールか、抑止されている場合は空マクロにする。
+;; インストールされていなければインストールを実行
+;;(unless (package-installed-p 'use-package)
+;;  (package-refresh-contents)
+;;  (package-install 'use-package))
+(eval-and-compile
+  (when (or (member "--qq" command-line-args)
+            (null (require 'use-package nil t)))
+    (warn "`use-package' is unavailable!  Please install it via `M-x list-packages' if possible.")
+    (defmacro use-package (&rest _args))))
+;; 後の startup.el におけるオプション認識エラーを防止
+(add-to-list 'command-switch-alist '("--qq" . (lambda (switch) nil)))
+(use-package use-package :ensure t :defer t :no-require t) ;; 形式的宣言
 
-  ;;;; proxy
-  ;;(setq url-proxy-services '(("http" . "proxy.hoge.com:8080"))) ;; proxy
-
-  ;;;; custom file
-  (setq custom-file (locate-user-emacs-file "custom.el")))
+;;;; bind-key
+;; bind-key* は、emulation-mode-map-alists を利用することにより、
+;; minor-mode よりも優先させたいキーのキーマップを定義できる。
+;; bind-key.el がない場合は普通のbind-key として振る舞う。
+(use-package bind-key :defer t :ensure t :no-require t)
+(eval-and-compile
+  (unless (require 'bind-key nil t)
+    (defun bind-key (key cmd &optional keymap)
+      (define-key (or keymap global-map) (kbd key) cmd))
+    (defun bind-key* (key cmd) (global-set-key (kbd key) cmd))))
 
 
 
@@ -147,9 +172,10 @@
 ;;(windmove-default-keybindings 'meta) ;; use alt+arrow
 
 ;;;; my-keybind
-(global-set-key (kbd "C-o") 'other-window-or-split)
-(global-set-key (kbd "C-c r") 'window-resizer)
-(global-set-key (kbd "<zenkaku-hankaku>") 'toggle-input-method)
+(bind-key "C-o" 'other-window-or-split)
+(bind-key "C-c r" 'window-resizer)
+(bind-key "<zenkaku-hankaku>" 'toggle-input-method)
+(bind-key "C-c n" 'make-frame)
 
 ;;;; backup (xxx~)
 ;; execution on or off
@@ -175,10 +201,20 @@
 (setq create-lockfiles nil)
 
 ;;;; open bufferlist on current window
-;;(global-set-key (kbd "C-x C-b") 'buffer-menu)
+;; helm-for-filesが後に置き換え
+;; 置き換えられない場合コチラがセット
+(bind-key "C-x C-b" 'buffer-menu)
 
-;;;; new frame
-(global-set-key (kbd "C-c n") 'make-frame)
+;;;; language
+(set-language-environment "Japanese")
+(prefer-coding-system 'utf-8)
+(set-keyboard-coding-system 'utf-8)
+(set-file-name-coding-system 'utf-8)
+(set-terminal-coding-system 'utf-8)
+(set-default 'buffer-file-cording-system 'utf-8)
+
+;;;; saving customization
+(setq custom-file (locate-user-emacs-file "elisp/custom.el"))
 
 ;; -------------------------------------
 ;; Appearance
@@ -229,7 +265,6 @@
 
 ;;;; org-mode
 (add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
-(global-set-key (kbd "C-c c") 'org-capture)
 (setq org-directory "~/Dropbox/document/org")
 (setq org-agenda-files '("~/Dropbox/document/org/agenda/"))
 (setq org-default-notes-file (concat org-directory "/notes.org"))
@@ -267,7 +302,9 @@
         (switch-to-buffer buffer)
         (message "%s" file))
     (find-file (concat org-directory file))))
-(global-set-key (kbd "C-M-^") '(lambda () (interactive) (show-org-buffer "/notes.org")))
+;; org-mode bind-key
+(bind-key "C-c c" 'org-capture)
+(bind-key "C-M-^" '(lambda () (interactive) (show-org-buffer "/notes.org")))
 
 ;;;; paren
 ;; illuminate corresponding brackets
@@ -428,9 +465,15 @@
 
 ;;;; elscreen
 (use-package elscreen
-  :ensure t
-  :bind ("C-c e" . elscreen-next)
+  :ensure t :defer nil :no-require t
   :config
+  ;; 衝突回避(org-modeと衝突) ;; bind-key*で解決済
+  ;; (define-minor-mode overriding-minor-mode
+  ;;   "強制的にC-tを割り当てる"             ;説明文字列
+  ;;   t                                ;デフォルトで有効にする
+  ;;   ""                               ;モードラインに表示しない
+  ;;   `((,(kbd "C-<tab>") . elscreen-next)))
+  (bind-key* "C-<tab>" 'elscreen-next)
   ;; Turn off peripheral functions of tab.
   (setq elscreen-display-tab nil
         elscreen-tab-display-kill-screen nil
@@ -513,14 +556,14 @@
   :ensure t :defer t
   :config
   (with-eval-after-load 'git-gutter
-    (global-set-key (kbd "C-c g") 'hydra-git-gutter/body)
     (defhydra hydra-git-gutter nil
       "git hunk"
       ("p" git-gutter:previous-hunk "previous")
       ("n" git-gutter:next-hunk "next")
       ("s" git-gutter:stage-hunk "stage")
       ("r" git-gutter:revert-hunk "revert")
-      ("SPC" git-gutter:popup-hunk "diffinfo"))))
+      ("SPC" git-gutter:popup-hunk "diffinfo"))
+    (bind-key "C-c g" 'hydra-git-gutter/body)))
 
 ;;;; iflipb
 ;; https://github.com/jrosdahl/iflipb
@@ -622,10 +665,7 @@
 
 ;;;; redo+
 (require 'redo+)
-(global-set-key (kbd "C-M-/") 'redo)
-;; (use-package redo+
-;;   :ensure t
-;;   :bind ("C-M-/" . redo))
+(bind-key "C-M-/" 'redo)
 
 ;;;; smart-newline
 (use-package smart-newline
