@@ -325,8 +325,7 @@
 ;;;; all-the-icons
 ;; Make dependent with doom-themes.
 ;; Fonts install ->  "M-x all-the-icons-install-fonts"
-(with-eval-after-load 'doom-modeline
-  (use-package all-the-icons :ensure t :defer t))
+(use-package all-the-icons :ensure t :defer t)
 
 ;;;; anzu
 (use-package anzu
