@@ -133,6 +133,7 @@
 (add-hook 'prog-mode-hook 'turn-on-show-trailing-whitespace)
 (add-hook 'org-mode-hook 'turn-on-show-trailing-whitespace)
 
+;;;; tab幅
 (setq-default tab-width 4 indent-tabs-mode nil)
 
 ;;;; scroll
@@ -727,7 +728,6 @@
 (let ((elapsed (float-time (time-subtract (current-time)
                                           emacs-start-time))))
   (message "Loading %s...done (%.3fs)" load-file-name elapsed))
-
 (add-hook 'after-init-hook
           `(lambda ()
              (let ((elapsed
