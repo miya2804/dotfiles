@@ -504,7 +504,8 @@
   :config
   (setq highlight-indent-guides-auto-enabled t)
   (setq highlight-indent-guides-responsive t)
-  (setq highlight-indent-guides-method 'bitmap))
+  (setq highlight-indent-guides-method
+        (if (display-graphic-p) 'bitmap 'character)))
 
 ;;;; hydra
 (use-package hydra
