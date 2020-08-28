@@ -657,7 +657,7 @@
 
 ;;;; recentf-ext
 (use-package recentf-ext
-  :ensure t
+  :ensure t :defer nil
   :config
   (setq resentf-max-saved-items 500)
   (setq recentf-exclude
@@ -669,10 +669,8 @@
 
 ;;;; smart-newline
 (use-package smart-newline
-  :ensure t
+  :ensure t :defer t
   :diminish smart-newline-mode
-  :bind (;;("RET" . smart-newline-mode)
-         ("C-m" . smart-newline-mode))
   :hook ((emacs-lisp-mode . smart-newline-mode)
          (org-mode . smart-newline-mode)))
 
