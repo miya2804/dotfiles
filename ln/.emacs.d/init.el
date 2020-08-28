@@ -5,6 +5,12 @@
 ;; Functions and Variables and Macros
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 
+;;;; with-eval-after-load (Emacs 24.4 以上)
+(unless (fboundp 'with-eval-after-load)
+  (defmacro with-eval-after-load (file &rest body)
+    `(eval-after-load ,file
+       `(funcall (function ,(lambda () ,@body))))))
+
 (defun set-alpha (alpha-num)
   "set frame parameter 'alpha"
   (interactive "nAlpha: ")
