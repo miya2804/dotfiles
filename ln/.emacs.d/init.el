@@ -538,25 +538,26 @@
          "\\.markdown\\'"))
 
 ;;;; migemo
-;; require external package -> "cmigemo"
-(when (executable-find "cmigemo")
-  (use-package migemo
-    :ensure t
-    :config
-    (setq migemo-command "cmigemo")
-    (setq migemo-dictionary "/usr/share/cmigemo/utf-8/migemo-dict")
-    (setq migemo-options '("-q" "--emacs"))
-    (setq migemo-coding-system 'utf-8-unix)
-    (setq migemo-user-dictionary nil)
-    (setq migemo-regex-dictionary nil)
-    (load-library "migemo")
-    (migemo-init)))
+(defvar migemo-command (executable-find "cmigemo"))
+(defvar migemo-dictionary
+  (locate-file "migemo-dict"
+               '("/usr/share/cmigemo/utf-8"))) ;; debian
+(use-package migemo
+  :if (and migemo-command migemo-dictionary)
+  :ensure t :defer nil :no-require t
+  :config
+  (setq migemo-options '("-q" "--emacs"))
+  (setq migemo-coding-system 'utf-8-unix)
+  (setq migemo-user-dictionary nil)
+  (setq migemo-regex-dictionary nil)
+  (load-library "migemo")
+  (migemo-init))
 
 ;;;; mozc
 ;; require external package -> "emacs-mozc-bin"
 (use-package mozc
+  :if (executable-find "mozc_emacs_helper")
   :ensure t :defer t
-  ;;:ensure-system-package emacs-mozc-bin
   :config
   (setq default-input-method "japanese-mozc"))
 
