@@ -1,4 +1,8 @@
 ;;;; init.el --- My Emacs Initialization/Customization file  -*- lexical-binding: t -*-
+;;;; compile
+;;(byte-recompile-directory (expand-file-name "~/.emacs.d/") 0)
+
+
 
 ;;;; code:
 (defconst emacs-start-time (current-time))
@@ -95,9 +99,8 @@
   (setq load-path (cons "~/.emacs.d/elisp" load-path))
 
   ;;;; proxy
-  ;; ~/.emacs.d/elisp/myproxy.elにプロキシ設定を書き込む
-  ;; ignore error.
-  (load "elisp/secret/myproxy" t)
+  ;; ~/.emacs.d/elisp/secret/myproxy.elにプロキシ設定を書き込む
+  (load "secret/myproxy" t)
 
   ;;;; debug
   (if init-file-debug
