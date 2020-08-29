@@ -662,12 +662,7 @@
   :hook (prog-mode . rainbow-delimiters-mode))
 
 ;;;; recentf-ext
-(use-package recentf-ext
-  :ensure t :defer nil
-  :config
-  (setq resentf-max-saved-items 500)
-  (setq recentf-exclude
-        '("/TAGS$" "/var/tmp/")))
+(use-package recentf-ext :ensure t :defer nil)
 
 ;;;; redo+
 (require 'redo+)
