@@ -638,7 +638,7 @@
 ;;;; helm-swoop
 (use-package helm-swoop
   :ensure t
-  :requires helm
+  :after helm
   :commands (helm-swoop helm-multi-swoop)
   :config
   (setq helm-swoop-move-to-line-cycle nil))
@@ -764,8 +764,9 @@
 (use-package recentf-ext :ensure t :defer nil)
 
 ;;;; redo+
-(require 'redo+)
-(bind-key "C-M-/" 'redo)
+(use-package redo+
+  :pin manual
+  :bind ("C-M-/" . redo))
 
 ;;;; smart-newline
 (use-package smart-newline
