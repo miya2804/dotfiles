@@ -95,7 +95,7 @@
   ;;;; proxy
   ;; ~/.emacs.d/elisp/myproxy.elにプロキシ設定を書き込む
   ;; ignore error.
-  (load "myproxy" t)
+  (load "elisp/secret/myproxy" t)
 
   ;;;; debug
   (if init-file-debug
