@@ -455,7 +455,7 @@
   (setq doom-modeline-major-mode-icon t)
   (setq doom-modeline-major-mode-color-icon t)
   (setq doom-modeline-buffer-state-icon t)
-  (setq doom-modeline-buffer-midification-icon t)
+  (setq doom-modeline-buffer-modification-icon t)
   (setq doom-modeline-persp-icon t)
   (setq doom-modeline-modal-icon t)
   (setq doom-modeline-unicode-fallback t)
