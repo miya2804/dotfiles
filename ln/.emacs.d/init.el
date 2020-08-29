@@ -453,7 +453,7 @@
   :ensure t :defer t
   :hook (emacs-lisp-mode . enable-auto-async-byte-compile-mode)
   :config
-  (set-variable 'auto-async-byte-compile-exclude-files-regexp "elisp/secret/"))
+  (set-variable 'auto-async-byte-compile-exclude-files-regexp "/secret/"))
 
 ;;;; beacon
 (use-package beacon
