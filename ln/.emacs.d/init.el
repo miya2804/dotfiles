@@ -516,6 +516,9 @@
   :ensure t
   :mode ("Dockerfile\\'"))
 
+;;;; docker-compose-mode
+(use-package docker-compose-mode :ensure t :defer t)
+
 ;;;; doom-modeline
 ;; https://github.com/seagle0128/doom-modeline
 ;; Make dependent with doom-themes.
