@@ -797,6 +797,15 @@
   :diminish which-key-mode
   :hook (after-init . which-key-mode))
 
+;;;; winner
+(use-package winner
+  :ensure t
+  :bind (("C-t" . winner-undo)
+         ("C-M-t" . winner-redo))
+  :config
+  (winner-mode 1)
+  (setq buffer-quit-function 'winner-undo))
+
 
 
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
