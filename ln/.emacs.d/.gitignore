@@ -4,6 +4,7 @@
 /.ehist/
 /auto-save-list/
 /themes/
+/transient/
 custom.el
 myproxy.el
 tramp
