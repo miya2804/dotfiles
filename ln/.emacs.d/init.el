@@ -506,6 +506,11 @@
   ;;                                                   :face 'font-lock-keyword-face))
   )
 
+;;;; docker.el
+(use-package docker
+  :ensure t
+  :bind ("C-c d" . docker))
+
 ;;;; doom-modeline
 ;; https://github.com/seagle0128/doom-modeline
 ;; Make dependent with doom-themes.
