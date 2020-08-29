@@ -130,3 +130,6 @@ set -C
 
 # local command path settings
 export PATH=$PATH:/usr/local/sbin
+
+# avoid logout by "C-d"
+export IGNOREEOF=100
