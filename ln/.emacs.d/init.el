@@ -511,6 +511,11 @@
   :ensure t
   :bind ("C-c d" . docker))
 
+;;;; dockerfile-mode.el
+(use-package dockerfile-mode
+  :ensure t
+  :mode ("Dockerfile\\'"))
+
 ;;;; doom-modeline
 ;; https://github.com/seagle0128/doom-modeline
 ;; Make dependent with doom-themes.
