@@ -171,6 +171,7 @@
 (bind-key "C-c r" 'window-resizer)
 (bind-key "<zenkaku-hankaku>" 'toggle-input-method)
 (bind-key "C-c n" 'make-frame)
+(bind-key "C-c w" 'delete-frame)
 
 ;;;; backup (xxx~)
 ;; execution on or off
