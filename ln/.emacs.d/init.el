@@ -4,6 +4,7 @@
 
 (defconst emacs-start-time (current-time))
 (message (format "[Startup time: %s]" (format-time-string "%Y/%m/%d %H:%M:%S")))
+(eval-when-compile (require 'cl))
 
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 ;; Functions and Variables and Macros
