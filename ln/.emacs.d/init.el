@@ -517,7 +517,9 @@
   :mode ("Dockerfile\\'"))
 
 ;;;; docker-compose-mode
-(use-package docker-compose-mode :ensure t :defer t)
+(use-package docker-compose-mode
+  :ensure t :defer t
+  :after yaml-mode)
 
 ;;;; doom-modeline
 ;; https://github.com/seagle0128/doom-modeline
@@ -640,7 +642,8 @@
 (use-package highlight-indent-guides
   :ensure t
   :diminish highlight-indent-guides-mode
-  :hook (prog-mode . highlight-indent-guides-mode)
+  :hook ((prog-mode . highlight-indent-guides-mode)
+         (yaml-mode . highlight-indent-guides-mode))
   :config
   (setq highlight-indent-guides-auto-enabled t)
   (setq highlight-indent-guides-responsive t)
@@ -818,6 +821,11 @@
   :config
   (winner-mode 1)
   (setq buffer-quit-function 'winner-undo))
+
+;;;; yaml-mode.el
+(use-package yaml-mode
+  :ensure t
+  :mode ("\\.ya?ml$"))
 
 
 
