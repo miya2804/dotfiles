@@ -101,6 +101,7 @@
   (if init-file-debug
       (progn
         (setq debug-on-error t)
+        (setq force-load-messages t)
         (set-variable 'use-package-verbose t)
 	    (set-variable 'use-package-expand-minimally nil)
 	    (set-variable 'use-package-compute-statistics t))
