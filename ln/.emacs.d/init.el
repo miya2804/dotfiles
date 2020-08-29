@@ -521,6 +521,11 @@
   :ensure t :defer t
   :after yaml-mode)
 
+;;;; docker-tramp.el
+(use-package docker-tramp
+  :ensure t :defer t
+  :config (set-variable 'docker-tramp-use-names t))
+
 ;;;; doom-modeline
 ;; https://github.com/seagle0128/doom-modeline
 ;; Make dependent with doom-themes.
