@@ -1,10 +1,11 @@
 ;;;; init.el --- My Emacs Initialization/Customization file  -*- lexical-binding: t -*-
 
 ;;;; code:
-
 (defconst emacs-start-time (current-time))
 (message (format "[Startup time: %s]" (format-time-string "%Y/%m/%d %H:%M:%S")))
 (eval-when-compile (require 'cl))
+
+
 
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 ;; Functions and Variables and Macros
@@ -127,13 +128,13 @@
     (defmacro use-package (&rest _args))))
 ;; 後の startup.el におけるオプション認識エラーを防止
 (add-to-list 'command-switch-alist '("--qq" . (lambda (switch) nil)))
-(use-package use-package :ensure t :defer t :no-require t) ;; 形式的宣言
+(use-package use-package :ensure t :defer t) ;; 形式的宣言
 
 ;;;; bind-key
 ;; bind-key* は、emulation-mode-map-alists を利用することにより、
 ;; minor-mode よりも優先させたいキーのキーマップを定義できる。
 ;; bind-key.el がない場合は普通のbind-key として振る舞う。
-(use-package bind-key :defer t :ensure t :no-require t)
+(use-package bind-key :ensure t :defer t)
 (eval-and-compile
   (unless (require 'bind-key nil t)
     (defun bind-key (key cmd &optional keymap)
@@ -148,17 +149,6 @@
 
 ;; -------------------------------------
 ;; Etc
-
-;;;; visualization of space and tab
-;;(global-whitespace-mode 1)
-
-;;;; 行末の空白表示
-(setq-default show-trailing-whitespace nil)
-(defun turn-on-show-trailing-whitespace  () (interactive) (setq show-trailing-whitespace t))
-(defun turn-off-show-trailing-whitespace () (interactive) (setq show-trailing-whitespace nil))
-(defun toggle-show-trailing-whitespace () (interactive) (callf null show-trailing-whitespace))
-(add-hook 'prog-mode-hook 'turn-on-show-trailing-whitespace)
-(add-hook 'org-mode-hook 'turn-on-show-trailing-whitespace)
 
 ;;;; tab幅
 (setq-default tab-width 4 indent-tabs-mode nil)
@@ -183,7 +173,6 @@
 ;; execution on or off
 (setq make-backup-files t)
 ;; change directory
-;;(setq backup-directory-alist '((".*" . "~/.emacs.d/.ehist/")))
 (setq backup-directory-alist
       (cons (cons ".*" (expand-file-name "~/.emacs.d/.ehist"))
             backup-directory-alist))
@@ -257,76 +246,31 @@
 (setq-default indicate-empty-lines nil)
 (setq-default indicate-buffer-boundaries 'left)
 
-;;;; display line number
-(if (version<= "26.0.50" emacs-version)
-    (global-display-line-numbers-mode)
-  (progn
-    (global-linum-mode)
-    (setq linum-format "%3d ")))
+;;;; visualization of space and tab
+;;(global-whitespace-mode 1)
 
-;;;; hl-line
-(add-hook 'after-init-hook 'global-hl-line-mode)
+;;;; 行末の空白表示
+(setq-default show-trailing-whitespace nil)
+(defun turn-on-show-trailing-whitespace  () (interactive) (setq show-trailing-whitespace t))
+(defun turn-off-show-trailing-whitespace () (interactive) (setq show-trailing-whitespace nil))
+(defun toggle-show-trailing-whitespace () (interactive) (callf null show-trailing-whitespace))
+(add-hook 'prog-mode-hook 'turn-on-show-trailing-whitespace)
+(add-hook 'org-mode-hook 'turn-on-show-trailing-whitespace)
 
-;;;; org-mode
-(add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
-(setq org-directory "~/Dropbox/document/org")
-(setq org-agenda-files '("~/Dropbox/document/org/agenda/"))
-(setq org-default-notes-file (concat org-directory "/notes.org"))
-(setq org-startup-truncated nil)
-;; org-dir外のrefile設定(bufferで開いていれば指定可能)
-;; cf. https://www.emacswiki.org/emacs/OrgMode#toc21
-(defun mhatta/org-buffer-files ()
-  "Return list of opened Org mode buffer files"
-  (mapcar (function buffer-file-name)
-          (org-buffer-list 'files)))
-(setq org-refile-targets
-      '((nil :maxlevel . 3)
-          (mhatta/org-buffer-files :maxlevel . 1)
-          (org-agenda-files :maxlevel . 3)))
-;; templates
-(setq org-capture-templates
-      '(("a" "Memoｃ⌒っﾟωﾟ)っφ　ﾒﾓﾒﾓ..."
-         entry (file+headline "memos.org" "MEMOS")
-         "* %U\n  %?"
-         :empty-lines 1 :jump-to-captured 1)
-        ("n" "Notes....φ(・ω・｀ )ｶｷｶｷ"
-         entry (file+headline org-default-notes-file "NOTES")
-         "* %?\n  Entered on %U\n  %a"
-         :empty-lines 1)
-        ("m" "Minutes( ´・ω) (´・ω・) (・ω・｀) (ω・｀ )"
-         entry (file+datetree "minutes.org" "MINUTES")
-         "* %?\n  Entered on %T\n"
-         :empty-lines 1 :jump-to-captured 1)))
-;; notes.orgを確認できる関数定義,キーへのbind
-(defun show-org-buffer (file)
-  "Show an org-file FILE on the current buffer."
-  (interactive)
-  (if (get-buffer file)
-      (let ((buffer (get-buffer file)))
-        (switch-to-buffer buffer)
-        (message "%s" file))
-    (find-file (concat org-directory file))))
-;; org-mode bind-key
-(bind-key "C-c c" 'org-capture)
-(bind-key "C-M-^" '(lambda () (interactive) (show-org-buffer "/notes.org")))
 
-;;;; paren
-;; illuminate corresponding brackets
-(add-hook 'after-init-hook 'show-paren-mode)
-(setq show-paren-style 'mixed)
-(setq show-paren-when-point-inside-paren t)
-(setq show-paren-when-point-in-periphery t)
-;; custom-face
-(with-eval-after-load 'doom-dracula-theme
-  (custom-set-faces
-   '(show-paren-match ((nil (:background "#44475a" :foreground "#f1fa8c"))))
-   ))
 
-;;;; recentf.el
-(set-variable 'recentf-max-saved-items 500)
-;;(set-variable 'recentf-auto-cleanup 'never)
-(set-variable 'recentf-exclude
-              '("/TAGS$" "/var/tmp/" ".recentf"))
+;; ++++++++++++++++++++++++++++++++++++++++++++++++++
+;; Libraries
+;; ++++++++++++++++++++++++++++++++++++++++++++++++++
+
+(use-package diminish :ensure t :demand t)
+;;(use-package use-package-ensure-system-package :ensure t :demand t)
+
+
+
+;; ++++++++++++++++++++++++++++++++++++++++++++++++++
+;; Fonts
+;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 
 (when (display-graphic-p)
   (when (x-list-fonts "SourceHanCodeJP")
@@ -340,16 +284,132 @@
 
 
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
-;; Libraries
+;; Themes
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 
-(use-package diminish :ensure t :demand t)
-;;(use-package use-package-ensure-system-package :ensure t :demand t)
+(when init-file-debug (message "Loading themes..."))
+
+;;;; doom-themes
+(use-package doom-themes
+  :config
+  (setq doom-themes-enable-italic t
+        doom-themes-enable-bold t)
+  (load-theme 'doom-dracula t)
+  (doom-themes-visual-bell-config)
+  (doom-themes-neotree-config)
+  (doom-themes-org-config))
+
+;;;; ice-berg-theme
+(use-package iceberg-theme :disabled
+  :config
+  (iceberg-theme-create-theme-file)
+  (load-theme 'solarized-iceberg-dark t))
+
+;;;; zenburn-theme
+(use-package zenburn-theme :disabled
+  :config
+  (load-theme 'zenburn t))
+
+;;;; Check if any enabled themes.
+;;;; If nothing enabled themes, load my-default-faces.
+(if custom-enabled-themes
+    (when init-file-debug
+      (message "Enabled themes: %s" custom-enabled-themes))
+  (progn
+    (when init-file-debug
+      (message "Enabled themes is noghing!")
+      (message "Loading my-default-faces...done"))
+    (set-my-default-faces)))
+
 
 
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 ;; Packages
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
+
+;; -------------------------------------
+;; standard packages
+
+;;;; display-line-numbers.el
+;;;; linum.el
+(if (version<= "26.0.50" emacs-version)
+    (global-display-line-numbers-mode)
+  (progn
+    (global-linum-mode)
+    (set-variable 'linum-format "%3d ")))
+
+;;;; hl-line.el
+(global-hl-line-mode)
+
+;;;; org.el
+(defvar org-directory)
+(declare-function org-buffer-list "org")
+;; cf. https://www.emacswiki.org/emacs/OrgMode#toc21
+(defun mhatta/org-buffer-files ()
+  "Return list of opened Org mode buffer files"
+  (mapcar (function buffer-file-name)
+          (org-buffer-list 'files)))
+;; org-directory内の(file)を確認できる関数
+(defun show-org-buffer (file)
+  "Show an org-file FILE on the current buffer."
+  (interactive)
+  (if (get-buffer file)
+      (let ((buffer (get-buffer file)))
+        (switch-to-buffer buffer)
+        (message "%s" file))
+    (find-file (concat org-directory file))))
+;; key binds
+(bind-key "C-c c" 'org-capture)
+(bind-key "C-M-^" '(lambda () (interactive) (show-org-buffer "/notes.org")))
+;; mode
+;;(add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
+(push '("\\.org\\'" . org-mode) auto-mode-alist)
+(with-eval-after-load 'org
+  (setq org-directory "~/Dropbox/document/org")
+  (set-variable 'org-agenda-files '("~/Dropbox/document/org/agenda/"))
+  (set-variable 'org-default-notes-file
+                (concat org-directory "/notes.org"))
+  (set-variable 'org-startup-truncated nil)
+  ;; org-dir外のrefile設定(bufferで開いていれば指定可能)
+  (set-variable 'org-refile-targets
+        '((nil :maxlevel . 3)
+          (mhatta/org-buffer-files :maxlevel . 1)
+          (org-agenda-files :maxlevel . 3)))
+  ;; templates
+  (set-variable 'org-capture-templates
+        '(("a" "Memoｃ⌒っﾟωﾟ)っφ　ﾒﾓﾒﾓ..."
+           entry (file+headline "memos.org" "MEMOS")
+           "* %U\n  %?"
+           :empty-lines 1 :jump-to-captured 1)
+          ("n" "Notes....φ(・ω・｀ )ｶｷｶｷ"
+           entry (file+headline org-default-notes-file "NOTES")
+           "* %?\n  Entered on %U\n  %a"
+           :empty-lines 1)
+          ("m" "Minutes( ´・ω) (´・ω・) (・ω・｀) (ω・｀ )"
+           entry (file+datetree "minutes.org" "MINUTES")
+           "* %?\n  Entered on %T\n"
+           :empty-lines 1 :jump-to-captured 1))))
+
+;;;; paren.el
+;; illuminate corresponding brackets
+(show-paren-mode t)
+(set-variable 'show-paren-style 'mixed)
+(set-variable 'show-paren-when-point-inside-paren t)
+(set-variable ' show-paren-when-point-in-periphery t)
+;; custom-face
+(with-eval-after-load 'doom-dracula-theme
+  (custom-set-faces
+   '(show-paren-match ((nil (:background "#44475a" :foreground "#f1fa8c"))))
+   ))
+
+;;;; recentf.el
+(set-variable 'recentf-max-saved-items 500)
+;;(set-variable 'recentf-auto-cleanup 'never)
+(set-variable 'recentf-exclude
+              '("/TAGS$" "/var/tmp/" ".recentf"))
+
+;; -------------------------------------
+;; Non-standard Packages
 
 ;;;; ace-isearch
 (use-package ace-isearch
@@ -385,6 +445,12 @@
   (setq anzu-minimum-input-length 3)
   (with-eval-after-load 'migemo
     (setq anzu-use-migemo t)))
+
+(use-package auto-async-byte-compile
+  :ensure t :defer t
+  :hook (emacs-lisp-mode . enable-auto-async-byte-compile-mode)
+  :config
+  (set-variable 'auto-async-byte-compile-exclude-files-regexp "elisp/secret/"))
 
 ;;;; beacon
 (use-package beacon
@@ -473,6 +539,7 @@
 ;;;; elscreen
 (use-package elscreen
   :ensure t :defer nil :no-require t
+  :functions (elscreen-create)
   :config
   ;; 衝突回避(org-modeと衝突) ;; bind-key*で解決済
   ;; (define-minor-mode overriding-minor-mode
@@ -482,31 +549,36 @@
   ;;   `((,(kbd "C-<tab>") . elscreen-next)))
   (bind-key* "C-<tab>" 'elscreen-next)
   ;; Turn off peripheral functions of tab.
-  (setq elscreen-display-tab nil
-        elscreen-tab-display-kill-screen nil
-        elscreen-tab-display-control nil)
+  (set-variable 'elscreen-display-tab nil)
+  (set-variable 'elscreen-tab-display-kill-screen nil)
+  (set-variable 'elscreen-tab-display-control nil)
   ;; init
   (elscreen-start)
   (elscreen-create))
 
 ;;;; git-gutter
 (use-package git-gutter
-  :ensure t
+  :ensure t :no-require t
   :diminish git-gutter-mode
   :hook (after-init . global-git-gutter-mode)
+  :functions (git-gutter:previous-hunk git-gutter:next-hunk
+              git-gutter:stage-hunk git-gutter:revert-hunk
+              git-gutter:popup-hunk)
   :custom-face
   (git-gutter:modified ((t (:background "#f1fa8c"))))
   (git-gutter:added    ((t (:background "#50fa7b"))))
   (git-gutter:deleted  ((t (:background "#ff79c6"))))
   :config
-  (setq git-gutter:modified-sign "~")
-  (setq git-gutter:added-sign    "+")
-  (setq git-gutter:deleted-sign  "-"))
+  (set-variable 'git-gutter:modified-sign "~")
+  (set-variable 'git-gutter:added-sign    "+")
+  (set-variable 'git-gutter:deleted-sign  "-"))
 
 ;;;; helm
 (use-package helm
   :ensure t
   :diminish helm-migemo-mode
+  :functions (helm-execute-persistent-action helm-kill-selection-and-quit
+              helm-select-action helm-migemo-mode)
   :bind (("C-x C-f" . helm-find-files)
          ("C-c h" . helm-command-prefix)
          ("C-x C-b" . helm-for-files)
@@ -523,13 +595,13 @@
              ("C-i" . helm-execute-persistent-action)
              ("C-z" . helm-select-action))
   ;; fuzzy matting
-  (setq helm-M-x-fuzzy-match t
-        helm-buffers-fuzzy-matching t
-        helm-recentf-fuzzy-match t
-        helm-apropos-fuzzy-match t
-        helm-lisp-fuzzy-completion t)
+  (set-variable 'helm-M-x-fuzzy-match t)
+  (set-variable 'helm-buffers-fuzzy-matching t)
+  (set-variable 'helm-recentf-fuzzy-match t)
+  (set-variable 'helm-apropos-fuzzy-match t)
+  (set-variable 'helm-lisp-fuzzy-completion t)
   ;; helm-for-files
-  (setq helm-for-files-preferred-list
+  (set-variable 'helm-for-files-preferred-list
         '(helm-source-buffers-list
           helm-source-recentf
           helm-source-bookmarks
@@ -560,7 +632,7 @@
 
 ;;;; hydra
 (use-package hydra
-  :ensure t :defer t
+  :ensure t :defer nil :no-require t
   :config
   (with-eval-after-load 'git-gutter
     (defhydra hydra-git-gutter nil
@@ -596,11 +668,12 @@
 (use-package migemo
   :if (and migemo-command migemo-dictionary)
   :ensure t :defer nil :no-require t
+  :functions (migemo-init)
   :config
-  (setq migemo-options '("-q" "--emacs"))
-  (setq migemo-coding-system 'utf-8-unix)
-  (setq migemo-user-dictionary nil)
-  (setq migemo-regex-dictionary nil)
+  (set-variable 'migemo-options '("-q" "--emacs"))
+  (set-variable 'migemo-coding-system 'utf-8-unix)
+  (set-variable 'migemo-user-dictionary nil)
+  (set-variable 'migemo-regex-dictionary nil)
   (load-library "migemo")
   (migemo-init))
 
@@ -721,44 +794,6 @@
   :hook (after-init . which-key-mode))
 
 
-
-;; ++++++++++++++++++++++++++++++++++++++++++++++++++
-;; Themes
-;; ++++++++++++++++++++++++++++++++++++++++++++++++++
-
-(message "Loading themes...")
-
-;;;; doom-themes
-(use-package doom-themes
-  :config
-  (setq doom-themes-enable-italic t
-        doom-themes-enable-bold t)
-  (load-theme 'doom-dracula t)
-  (doom-themes-visual-bell-config)
-  (doom-themes-neotree-config)
-  (doom-themes-org-config))
-
-;;;; ice-berg-theme
-(use-package iceberg-theme :disabled
-  :config
-  (iceberg-theme-create-theme-file)
-  (load-theme 'solarized-iceberg-dark t))
-
-;;;; zenburn-theme
-(use-package zenburn-theme :disabled
-  :config
-  (load-theme 'zenburn t))
-
-;;;; Check if any enabled themes.
-;;;; If nothing enabled themes, load my-default-faces.
-(if custom-enabled-themes
-    (when init-file-debug
-      (message "Enabled themes: %s" custom-enabled-themes))
-  (progn
-    (when init-file-debug
-      (message "Enabled themes is noghing!")
-      (message "Loading my-default-faces...done"))
-    (set-my-default-faces)))
 
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 ;; Finalization
