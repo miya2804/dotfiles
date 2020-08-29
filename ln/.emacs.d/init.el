@@ -182,10 +182,13 @@
 ;; execution on or off
 (setq make-backup-files t)
 ;; change directory
-(setq backup-directory-alist '((".*" . "~/.emacs.d/.ehist/")))
+;;(setq backup-directory-alist '((".*" . "~/.emacs.d/.ehist/")))
+(setq backup-directory-alist
+      (cons (cons ".*" (expand-file-name "~/.emacs.d/.ehist"))
+            backup-directory-alist))
 ;; save multiple backupfiles
 (setq version-control     t) ;; exucution on or off
-(setq kept-new-versions   2) ;; latest number
+(setq kept-new-versions   5) ;; latest number
 (setq kept-old-versions   1) ;; oldest number
 (setq delete-old-versions t) ;; delete out of range
 
@@ -193,9 +196,8 @@
 (setq auto-save-timeout 10) ;; 10sec (def:30)
 (setq auto-save-interval 100) ;; 100char (def:300)
 (setq delete-auto-save-files t) ;; successful completion
-;;;; create auto-save file in ~/.emacs.d/.ehist
 (setq auto-save-file-name-transforms
-      '((".*" "~/.emacs.d/.ehist/" t)))
+      `((".*", (expand-file-name "~/.emacs.d/.ehist") t)))
 
 ;;;; lockfile (.#xxx)
 ;; execution on of off
@@ -319,8 +321,11 @@
    '(show-paren-match ((nil (:background "#44475a" :foreground "#f1fa8c"))))
    ))
 
-;; -------------------------------------
-;; Fonts
+;;;; recentf.el
+(set-variable 'recentf-max-saved-items 500)
+;;(set-variable 'recentf-auto-cleanup 'never)
+(set-variable 'recentf-exclude
+              '("/TAGS$" "/var/tmp/" ".recentf"))
 
 (when (display-graphic-p)
   (when (x-list-fonts "SourceHanCodeJP")
