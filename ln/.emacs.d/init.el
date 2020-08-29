@@ -1,3 +1,7 @@
+;;;; init.el --- My Emacs Initialization/Customization file  -*- lexical-binding: t -*-
+
+;;;; code:
+
 (defconst emacs-start-time (current-time))
 (message (format "[Startup time: %s]" (format-time-string "%Y/%m/%d %H:%M:%S")))
 
@@ -30,10 +34,7 @@
 (defun window-resizer ()
   "Control window size and position."
   (interactive)
-  (let ((window-obj (selected-window))
-        (current-width (window-width))
-        (current-height (window-height))
-        (dx (if (= (nth 0 (window-edges)) 0) 1
+  (let ((dx (if (= (nth 0 (window-edges)) 0) 1
               -1))
         (dy (if (= (nth 1 (window-edges)) 0) 1
               -1))
@@ -55,8 +56,7 @@
                (shrink-window dy))
               ;; otherwise
               (t
-               (let ((last-command-char (aref action 0))
-                     (command (key-binding action)))
+               (let ((command (key-binding action)))
                  (when command
                    (call-interactively command)))
                (message "Quit")
