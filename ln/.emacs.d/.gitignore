@@ -1,8 +1,11 @@
+*.elc
+*~
 /elpa/
 /.ehist/
 /auto-save-list/
 /themes/
 custom.el
+myproxy.el
 tramp
 kkcrc
 recentf
