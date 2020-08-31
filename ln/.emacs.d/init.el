@@ -382,16 +382,16 @@
   ;; templates
   (set-variable 'org-capture-templates
         '(("a" "Memoｃ⌒っﾟωﾟ)っφ　ﾒﾓﾒﾓ..."
-           entry (file+headline "memos.org" "MEMOS")
-           "* %U\n  %?"
+           plain (file "memos.org")
+           "* %?%U"
            :empty-lines 1 :jump-to-captured 1)
           ("n" "Notes....φ(・ω・｀ )ｶｷｶｷ"
            entry (file+headline org-default-notes-file "NOTES")
-           "* %?\n  Entered on %U\n  %a"
+           "* %?%U"
            :empty-lines 1)
           ("m" "Minutes( ´・ω) (´・ω・) (・ω・｀) (ω・｀ )"
            entry (file+datetree "minutes.org" "MINUTES")
-           "* %?\n  Entered on %T\n"
+           "* %?%U"
            :empty-lines 1 :jump-to-captured 1))))
 
 ;;;; paren.el
@@ -772,8 +772,7 @@
 (use-package smart-newline
   :ensure t :defer t
   :diminish smart-newline-mode
-  :hook ((emacs-lisp-mode . smart-newline-mode)
-         (org-mode . smart-newline-mode)))
+  :hook ((emacs-lisp-mode . smart-newline-mode)))
 
 ;;;; swap-buffers
 (use-package swap-buffers
