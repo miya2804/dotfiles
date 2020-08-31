@@ -467,7 +467,7 @@
           beacon-size 20
           beacon-blink-duration 0.2)))
 
-;;;; dashborad
+;;;; dashboard
 (use-package dashboard
   :ensure t
   :config
@@ -484,7 +484,7 @@
   ;; 'logo which displays an alternative emacs logo
   ;; 1, 2 or 3 which displays one of the text banners
   ;; "path/to/your/image.png" which displays whatever image you would prefer
-  (setq dashboard-startup-banner 'logo)
+  (setq dashboard-startup-banner (if (display-graphic-p) 'logo 3))
   ;; centering
   (setq dashboard-center-content t)
   ;; use icons
