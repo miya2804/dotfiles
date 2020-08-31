@@ -587,12 +587,21 @@
   :hook (after-init . global-git-gutter-mode)
   :functions (git-gutter:previous-hunk git-gutter:next-hunk
               git-gutter:stage-hunk git-gutter:revert-hunk
-              git-gutter:popup-hunk)
+              git-gutter:popup-hunk git-gutter:popup-buffer-window
+              git-gutter:toggle-popup-hunk)
   :custom-face
   (git-gutter:modified ((t (:background "#f1fa8c"))))
   (git-gutter:added    ((t (:background "#50fa7b"))))
   (git-gutter:deleted  ((t (:background "#ff79c6"))))
   :config
+  (defun git-gutter:toggle-popup-hunk ()
+    "Toggle git-gutter hunk window."
+    (interactive)
+    (if (get-buffer "*git-gutter:diff*")
+        (progn
+          (delete-window (git-gutter:popup-buffer-window))
+          (kill-buffer "*git-gutter:diff*"))
+      (git-gutter:popup-hunk)))
   (set-variable 'git-gutter:modified-sign "~")
   (set-variable 'git-gutter:added-sign    "+")
   (set-variable 'git-gutter:deleted-sign  "-"))
@@ -666,7 +675,7 @@
       ("n" git-gutter:next-hunk "next")
       ("s" git-gutter:stage-hunk "stage")
       ("r" git-gutter:revert-hunk "revert")
-      ("SPC" git-gutter:popup-hunk "diffinfo"))
+      ("SPC" git-gutter:toggle-popup-hunk "diffinfo"))
     (bind-key "C-c g" 'hydra-git-gutter/body)))
 
 ;;;; iflipb
