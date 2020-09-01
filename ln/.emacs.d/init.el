@@ -555,9 +555,6 @@
   ;;(setq doom-modeline-display-default-persp-name nil)
   ;; lsp
   ;;(setq doom-modeline-lsp t)
-  ;; github ;; requires ghub
-  ;;(setq doom-modeline-github nil)
-  ;;(setq doom-modeline-github-interval (* 30 60))
   )
 
 ;;;; elscreen
@@ -668,15 +665,25 @@
 (use-package hydra
   :ensure t :defer nil :no-require t
   :config
-  (with-eval-after-load 'git-gutter
-    (defhydra hydra-git-gutter nil
-      "git hunk"
-      ("p" git-gutter:previous-hunk "previous")
-      ("n" git-gutter:next-hunk "next")
-      ("s" git-gutter:stage-hunk "stage")
-      ("r" git-gutter:revert-hunk "revert")
-      ("SPC" git-gutter:toggle-popup-hunk "diffinfo"))
-    (bind-key "C-c g" 'hydra-git-gutter/body)))
+  (defhydra hydra-git-gutter (:hint nil)
+    "
+    ^Git-gutter^      ^Magit^
+    --------------------------------------------------------------------------
+    _p_:   previous   _m_: magit-status
+    _n_:   next
+    _s_:   stage
+    _r_:   revert
+    _SPC_: diffinfo
+    "
+    ;; git-gutter
+    ("p" git-gutter:previous-hunk)
+    ("n" git-gutter:next-hunk)
+    ("s" git-gutter:stage-hunk)
+    ("r" git-gutter:revert-hunk)
+    ("SPC" git-gutter:toggle-popup-hunk)
+    ;; magit
+    ("m" magit-status :exit t))
+  (bind-key "C-c g" 'hydra-git-gutter/body))
 
 ;;;; iflipb
 ;; https://github.com/jrosdahl/iflipb
@@ -687,6 +694,9 @@
   :config
   (setq iflipb-ignore-buffers (list "^[*]"))
   (setq iflipb-wrap-around t))
+
+;;;; magit.el
+(use-package magit :ensure t :defer t)
 
 ;;;; markdown-mode
 (use-package markdown-mode
