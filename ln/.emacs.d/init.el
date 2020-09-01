@@ -467,6 +467,35 @@
           beacon-size 20
           beacon-blink-duration 0.2)))
 
+;;;; company.el
+(use-package company
+  :ensure t
+  :bind (("<tab>" . company-indent-or-complete-common)
+         ("C-i" . company-complete)
+         :map company-active-map
+         ("C-p" . company-select-previous)
+         ("C-n" . company-select-next))
+  :config
+  (bind-key "<tab>" 'company-indent-or-complete-common)
+  (global-company-mode)
+  (setq company-idle-delay nil) ;; 手動補完
+  (setq company-selection-wrap-around t) ;; 候補の最後の次は先頭に戻る
+  (setq completion-ignore-case t)
+  (setq company-require-match 'never))
+
+;;;; company-box.el
+(use-package company-box
+  :ensure t
+  :hook (company-mode . company-box-mode)
+  :config
+  (with-eval-after-load 'all-the-icons
+    (setq company-box-icons-alist 'company-box-icons-all-the-icons)))
+
+;;;; company-quickhelp.el
+(use-package company-quickhelp
+  :ensure t
+  :hook (company-mode. company-quickhelp-mode))
+
 ;;;; dashboard
 (use-package dashboard
   :ensure t
