@@ -588,6 +588,7 @@ If there are multiple windows, the 'other-window' is called."
   (setq doom-modeline-persp-icon t)
   (setq doom-modeline-modal-icon t)
   (setq doom-modeline-unicode-fallback t)
+  (setq doom-modeline-github-interval (* 30 60))
   ;; persp
   ;;(setq doom-modeline-persp-name t)
   ;;(setq doom-modeline-display-default-persp-name nil)
@@ -717,6 +718,7 @@ If there are multiple windows, the 'other-window' is called."
     "
     ^Git-gutter^      ^Magit^
     --------------------------------------------------------------------------
+    _l_:   reload
     _p_:   previous   _m_: magit-status
     _n_:   next
     _s_:   stage
@@ -724,6 +726,7 @@ If there are multiple windows, the 'other-window' is called."
     _SPC_: diffinfo
     "
     ;; git-gutter
+    ("l" git-gutter)
     ("p" git-gutter:previous-hunk)
     ("n" git-gutter:next-hunk)
     ("s" git-gutter:stage-hunk)
