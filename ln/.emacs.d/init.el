@@ -476,7 +476,6 @@
          ("C-p" . company-select-previous)
          ("C-n" . company-select-next))
   :config
-  (bind-key "<tab>" 'company-indent-or-complete-common)
   (global-company-mode)
   (setq company-idle-delay nil) ;; 手動補完
   (setq company-selection-wrap-around t) ;; 候補の最後の次は先頭に戻る
