@@ -578,6 +578,7 @@
   (setq doom-modeline-persp-icon t)
   (setq doom-modeline-modal-icon t)
   (setq doom-modeline-unicode-fallback t)
+  (setq doom-modeline-github-interval (* 30 60))
   ;; persp
   ;;(setq doom-modeline-persp-name t)
   ;;(setq doom-modeline-display-default-persp-name nil)
