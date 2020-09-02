@@ -684,6 +684,12 @@ If there are multiple windows, the 'other-window' is called."
           ;;helm-source-locate
           )))
 
+;;;; helm-flycheck.el
+(use-package helm-flycheck
+  :ensure t
+  :bind (:map flycheck-mode-map
+         ("C-c ! h" . 'helm-flycheck)))
+
 ;;;; helm-swoop
 (use-package helm-swoop
   :ensure t
