@@ -697,6 +697,7 @@
     "
     ^Git-gutter^      ^Magit^
     --------------------------------------------------------------------------
+    _l_:   reload
     _p_:   previous   _m_: magit-status
     _n_:   next
     _s_:   stage
@@ -704,6 +705,7 @@
     _SPC_: diffinfo
     "
     ;; git-gutter
+    ("l" git-gutter)
     ("p" git-gutter:previous-hunk)
     ("n" git-gutter:next-hunk)
     ("s" git-gutter:stage-hunk)
