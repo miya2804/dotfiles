@@ -618,7 +618,7 @@ If there are multiple windows, the 'other-window' is called."
 ;;;; flycheck.el
 (use-package flycheck
   :ensure t
-  :hook ((elisp-mode . flycheck-mode)))
+  :hook ((emacs-lisp-mode . flycheck-mode)))
 
 ;;;; git-gutter
 (use-package git-gutter
