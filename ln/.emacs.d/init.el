@@ -656,17 +656,16 @@ If there are multiple windows, the 'other-window' is called."
          ("C-c h" . helm-command-prefix)
          ("C-x C-b" . helm-for-files)
          ("M-x" . helm-M-x)
-         ("M-y" . helm-show-kill-ring))
+         ("M-y" . helm-show-kill-ring)
+         :map helm-map
+         ("<tab>" . helm-execute-persistent-action)
+         ("C-c C-k" . helm-kill-selection-and-quit)
+         ("C-i" . helm-execute-persistent-action)
+         ("C-z" . helm-select-action))
   :config
   (require 'helm-config)
   (with-eval-after-load 'migemo
     (helm-migemo-mode 1))
-  ;; helm-map keybinds
-  (bind-keys :map helm-map
-             ("<tab>" . helm-execute-persistent-action)
-             ("C-c C-k" . helm-kill-selection-and-quit)
-             ("C-i" . helm-execute-persistent-action)
-             ("C-z" . helm-select-action))
   ;; fuzzy matting
   (set-variable 'helm-M-x-fuzzy-match t)
   (set-variable 'helm-buffers-fuzzy-matching t)
