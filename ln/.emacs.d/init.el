@@ -78,6 +78,15 @@ If there are multiple windows, the 'other-window' is called."
     (split-window-horizontally))
   (other-window 1))
 
+(defun enable-show-trailing-whitespace  ()
+  "Enable display of trailing whitespace."
+  (interactive) (setq show-trailing-whitespace t))
+(defun disable-show-trailing-whitespace ()
+  "Disable display of trailing whitespace."
+  (interactive) (setq show-trailing-whitespace nil))
+(defun toggle-show-trailing-whitespace ()
+  "Toggle display of trailing whitespace."
+  (interactive) (callf null show-trailing-whitespace))
 
 
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -259,15 +268,6 @@ If there are multiple windows, the 'other-window' is called."
 
 ;;;; 行末の空白表示
 (setq-default show-trailing-whitespace nil)
-(defun enable-show-trailing-whitespace  ()
-  "Enable display of trailing whitespace."
-  (interactive) (setq show-trailing-whitespace t))
-(defun disable-show-trailing-whitespace ()
-  "Disable display of trailing whitespace."
-  (interactive) (setq show-trailing-whitespace nil))
-(defun toggle-show-trailing-whitespace ()
-  "Toggle display of trailing whitespace."
-  (interactive) (callf null show-trailing-whitespace))
 (add-hook 'prog-mode-hook 'enable-show-trailing-whitespace)
 (add-hook 'org-mode-hook 'enable-show-trailing-whitespace)
 
