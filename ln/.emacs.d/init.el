@@ -1,10 +1,12 @@
-;;;; init.el --- My Emacs Initialization/Customization file  -*- lexical-binding: t -*-
-;;;; compile
-;;(byte-recompile-directory (expand-file-name "~/.emacs.d/") 0)
+;;; init.el --- My Emacs Initialization/Customization file  -*- lexical-binding: t -*-
 
+;;; Commentary:
 
+;;;; Init compile command.
+;; (byte-recompile-directory (expand-file-name "~/.emacs.d/") 0)
 
-;;;; code:
+;;; Code:
+
 (defconst emacs-start-time (current-time))
 (message (format "[Startup time: %s]" (format-time-string "%Y/%m/%d %H:%M:%S")))
 (eval-when-compile (require 'cl))
@@ -21,10 +23,10 @@
     `(eval-after-load ,file
        `(funcall (function ,(lambda () ,@body))))))
 
-(defun set-alpha (alpha-num)
-  "set frame parameter 'alpha"
+(defun set-alpha (value)
+  "Set frame parameter 'alpha by VALUE."
   (interactive "nAlpha: ")
-  (set-frame-parameter nil 'alpha (cons alpha-num '(90))))
+  (set-frame-parameter nil 'alpha (cons value '(90))))
 
 (defun set-my-default-faces ()
   "Can be used to set a default faces if the themes isn't installed."
@@ -69,11 +71,22 @@
                (throw 'end-flag t)))))))
 
 (defun other-window-or-split ()
+  "If there is only one window, the 'split-window-horizontally' is called.
+If there are multiple windows, the 'other-window' is called."
   (interactive)
   (when (one-window-p)
     (split-window-horizontally))
   (other-window 1))
 
+(defun enable-show-trailing-whitespace  ()
+  "Enable display of trailing whitespace."
+  (interactive) (setq show-trailing-whitespace t))
+(defun disable-show-trailing-whitespace ()
+  "Disable display of trailing whitespace."
+  (interactive) (setq show-trailing-whitespace nil))
+(defun toggle-show-trailing-whitespace ()
+  "Toggle display of trailing whitespace."
+  (interactive) (callf null show-trailing-whitespace))
 
 
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -255,11 +268,8 @@
 
 ;;;; 行末の空白表示
 (setq-default show-trailing-whitespace nil)
-(defun turn-on-show-trailing-whitespace  () (interactive) (setq show-trailing-whitespace t))
-(defun turn-off-show-trailing-whitespace () (interactive) (setq show-trailing-whitespace nil))
-(defun toggle-show-trailing-whitespace () (interactive) (callf null show-trailing-whitespace))
-(add-hook 'prog-mode-hook 'turn-on-show-trailing-whitespace)
-(add-hook 'org-mode-hook 'turn-on-show-trailing-whitespace)
+(add-hook 'prog-mode-hook 'enable-show-trailing-whitespace)
+(add-hook 'org-mode-hook 'enable-show-trailing-whitespace)
 
 
 
@@ -350,7 +360,7 @@
 (declare-function org-buffer-list "org")
 ;; cf. https://www.emacswiki.org/emacs/OrgMode#toc21
 (defun mhatta/org-buffer-files ()
-  "Return list of opened Org mode buffer files"
+  "Return list of opened Org mode buffer files."
   (mapcar (function buffer-file-name)
           (org-buffer-list 'files)))
 ;; org-directory内の(file)を確認できる関数
@@ -606,6 +616,12 @@
   (elscreen-start)
   (elscreen-create))
 
+;;;; flycheck.el
+(use-package flycheck
+  :ensure t
+  :hook ((emacs-lisp-mode . flycheck-mode)
+         (dockerfile-mode . flycheck-mode)))
+
 ;;;; git-gutter
 (use-package git-gutter
   :ensure t :no-require t
@@ -642,17 +658,16 @@
          ("C-c h" . helm-command-prefix)
          ("C-x C-b" . helm-for-files)
          ("M-x" . helm-M-x)
-         ("M-y" . helm-show-kill-ring))
+         ("M-y" . helm-show-kill-ring)
+         :map helm-map
+         ("<tab>" . helm-execute-persistent-action)
+         ("C-c C-k" . helm-kill-selection-and-quit)
+         ("C-i" . helm-execute-persistent-action)
+         ("C-z" . helm-select-action))
   :config
   (require 'helm-config)
   (with-eval-after-load 'migemo
     (helm-migemo-mode 1))
-  ;; helm-map keybinds
-  (bind-keys :map helm-map
-             ("<tab>" . helm-execute-persistent-action)
-             ("C-c C-k" . helm-kill-selection-and-quit)
-             ("C-i" . helm-execute-persistent-action)
-             ("C-z" . helm-select-action))
   ;; fuzzy matting
   (set-variable 'helm-M-x-fuzzy-match t)
   (set-variable 'helm-buffers-fuzzy-matching t)
@@ -669,6 +684,12 @@
           helm-source-bookmark-set
           ;;helm-source-locate
           )))
+
+;;;; helm-flycheck.el
+(use-package helm-flycheck
+  :ensure t
+  :bind (:map flycheck-mode-map
+         ("C-c ! h" . 'helm-flycheck)))
 
 ;;;; helm-swoop
 (use-package helm-swoop
@@ -901,5 +922,6 @@
                         ,load-file-name elapsed))) t)
 
 
+;; (provide 'init)
 
-;; init.el ends here
+;;; init.el ends here
