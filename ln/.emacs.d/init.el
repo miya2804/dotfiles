@@ -410,7 +410,7 @@
 (set-variable 'recentf-max-saved-items 500)
 ;;(set-variable 'recentf-auto-cleanup 'never)
 (set-variable 'recentf-exclude
-              '("/TAGS$" "/var/tmp/" ".recentf"))
+              '(".recentf" ".bookmarks"))
 
 ;; -------------------------------------
 ;; Non-standard Packages
