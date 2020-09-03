@@ -89,6 +89,7 @@ If there are multiple windows, the 'other-window' is called."
   (interactive) (callf null show-trailing-whitespace))
 
 
+
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 ;; Environment
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -181,10 +182,7 @@ If there are multiple windows, the 'other-window' is called."
 
 ;;;; my-keybind
 (bind-key "C-o" 'other-window-or-split)
-(bind-key "C-c r" 'window-resizer)
 (bind-key "<zenkaku-hankaku>" 'toggle-input-method)
-(bind-key "C-c n" 'make-frame)
-(bind-key "C-c w" 'delete-frame)
 
 ;;;; backup (xxx~)
 ;; execution on or off
@@ -732,14 +730,8 @@ If there are multiple windows, the 'other-window' is called."
   :config
   (defhydra hydra-git-gutter (:hint nil)
     "
-    ^Git-gutter^      ^Magit^
-    --------------------------------------------------------------------------
-    _l_:   reload
-    _p_:   previous   _m_: magit-status
-    _n_:   next
-    _s_:   stage
-    _r_:   revert
-    _SPC_: diffinfo
+    ^Git-gutter^ | _l_: reload _p_: previous _n_: next _s_: stage _r_: revert _d_: diffinfo
+    ^Magit^      | _m_: magit-status
     "
     ;; git-gutter
     ("l" git-gutter)
@@ -747,10 +739,30 @@ If there are multiple windows, the 'other-window' is called."
     ("n" git-gutter:next-hunk)
     ("s" git-gutter:stage-hunk)
     ("r" git-gutter:revert-hunk)
-    ("SPC" git-gutter:toggle-popup-hunk)
+    ("d" git-gutter:toggle-popup-hunk)
     ;; magit
     ("m" magit-status :exit t))
-  (bind-key "C-c g" 'hydra-git-gutter/body))
+  (defhydra hydra-window-and-buffer-manager (:hint nil :exit t)
+    "
+    frame           | _n_: make   _w_: delete
+    window          | _r_: resize _c_: balance _0_: delete
+    buffer          | _b_: menu   _k_: kill
+    window & buffer | _4_: kill
+    "
+    ;; frame
+    ("n" make-frame)
+    ("w" delete-frame)
+    ;; window
+    ("0" delete-window)
+    ("r" window-resizer)
+    ("c" balance-windows)
+    ;; buffer
+    ("b" buffer-menu)
+    ("k" kill-buffer)
+    ;; window & buffer
+    ("4" kill-buffer-and-window))
+  (bind-key "C-c g" 'hydra-git-gutter/body)
+  (bind-key "C-c x" 'hydra-window-and-buffer-manager/body))
 
 ;;;; iflipb
 ;; https://github.com/jrosdahl/iflipb
