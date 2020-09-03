@@ -170,9 +170,9 @@ If there are multiple windows, the 'other-window' is called."
 (setq-default tab-width 4 indent-tabs-mode nil)
 
 ;;;; scroll
-(setq mouse-wheel-scroll-amount '(1 ((shift) . 5) ((control . 40)))
+(setq mouse-wheel-scroll-amount '(5 ((shift) . 1) ((control)))
       mouse-wheel-progressive-speed nil)
-(setq scroll-conservatively 1)
+(setq scroll-conservatively 30)
 (setq scroll-margin 5)
 
 ;;;; windmove setting
@@ -471,6 +471,8 @@ If there are multiple windows, the 'other-window' is called."
   :ensure t
   :diminish beacon-mode
   :hook (after-init . beacon-mode)
+  :custom
+  (beacon-blink-when-window-scrolls nil)
   :config
   (with-eval-after-load 'doom-dracula-theme
     (setq beacon-color "yellow"
@@ -844,6 +846,14 @@ If there are multiple windows, the 'other-window' is called."
   :ensure t :defer t
   :diminish smart-newline-mode
   :hook ((emacs-lisp-mode . smart-newline-mode)))
+
+;;;; smooth-scroll.el
+(use-package smooth-scroll
+  :ensure t
+  :custom
+  (smooth-scroll/vscroll-step-size 4)
+  :config
+  (smooth-scroll-mode t))
 
 ;;;; swap-buffers
 (use-package swap-buffers
