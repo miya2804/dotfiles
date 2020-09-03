@@ -487,12 +487,25 @@ If there are multiple windows, the 'other-window' is called."
          :map company-active-map
          ("C-p" . company-select-previous)
          ("C-n" . company-select-next))
+  :custom
+  (company-idle-delay nil) ;; 手動補完
+  (company-selection-wrap-around t) ;; 候補の最後の次は先頭に戻る
+  (completion-ignore-case t)
+  (company-require-match 'never)
+  (company-backends '((company-capf company-dabbrev)
+                      ;;company-bbdb
+                      ;;company-eclim
+                      company-semantic
+                      ;;company-clang
+                      ;;company-xcode
+                      ;;company-cmake
+                      company-files
+                      (company-dabbrev-code company-gtags
+                                            company-etags company-keywords)
+                      ;;company-oddmuse
+                      ))
   :config
-  (global-company-mode)
-  (setq company-idle-delay nil) ;; 手動補完
-  (setq company-selection-wrap-around t) ;; 候補の最後の次は先頭に戻る
-  (setq completion-ignore-case t)
-  (setq company-require-match 'never))
+  (global-company-mode))
 
 ;;;; company-box.el
 (use-package company-box
