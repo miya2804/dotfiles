@@ -803,7 +803,8 @@ If there are multiple windows, the 'other-window' is called."
   :config
   (setq neo-theme
         (if (display-graphic-p) 'nerd2 'arrow))
-  (setq neo-show-hidden-files t))
+  (setq neo-show-hidden-files t)
+  (setq neo-smart-open t))
 
 ;;;; nyan-mode
 (use-package nyan-mode
