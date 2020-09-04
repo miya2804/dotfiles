@@ -306,10 +306,15 @@ If there are multiple windows, the 'other-window' is called."
   :config
   (setq doom-themes-enable-italic t
         doom-themes-enable-bold t)
-  (load-theme 'doom-dracula t)
+ (load-theme 'doom-dracula t)
   (doom-themes-visual-bell-config)
   (doom-themes-neotree-config)
-  (doom-themes-org-config))
+  (doom-themes-org-config)
+  (with-eval-after-load 'doom-dracula-theme
+    (unless (display-grayscale-p)
+      (custom-set-faces
+       '(region ((t (:background "#00cd00"))))
+       ))))
 
 ;;;; ice-berg-theme
 (use-package iceberg-theme :disabled
@@ -352,6 +357,11 @@ If there are multiple windows, the 'other-window' is called."
 
 ;;;; hl-line.el
 (global-hl-line-mode)
+(with-eval-after-load 'doom-dracula-theme
+  (unless (display-grayscale-p)
+    (custom-set-faces
+     '(hl-line ((t (:background "#3a3a3a"))))
+     )))
 
 ;;;; org.el
 (defvar org-directory)
@@ -584,10 +594,10 @@ If there are multiple windows, the 'other-window' is called."
   :hook (after-init . doom-modeline-mode)
   :config
   (line-number-mode 0)
-  (column-number-mode 1)
+  (column-number-mode 0)
   (setq doom-modeline-buffer-file-name-style 'truncate-with-project)
   (setq doom-modeline-minor-modes nil)
-  (setq doom-modeline-buffer-encoding t)
+  (setq doom-modeline-buffer-encoding nil)
   ;; display env version
   (setq doom-modeline-env-version t)
   (setq doom-modeline-env-load-string "...")
@@ -596,10 +606,10 @@ If there are multiple windows, the 'other-window' is called."
   (setq doom-modeline-major-mode-icon t)
   (setq doom-modeline-major-mode-color-icon t)
   (setq doom-modeline-buffer-state-icon t)
-  (setq doom-modeline-buffer-modification-icon t)
+  (setq doom-modeline-buffer-modification-icon t) ;; respect doom-modeline-buffer-state-icon
   (setq doom-modeline-persp-icon t)
   (setq doom-modeline-modal-icon t)
-  (setq doom-modeline-unicode-fallback t)
+  (setq doom-modeline-unicode-fallback nil)
   (setq doom-modeline-github-interval (* 30 60))
   ;; persp
   ;;(setq doom-modeline-persp-name t)
@@ -825,7 +835,7 @@ If there are multiple windows, the 'other-window' is called."
   (after-init . nyan-mode)
   (nyan-mode . nyan-start-animation)
   :config
-  (setq nyan-bar-length 15)
+  (setq nyan-bar-length 10)
   (setq nyan-cat-face-number 4)
   (setq nyan-minimum-window-width 50))
 
