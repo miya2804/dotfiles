@@ -482,10 +482,10 @@ If there are multiple windows, the 'other-window' is called."
   :custom
   (beacon-blink-when-window-scrolls nil)
   :config
+  (setq beacon-size 20)
+  (setq beacon-blink-duration 0.2)
   (with-eval-after-load 'doom-dracula-theme
-    (setq beacon-color "yellow"
-          beacon-size 20
-          beacon-blink-duration 0.2)))
+    (setq beacon-color "yellow")))
 
 ;;;; company.el
 (use-package company
