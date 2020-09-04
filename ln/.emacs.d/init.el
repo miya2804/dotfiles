@@ -184,6 +184,8 @@ If there are multiple windows, the 'other-window' is called."
 (bind-key "C-o" 'other-window-or-split)
 (bind-key "C-i" 'indent-for-tab-command)
 (bind-key "<zenkaku-hankaku>" 'toggle-input-method)
+(global-unset-key (kbd "C-x C-c"))
+(defalias 'exit 'save-buffers-kill-emacs)
 
 ;;;; backup (xxx~)
 ;; execution on or off
