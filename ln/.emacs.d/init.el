@@ -182,6 +182,7 @@ If there are multiple windows, the 'other-window' is called."
 
 ;;;; my-keybind
 (bind-key "C-o" 'other-window-or-split)
+(bind-key "C-i" 'indent-for-tab-command)
 (bind-key "<zenkaku-hankaku>" 'toggle-input-method)
 
 ;;;; backup (xxx~)
@@ -490,8 +491,10 @@ If there are multiple windows, the 'other-window' is called."
 ;;;; company.el
 (use-package company
   :ensure t
+  :if (locate-library "company")
+  :init
+  (global-unset-key (kbd "<tab>"))
   :bind (("<tab>" . company-indent-or-complete-common)
-         ("C-i" . company-complete)
          :map company-active-map
          ("C-p" . company-select-previous)
          ("C-n" . company-select-next))
@@ -622,14 +625,8 @@ If there are multiple windows, the 'other-window' is called."
 (use-package elscreen
   :ensure t :defer nil :no-require t
   :functions (elscreen-create)
+  :bind ("<f5>" . elscreen-next)
   :config
-  ;; 衝突回避(org-modeと衝突) ;; bind-key*で解決済
-  ;; (define-minor-mode overriding-minor-mode
-  ;;   "強制的にC-tを割り当てる"             ;説明文字列
-  ;;   t                                ;デフォルトで有効にする
-  ;;   ""                               ;モードラインに表示しない
-  ;;   `((,(kbd "C-<tab>") . elscreen-next)))
-  (bind-key* "C-<tab>" 'elscreen-next)
   ;; Turn off peripheral functions of tab.
   (set-variable 'elscreen-display-tab nil)
   (set-variable 'elscreen-tab-display-kill-screen nil)
@@ -737,6 +734,7 @@ If there are multiple windows, the 'other-window' is called."
 ;;;; hydra
 (use-package hydra
   :ensure t :defer nil :no-require t
+  :functions (winner-redo winner-undo)
   :config
   (defhydra hydra-git-gutter (:hint nil)
     "
@@ -755,7 +753,7 @@ If there are multiple windows, the 'other-window' is called."
   (defhydra hydra-window-and-buffer-manager (:hint nil :exit t)
     "
     frame           | _n_: make   _w_: delete
-    window          | _r_: resize _c_: balance _0_: delete
+    window          | _r_: resize _c_: balance _0_: delete _h_: redo _l_: undo
     buffer          | _b_: menu   _k_: kill
     window & buffer | _4_: kill
     "
@@ -763,6 +761,8 @@ If there are multiple windows, the 'other-window' is called."
     ("n" make-frame)
     ("w" delete-frame)
     ;; window
+    ("h" winner-undo :exit nil)
+    ("l" winner-redo :exit nil)
     ("0" delete-window)
     ("r" window-resizer)
     ("c" balance-windows)
@@ -772,7 +772,7 @@ If there are multiple windows, the 'other-window' is called."
     ;; window & buffer
     ("4" kill-buffer-and-window))
   (bind-key "C-c g" 'hydra-git-gutter/body)
-  (bind-key "C-c x" 'hydra-window-and-buffer-manager/body))
+  (bind-key "C-c C-x" 'hydra-window-and-buffer-manager/body))
 
 ;;;; iflipb
 ;; https://github.com/jrosdahl/iflipb
@@ -938,8 +938,7 @@ If there are multiple windows, the 'other-window' is called."
 ;;;; winner
 (use-package winner
   :ensure t
-  :bind (("C-t" . winner-undo)
-         ("C-M-t" . winner-redo))
+  :commands (winner-redo winner-undo)
   :config
   (winner-mode 1)
   (setq buffer-quit-function 'winner-undo))
