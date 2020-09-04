@@ -565,12 +565,11 @@ If there are multiple windows, the 'other-window' is called."
 ;;;; dockerfile-mode.el
 (use-package dockerfile-mode
   :ensure t
-  :mode ("Dockerfile\\'"))
+  :mode ("/Dockerfile\\'"))
 
 ;;;; docker-compose-mode
-(use-package docker-compose-mode
-  :ensure t :defer t
-  :after yaml-mode)
+;; yaml-modeも兼ねる
+(use-package docker-compose-mode :ensure t :defer t)
 
 ;;;; docker-tramp.el
 (use-package docker-tramp
@@ -936,9 +935,10 @@ If there are multiple windows, the 'other-window' is called."
   (setq buffer-quit-function 'winner-undo))
 
 ;;;; yaml-mode.el
-(use-package yaml-mode
+;; docker-compose-modeでインストールされる
+(use-package yaml-mode :disabled
   :ensure t
-  :mode ("\\.ya?ml$"))
+  :mode ("\\.ya?ml\\'"))
 
 
 
