@@ -2,7 +2,7 @@
 
 ;;; Commentary:
 
-;;;; Init compile command.
+;; Init compile command.
 ;; (byte-recompile-directory (expand-file-name "~/.emacs.d/") 0)
 
 ;;; Code:
@@ -14,7 +14,7 @@
 
 
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
-;; Functions and Variables and Macros
+;; Functions and Macros
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 
 ;;;; with-eval-after-load (Emacs 24.4 以上)
@@ -78,6 +78,7 @@ If there are multiple windows, the 'other-window' is called."
     (split-window-horizontally))
   (other-window 1))
 
+;;;; trailing-whitespace
 (defun enable-show-trailing-whitespace  ()
   "Enable display of trailing whitespace."
   (interactive) (setq show-trailing-whitespace t))
@@ -91,13 +92,13 @@ If there are multiple windows, the 'other-window' is called."
 
 
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
-;; Environment
+;; Environments
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 
 (eval-and-compile
 
   ;;;; Package Manager
-  ;; package.el
+  ;;; package.el
   (when (require 'package nil t)
     (set-variable
      'package-archives
@@ -134,10 +135,11 @@ If there are multiple windows, the 'other-window' is called."
 ;; - 起動時の use-package の抑止
 ;;   init.el を外部に持ちだした時など、use-package を抑止したいときはEmacs を、オプション "--qq" で起動する。
 ;; - use-package が未インストールか、抑止されている場合は空マクロにする。
-;; インストールされていなければインストールを実行
+;;; インストールされていなければインストールを実行
 ;;(unless (package-installed-p 'use-package)
 ;;  (package-refresh-contents)
 ;;  (package-install 'use-package))
+;;;
 (eval-and-compile
   (when (or (member "--qq" command-line-args)
             (null (require 'use-package nil t)))
@@ -145,7 +147,7 @@ If there are multiple windows, the 'other-window' is called."
     (defmacro use-package (&rest _args))))
 ;; 後の startup.el におけるオプション認識エラーを防止
 (add-to-list 'command-switch-alist '("--qq" . (lambda (switch) nil)))
-(use-package use-package :ensure t :defer t) ;; 形式的宣言
+(use-package use-package :ensure t :defer t) ; 形式的宣言
 
 ;;;; bind-key
 ;; bind-key* は、emulation-mode-map-alists を利用することにより、
@@ -165,7 +167,7 @@ If there are multiple windows, the 'other-window' is called."
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 
 ;; -------------------------------------
-;; Etc
+;; General
 
 ;;;; tab幅
 (setq-default tab-width 4 indent-tabs-mode nil)
@@ -177,19 +179,20 @@ If there are multiple windows, the 'other-window' is called."
 (setq scroll-margin 5)
 
 ;;;; windmove setting
-;;(windmove-default-keybindings) ;; use shift+arrow
-;;(windmove-default-keybindings 'meta) ;; use alt+arrow
+;;(windmove-default-keybindings)          ; use shift+arrow
+;;(windmove-default-keybindings 'meta)    ; use alt+arrow
 
-;;;; my-keybind
+;;;; my-keybinds
 (bind-key "C-o" 'other-window-or-split)
 (bind-key "C-i" 'indent-for-tab-command)
 (bind-key "<zenkaku-hankaku>" 'toggle-input-method)
+;;; "C-x C-c" -> exit
 (global-unset-key (kbd "C-x C-c"))
 (defalias 'exit 'save-buffers-kill-emacs)
+;;;
 ;; helm-for-filesが後に置き換え
 ;; 置き換えられない場合コチラがセット
 (bind-key "C-x C-b" 'buffer-menu)
-
 
 ;;;; backup and auto-save dir
 (defvar backup-and-auto-save-dir-dropbox
@@ -204,13 +207,13 @@ If there are multiple windows, the 'other-window' is called."
   "Set nil to 'buffer-backed-up'."
   (interactive) (setq buffer-backed-up nil))
 (advice-add 'save-buffer :before 'setq-buffer-backed-up-nil)
-;; Change backup directory
+;;; Change backup directory
 (if (file-directory-p backup-and-auto-save-dir-dropbox)
     (add-to-list 'backup-directory-alist
                  (cons ".*" backup-and-auto-save-dir-dropbox))
   (add-to-list 'backup-directory-alist
                (cons ".*" backup-and-auto-save-dir-dropbox)))
-;; Save multiple backupfiles
+;;; Save multiple backupfiles
 (setq make-backup-files t
       vc-make-backup-files t
       backup-by-copying t
@@ -272,9 +275,9 @@ If there are multiple windows, the 'other-window' is called."
 (add-to-list 'initial-frame-alist '(fullscreen . maximized))
 
 ;;;; display-time
-;; (setq display-time-day-and-date nil)
-;; (setq display-time-24hr-format t)
-;; (display-time)
+;;(setq display-time-day-and-date nil)
+;;(setq display-time-24hr-format t)
+;;(display-time)
 
 ;;;; indicater
 (setq-default indicate-empty-lines nil)
@@ -305,11 +308,11 @@ If there are multiple windows, the 'other-window' is called."
 
 (when (display-graphic-p)
   (when (x-list-fonts "SourceHanCodeJP")
-    ;;;; create fontset
+    ;;; create fontset
     (create-fontset-from-ascii-font "SourceHanCodeJp-9:weight=normal:slant=normal" nil "SourceHanCodeJp")
-    ;;;; set font
+    ;;; set font
     (set-fontset-font "fontset-SourceHanCodeJp" 'unicode "SourceHanCodeJp" nil 'append)
-    ;;;; apply fontset to frame
+    ;;; apply fontset to frame
     (add-to-list 'default-frame-alist '(font . "fontset-SourceHanCodeJp"))))
 
 
@@ -346,8 +349,9 @@ If there are multiple windows, the 'other-window' is called."
   :config
   (load-theme 'zenburn t))
 
-;;;; Check if any enabled themes.
-;;;; If nothing enabled themes, load my-default-faces.
+;;;
+;; Check if any enabled themes.
+;; If nothing enabled themes, load my-default-faces.
 (if custom-enabled-themes
     (when init-file-debug
       (message "Enabled themes: %s" custom-enabled-themes))
@@ -385,12 +389,12 @@ If there are multiple windows, the 'other-window' is called."
 ;;;; org.el
 (defvar org-directory)
 (declare-function org-buffer-list "org")
-;; cf. https://www.emacswiki.org/emacs/OrgMode#toc21
+;;; cf. https://www.emacswiki.org/emacs/OrgMode#toc21
 (defun mhatta/org-buffer-files ()
   "Return list of opened Org mode buffer files."
   (mapcar (function buffer-file-name)
           (org-buffer-list 'files)))
-;; org-directory内の(file)を確認できる関数
+;;; org-directory内の(file)を確認できる関数
 (defun show-org-buffer (file)
   "Show an org-file FILE on the current buffer."
   (interactive)
@@ -399,12 +403,13 @@ If there are multiple windows, the 'other-window' is called."
         (switch-to-buffer buffer)
         (message "%s" file))
     (find-file (concat org-directory file))))
-;; key binds
+;;; key binds
 (bind-key "C-c c" 'org-capture)
 (bind-key "C-M-^" '(lambda () (interactive) (show-org-buffer "/notes.org")))
-;; mode
+;;; mode
 ;;(add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
 (push '("\\.org\\'" . org-mode) auto-mode-alist)
+;;; custom
 (with-eval-after-load 'org
   (setq org-directory "~/Dropbox/document/org")
   (set-variable 'org-agenda-files '("~/Dropbox/document/org/agenda/"))
@@ -432,12 +437,11 @@ If there are multiple windows, the 'other-window' is called."
            :empty-lines 1 :jump-to-captured 1))))
 
 ;;;; paren.el
-;; illuminate corresponding brackets
-(show-paren-mode t)
+(show-paren-mode t)                ; illuminate corresponding brackets
 (set-variable 'show-paren-style 'mixed)
 (set-variable 'show-paren-when-point-inside-paren t)
 (set-variable ' show-paren-when-point-in-periphery t)
-;; custom-face
+;;; custom-face
 (with-eval-after-load 'doom-dracula-theme
   (custom-set-faces
    '(show-paren-match ((nil (:background "#44475a" :foreground "#f1fa8c"))))
@@ -517,8 +521,8 @@ If there are multiple windows, the 'other-window' is called."
          ("C-p" . company-select-previous)
          ("C-n" . company-select-next))
   :custom
-  (company-idle-delay nil) ;; 手動補完
-  (company-selection-wrap-around t) ;; 候補の最後の次は先頭に戻る
+  (company-idle-delay nil)              ; 手動補完
+  (company-selection-wrap-around t)     ; 候補の最後の次は先頭に戻る
   (completion-ignore-case t)
   (company-require-match 'never)
   (company-backends '((company-capf company-dabbrev)
@@ -554,32 +558,32 @@ If there are multiple windows, the 'other-window' is called."
   :ensure t
   :config
   (dashboard-setup-startup-hook)
-  ;; set the title
+  ;;; set the title
   (when (eq system-type 'gnu/linux)
     (setq dashboard-banner-logo-title
           (concat "Welcome to Emacs " emacs-version
                   " - "
                   "Kernel " (shell-command-to-string "uname -smo"))))
-  ;; set the bunner
+  ;;; set the bunner
   ;; value can be
   ;; 'official which displays the official emacs logo
   ;; 'logo which displays an alternative emacs logo
   ;; 1, 2 or 3 which displays one of the text banners
   ;; "path/to/your/image.png" which displays whatever image you would prefer
   (setq dashboard-startup-banner (if (display-graphic-p) 'logo 3))
-  ;; centering
+  ;;; centering
   (setq dashboard-center-content t)
-  ;; use icons
+  ;;; use icons
   (setq dashboard-set-heading-icons t)
   (setq dashboard-set-file-icons t)
-  ;; init-info (default: init time)
+  ;;; init-info (default: init time)
   (setq dashboard-set-init-info t)
   ;;(setq dashboard-init-info "This is an init message!")
-  ;; dashboard items
+  ;;; dashboard items
   (setq dashboard-items '((recents  . 10)
                         (bookmarks . 5)
                         (agenda . 5)))
-  ;; footer
+  ;;; footer
   (setq dashboard-set-footer t)
   ;;(setq dashboard-footer-messages '("Dashboard is pretty cool!"))
   ;;(setq dashboard-footer-icon (all-the-icons-octicon "dashboard"
@@ -619,23 +623,23 @@ If there are multiple windows, the 'other-window' is called."
   (setq doom-modeline-buffer-file-name-style 'truncate-with-project)
   (setq doom-modeline-minor-modes nil)
   (setq doom-modeline-buffer-encoding nil)
-  ;; display env version
+  ;;; display env version
   (setq doom-modeline-env-version t)
   (setq doom-modeline-env-load-string "...")
-  ;; icon
+  ;;; icon
   (setq doom-modeline-icon (display-graphic-p))
   (setq doom-modeline-major-mode-icon t)
   (setq doom-modeline-major-mode-color-icon t)
   (setq doom-modeline-buffer-state-icon t)
-  (setq doom-modeline-buffer-modification-icon t) ;; respect doom-modeline-buffer-state-icon
+  (setq doom-modeline-buffer-modification-icon t) ; respect doom-modeline-buffer-state-icon
   (setq doom-modeline-persp-icon t)
   (setq doom-modeline-modal-icon t)
   (setq doom-modeline-unicode-fallback nil)
   (setq doom-modeline-github-interval (* 30 60))
-  ;; persp
+  ;;; persp
   ;;(setq doom-modeline-persp-name t)
   ;;(setq doom-modeline-display-default-persp-name nil)
-  ;; lsp
+  ;;; lsp
   ;;(setq doom-modeline-lsp t)
   )
 
@@ -645,11 +649,11 @@ If there are multiple windows, the 'other-window' is called."
   :functions (elscreen-create)
   :bind ("<f5>" . elscreen-next)
   :config
-  ;; Turn off peripheral functions of tab.
+  ;;; Turn off peripheral functions of tab.
   (set-variable 'elscreen-display-tab nil)
   (set-variable 'elscreen-tab-display-kill-screen nil)
   (set-variable 'elscreen-tab-display-control nil)
-  ;; init
+  ;;; init
   (elscreen-start)
   (elscreen-create))
 
@@ -706,13 +710,13 @@ If there are multiple windows, the 'other-window' is called."
   (require 'helm-config)
   (with-eval-after-load 'migemo
     (helm-migemo-mode 1))
-  ;; fuzzy matting
+  ;;; fuzzy matting
   (set-variable 'helm-M-x-fuzzy-match t)
   (set-variable 'helm-buffers-fuzzy-matching t)
   (set-variable 'helm-recentf-fuzzy-match t)
   (set-variable 'helm-apropos-fuzzy-match t)
   (set-variable 'helm-lisp-fuzzy-completion t)
-  ;; helm-for-files
+  ;;; helm-for-files
   (set-variable 'helm-for-files-preferred-list
         '(helm-source-buffers-list
           helm-source-recentf
@@ -759,14 +763,14 @@ If there are multiple windows, the 'other-window' is called."
     ^Git-gutter^ | _l_: reload _p_: previous _n_: next _s_: stage _r_: revert _d_: diffinfo
     ^Magit^      | _m_: magit-status
     "
-    ;; git-gutter
+    ;;; git-gutter
     ("l" git-gutter)
     ("p" git-gutter:previous-hunk)
     ("n" git-gutter:next-hunk)
     ("s" git-gutter:stage-hunk)
     ("r" git-gutter:revert-hunk)
     ("d" git-gutter:toggle-popup-hunk)
-    ;; magit
+    ;;; magit
     ("m" magit-status :exit t))
   (defhydra hydra-window-and-buffer-manager (:hint nil :exit t)
     "
@@ -775,19 +779,19 @@ If there are multiple windows, the 'other-window' is called."
     buffer          | _b_: menu   _k_: kill
     window & buffer | _4_: kill
     "
-    ;; frame
+    ;;; frame
     ("n" make-frame)
     ("w" delete-frame)
-    ;; window
+    ;;; window
     ("h" winner-undo :exit nil)
     ("l" winner-redo :exit nil)
     ("0" delete-window)
     ("r" window-resizer)
     ("c" balance-windows)
-    ;; buffer
+    ;;; buffer
     ("b" buffer-menu)
     ("k" kill-buffer)
-    ;; window & buffer
+    ;;; window & buffer
     ("4" kill-buffer-and-window))
   (bind-key "C-c g" 'hydra-git-gutter/body)
   (bind-key "C-c C-x" 'hydra-window-and-buffer-manager/body))
@@ -815,7 +819,7 @@ If there are multiple windows, the 'other-window' is called."
 (defvar migemo-command (executable-find "cmigemo"))
 (defvar migemo-dictionary
   (locate-file "migemo-dict"
-               '("/usr/share/cmigemo/utf-8"))) ;; debian
+               '("/usr/share/cmigemo/utf-8"))) ; debian
 (use-package migemo
   :if (and migemo-command migemo-dictionary)
   :ensure t :defer nil :no-require t
@@ -877,7 +881,7 @@ If there are multiple windows, the 'other-window' is called."
   (setq org-journal-file-format "%Y%m%d.org")
   (setq org-journal-find-file 'find-file)
   (setq org-extend-today-until '3)
-  ;; 折返しが起こったときの挙動の修正
+  ;;; 折返しが起こったときの挙動の修正
   (add-hook 'visual-line-mode-hook
             '(lambda()
                (setq word-wrap nil))))
@@ -925,7 +929,7 @@ If there are multiple windows, the 'other-window' is called."
   :diminish volatile-highlights-mode
   :hook (after-init . volatile-highlights-mode)
   :config
-  ;; custom-face
+  ;;; custom-face
   (with-eval-after-load 'doom-dracula-theme
     (custom-set-faces
      '(vhl/default-face ((nil (:foreground "#FF3333" :background "#FFCDCD"))))
@@ -986,6 +990,6 @@ If there are multiple windows, the 'other-window' is called."
                         ,load-file-name elapsed))) t)
 
 
-;; (provide 'init)
+;;(provide 'init)
 
 ;;; init.el ends here
