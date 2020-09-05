@@ -186,35 +186,51 @@ If there are multiple windows, the 'other-window' is called."
 (bind-key "<zenkaku-hankaku>" 'toggle-input-method)
 (global-unset-key (kbd "C-x C-c"))
 (defalias 'exit 'save-buffers-kill-emacs)
-
-;;;; backup (xxx~)
-;; execution on or off
-(setq make-backup-files t)
-;; change directory
-(setq backup-directory-alist
-      (cons (cons ".*" (expand-file-name "~/.emacs.d/.ehist"))
-            backup-directory-alist))
-;; save multiple backupfiles
-(setq version-control     t) ;; exucution on or off
-(setq kept-new-versions   5) ;; latest number
-(setq kept-old-versions   1) ;; oldest number
-(setq delete-old-versions t) ;; delete out of range
-
-;;;; auto-save (#xxx#)
-(setq auto-save-timeout 10) ;; 10sec (def:30)
-(setq auto-save-interval 100) ;; 100char (def:300)
-(setq delete-auto-save-files t) ;; successful completion
-(setq auto-save-file-name-transforms
-      `((".*", (expand-file-name "~/.emacs.d/.ehist") t)))
-
-;;;; lockfile (.#xxx)
-;; execution on of off
-(setq create-lockfiles nil)
-
-;;;; open bufferlist on current window
 ;; helm-for-filesが後に置き換え
 ;; 置き換えられない場合コチラがセット
 (bind-key "C-x C-b" 'buffer-menu)
+
+
+;;;; backup and auto-save dir
+(defvar backup-and-auto-save-dir-dropbox
+  (expand-file-name "~/Dropbox/backup/emacs"))
+(defvar backup-and-auto-save-dir-local
+  (expand-file-name "~/.emacs.d/.backup"))
+
+;;;; backup (xxx~)
+;;; 保存するたびにバックアップを作る設定
+;;; https://www.ncaq.net/2018/04/19/10/57/08/
+(defun setq-buffer-backed-up-nil ()
+  "Set nil to 'buffer-backed-up'."
+  (interactive) (setq buffer-backed-up nil))
+(advice-add 'save-buffer :before 'setq-buffer-backed-up-nil)
+;; Change backup directory
+(if (file-directory-p backup-and-auto-save-dir-dropbox)
+    (add-to-list 'backup-directory-alist
+                 (cons ".*" backup-and-auto-save-dir-dropbox))
+  (add-to-list 'backup-directory-alist
+               (cons ".*" backup-and-auto-save-dir-dropbox)))
+;; Save multiple backupfiles
+(setq make-backup-files t
+      vc-make-backup-files t
+      backup-by-copying t
+      version-control t              ; 複数バックアップ
+      kept-new-versions 30           ; 新しいバックアップをいくつ残すか
+      kept-old-versions 0            ; 古いバックアップをいくつ残すか
+      delete-old-versions t)         ; Delete out of range
+
+;;;; auto-save (#xxx#)
+(setq auto-save-timeout 1               ; (def:30)
+      delete-auto-save-files t ; delete auto save file when successful completion.
+      auto-save-list-file-prefix nil)
+(if (file-directory-p (expand-file-name backup-and-auto-save-dir-dropbox))
+    (setq auto-save-file-name-transforms
+          `((".*", backup-and-auto-save-dir-dropbox t)))
+  (setq auto-save-file-name-transforms
+        `((".*", backup-and-auto-save-dir-local t))))
+
+;;;; lockfile (.#xxx)
+(setq create-lockfiles nil)
 
 ;;;; language
 (set-language-environment "Japanese")
