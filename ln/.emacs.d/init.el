@@ -561,30 +561,31 @@ If there are multiple windows, the 'other-window' is called."
   :config
   (dashboard-setup-startup-hook)
   ;;; set the title
-  (when (eq system-type 'gnu/linux)
-    (setq dashboard-banner-logo-title
-          (concat "Welcome to Emacs " emacs-version
-                  " - "
-                  "Kernel " (shell-command-to-string "uname -smo"))))
-  ;;; set the bunner
-  ;; value can be
-  ;; 'official which displays the official emacs logo
-  ;; 'logo which displays an alternative emacs logo
-  ;; 1, 2 or 3 which displays one of the text banners
-  ;; "path/to/your/image.png" which displays whatever image you would prefer
-  (setq dashboard-startup-banner (if (display-graphic-p) 'logo 3))
+  (setq dashboard-banner-logo-title nil)
+  ;;; custom banner
+  ;; You can be "path/to/your/image.png"
+  ;; which displays whatever image you would prefer
+  ;; ↓↓ custom banners ↓↓
+  ;; 1: Ghost
+  ;; 2: Isometric3
+  (setq dashboard-banners-directory (expand-file-name "~/.emacs.d/dashboard-banners/"))
+  (setq dashboard-startup-banner 1)
   ;;; centering
   (setq dashboard-center-content t)
-  ;;; use icons
+  ;;; icon
   (setq dashboard-set-heading-icons t)
   (setq dashboard-set-file-icons t)
   ;;; init-info (default: init time)
   (setq dashboard-set-init-info t)
-  ;;(setq dashboard-init-info "This is an init message!")
+  (when (eq system-type 'gnu/linux)
+    (setq dashboard-init-info
+          (concat "Welcome to Emacs " emacs-version
+                  " - "
+                  "Kernel " (shell-command-to-string "uname -smo"))))
   ;;; dashboard items
-  (setq dashboard-items '((recents  . 10)
-                        (bookmarks . 5)
-                        (agenda . 5)))
+  (setq dashboard-items '((recents  . 15)
+                        ;;(bookmarks . 5)
+                          (agenda . 5)))
   ;;; footer
   (setq dashboard-set-footer t)
   ;;(setq dashboard-footer-messages '("Dashboard is pretty cool!"))
