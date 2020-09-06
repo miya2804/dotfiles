@@ -2,6 +2,8 @@
 
 ;;; Commentary:
 
+;; Init file for Emacs settings.
+;;
 ;; Init compile command.
 ;; (byte-recompile-directory (expand-file-name "~/.emacs.d/") 0)
 
