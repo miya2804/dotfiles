@@ -806,7 +806,7 @@ If there are multiple windows, the 'other-window' is called."
   :bind (("M-o" . iflipb-next-buffer)
          ("M-O" . iflipb-previous-buffer))
   :config
-  (setq iflipb-ignore-buffers (list "^[*]"))
+  (setq iflipb-ignore-buffers (list "^[*]" "^magit-process:"))
   (setq iflipb-wrap-around t))
 
 ;;;; magit.el
