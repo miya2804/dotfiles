@@ -98,6 +98,7 @@ alias l='ls -CF'
 alias rm='rm -i'
 alias mv='mv -i'
 alias cp='cp -i'
+alias open='xdg-open'
 
 # Local Alias definitions.
 # You may want to put all your additions into a separate file like
