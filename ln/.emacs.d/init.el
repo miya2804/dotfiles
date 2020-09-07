@@ -899,7 +899,7 @@ If there are multiple windows, the 'other-window' is called."
 
 ;;;; redo+
 (use-package redo+
-  :pin manual
+  :pin manual :demand t
   :bind ("C-M-/" . redo))
 
 ;;;; smart-newline
