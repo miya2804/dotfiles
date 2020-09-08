@@ -196,46 +196,47 @@ If there are multiple windows, the 'other-window' is called."
 ;; 置き換えられない場合コチラがセット
 (bind-key "C-x C-b" 'buffer-menu)
 
-;;;; backup and auto-save dir
-(defvar backup-and-auto-save-dir-dropbox
-  (expand-file-name "~/Dropbox/backup/emacs"))
-(defvar backup-and-auto-save-dir-local
-  (expand-file-name "~/.emacs.d/.backup"))
+(eval-and-compile
+  ;;;; backup and auto-save dir
+  (defvar backup-and-auto-save-dir-dropbox
+    (expand-file-name "~/Dropbox/backup/emacs"))
+  (defvar backup-and-auto-save-dir-local
+    (expand-file-name "~/.emacs.d/.backup"))
 
-;;;; backup (xxx~)
-;;; 保存するたびにバックアップを作る設定
-;;; https://www.ncaq.net/2018/04/19/10/57/08/
-(defun setq-buffer-backed-up-nil ()
-  "Set nil to 'buffer-backed-up'."
-  (interactive) (setq buffer-backed-up nil))
-(advice-add 'save-buffer :before 'setq-buffer-backed-up-nil)
-;;; Change backup directory
-(if (file-directory-p backup-and-auto-save-dir-dropbox)
+  ;;;; backup (xxx~)
+  ;;; 保存するたびにバックアップを作る設定
+  ;;; https://www.ncaq.net/2018/04/19/10/57/08/
+  (defun setq-buffer-backed-up-nil ()
+    "Set nil to 'buffer-backed-up'."
+    (interactive) (setq buffer-backed-up nil))
+  (advice-add 'save-buffer :before 'setq-buffer-backed-up-nil)
+  ;;; Change backup directory
+  (if (file-directory-p backup-and-auto-save-dir-dropbox)
+      (add-to-list 'backup-directory-alist
+                   (cons ".*" backup-and-auto-save-dir-dropbox))
     (add-to-list 'backup-directory-alist
-                 (cons ".*" backup-and-auto-save-dir-dropbox))
-  (add-to-list 'backup-directory-alist
-               (cons ".*" backup-and-auto-save-dir-dropbox)))
-;;; Save multiple backupfiles
-(setq make-backup-files t
-      vc-make-backup-files t
-      backup-by-copying t
-      version-control t              ; 複数バックアップ
-      kept-new-versions 30           ; 新しいバックアップをいくつ残すか
-      kept-old-versions 0            ; 古いバックアップをいくつ残すか
-      delete-old-versions t)         ; Delete out of range
+                 (cons ".*" backup-and-auto-save-dir-dropbox)))
+  ;;; Save multiple backupfiles
+  (setq make-backup-files t
+        vc-make-backup-files t
+        backup-by-copying t
+        version-control t           ; 複数バックアップ
+        kept-new-versions 30        ; 新しいバックアップをいくつ残すか
+        kept-old-versions 0         ; 古いバックアップをいくつ残すか
+        delete-old-versions t)      ; Delete out of range
 
-;;;; auto-save (#xxx#)
-(setq auto-save-timeout 1               ; (def:30)
-      delete-auto-save-files t ; delete auto save file when successful completion.
-      auto-save-list-file-prefix nil)
-(if (file-directory-p (expand-file-name backup-and-auto-save-dir-dropbox))
+  ;;;; auto-save (#xxx#)
+  (setq auto-save-timeout 1             ; (def:30)
+        delete-auto-save-files t ; delete auto save file when successful completion.
+        auto-save-list-file-prefix nil)
+  (if (file-directory-p (expand-file-name backup-and-auto-save-dir-dropbox))
+      (setq auto-save-file-name-transforms
+            `((".*", backup-and-auto-save-dir-dropbox t)))
     (setq auto-save-file-name-transforms
-          `((".*", backup-and-auto-save-dir-dropbox t)))
-  (setq auto-save-file-name-transforms
-        `((".*", backup-and-auto-save-dir-local t))))
+          `((".*", backup-and-auto-save-dir-local t))))
 
-;;;; lockfile (.#xxx)
-(setq create-lockfiles nil)
+  ;;;; lockfile (.#xxx)
+  (setq create-lockfiles nil))
 
 ;;;; language
 (set-language-environment "Japanese")
@@ -451,9 +452,9 @@ If there are multiple windows, the 'other-window' is called."
 
 ;;;; recentf.el
 (set-variable 'recentf-max-saved-items 500)
-;;(set-variable 'recentf-auto-cleanup 'never)
+(set-variable 'recentf-auto-cleanup 'never)
 (set-variable 'recentf-exclude
-              '(".recentf" ".bookmarks"))
+              '("/recentf\\'" "/bookmarks\\'"))
 
 ;; -------------------------------------
 ;; Non-standard Packages
