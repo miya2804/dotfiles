@@ -825,6 +825,8 @@ If there are multiple windows, the 'other-window' is called."
 (defvar migemo-dictionary
   (locate-file "migemo-dict"
                '("/usr/share/cmigemo/utf-8"))) ; debian
+(unless migemo-command
+  (warn "migemo: `cmigemo' is unavailable! Please install it via `sudo apt install cmigemo' if possible."))
 (use-package migemo
   :if (and migemo-command migemo-dictionary)
   :ensure t :defer nil :no-require t
@@ -839,8 +841,11 @@ If there are multiple windows, the 'other-window' is called."
 
 ;;;; mozc
 ;; require external package -> "emacs-mozc-bin"
+(defvar mozc-emacs-helper (executable-find "mozc_emacs_helper"))
+(unless mozc-emacs-helper
+  (warn "mozc: `mozc_emacs_helmper' is unavailable! Please install it via `sudo apt install emacs-mozc-bin' if possible."))
 (use-package mozc
-  :if (executable-find "mozc_emacs_helper")
+  :if mozc-emacs-helper
   :ensure t :defer t
   :config
   (setq default-input-method "japanese-mozc"))
