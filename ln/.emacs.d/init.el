@@ -516,16 +516,13 @@ If there are multiple windows, the 'other-window' is called."
 
 ;;;; company.el
 (use-package company
-  :ensure t
-  :if (locate-library "company")
-  :init
-  (global-unset-key (kbd "<tab>"))
+  :ensure t :demand t
   :bind (("<tab>" . company-indent-or-complete-common)
          :map company-active-map
          ("C-p" . company-select-previous)
          ("C-n" . company-select-next))
   :custom
-  (company-idle-delay nil)              ; 手動補完
+  (company-idle-delay 0)                ; 手動補完
   (company-selection-wrap-around t)     ; 候補の最後の次は先頭に戻る
   (completion-ignore-case t)
   (company-require-match 'never)
