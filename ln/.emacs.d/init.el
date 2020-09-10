@@ -250,6 +250,9 @@ If there are multiple windows, the 'other-window' is called."
 ;;;; saving customization
 (setq custom-file (locate-user-emacs-file "elisp/custom.el"))
 
+;;;; terminalでのマウス使用
+(unless (display-graphic-p) (xterm-mouse-mode t))
+
 ;; -------------------------------------
 ;; Appearance
 
