@@ -765,8 +765,8 @@ If there are multiple windows, the 'other-window' is called."
   :config
   (defhydra hydra-git-gutter (:hint nil)
     "
-    ^Git-gutter^ | _l_: reload _p_: previous _n_: next _s_: stage _r_: revert _d_: diffinfo
-    ^Magit^      | _m_: magit-status
+    ^Git-gutter^ | [_l_]: reload [_p_]: previous [_n_]: next [_s_]: stage [_r_]: revert [_d_]: diffinfo
+    ^Magit^      | [_m_]: magit-status
     "
     ;;; git-gutter
     ("l" git-gutter)
@@ -779,15 +779,20 @@ If there are multiple windows, the 'other-window' is called."
     ("m" magit-status :exit t))
   (defhydra hydra-window-and-buffer-manager (:hint nil :exit t)
     "
-    frame           | _n_: make   _w_: delete
-    window          | _r_: resize _c_: balance _0_: delete _h_: redo _l_: undo
-    buffer          | _b_: menu   _k_: kill
-    window & buffer | _4_: kill
+    frame           | [_n_]: make [_w_]: delete
+    window split    | [_2_]: split-below [_3_]: split-right
+           resize   | [_r_]: resize [_c_]: balance
+           manage   | [_0_]: delete [_1_]: delete-other [_h_]: redo [_l_]: undo
+    buffer          | [_b_]: menu [_k_]: kill
+    window & buffer | [_4_]: kill
     "
     ;;; frame
     ("n" make-frame)
     ("w" delete-frame)
     ;;; window
+    ("1" delete-other-windows)
+    ("2" split-window-below)
+    ("3" split-window-right)
     ("h" winner-undo :exit nil)
     ("l" winner-redo :exit nil)
     ("0" delete-window)
