@@ -412,7 +412,7 @@ If there are multiple windows, the 'other-window' is called."
     (find-file (concat org-directory file))))
 ;;; key binds
 (bind-key "C-c c" 'org-capture)
-(bind-key "C-M-^" '(lambda () (interactive) (show-org-buffer "/notes.org")))
+(bind-key "C-c n" '(lambda () (interactive) (show-org-buffer "/notes.org")))
 ;;; mode
 ;;(add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
 (push '("\\.org\\'" . org-mode) auto-mode-alist)
