@@ -200,9 +200,9 @@ If there are multiple windows, the 'other-window' is called."
 (eval-and-compile
   ;;;; backup and auto-save dir
   (defvar backup-and-auto-save-dir-dropbox
-    (expand-file-name "~/Dropbox/backup/emacs"))
+    (expand-file-name "~/Dropbox/backup/emacs/"))
   (defvar backup-and-auto-save-dir-local
-    (expand-file-name "~/.emacs.d/.backup"))
+    (expand-file-name "~/.emacs.d/.backup/"))
 
   ;;;; backup (xxx~)
   ;;; 保存するたびにバックアップを作る設定
@@ -230,7 +230,7 @@ If there are multiple windows, the 'other-window' is called."
   (setq auto-save-timeout 1             ; (def:30)
         delete-auto-save-files t ; delete auto save file when successful completion.
         auto-save-list-file-prefix nil)
-  (if (file-directory-p (expand-file-name backup-and-auto-save-dir-dropbox))
+  (if (file-directory-p backup-and-auto-save-dir-dropbox)
       (setq auto-save-file-name-transforms
             `((".*", backup-and-auto-save-dir-dropbox t)))
     (setq auto-save-file-name-transforms
