@@ -674,10 +674,7 @@ If there are multiple windows, the 'other-window' is called."
   :ensure t :no-require t
   :diminish git-gutter-mode
   :hook (after-init . global-git-gutter-mode)
-  :functions (git-gutter:previous-hunk git-gutter:next-hunk
-              git-gutter:stage-hunk git-gutter:revert-hunk
-              git-gutter:popup-hunk git-gutter:popup-buffer-window
-              git-gutter:toggle-popup-hunk)
+  :functions (git-gutter:popup-buffer-window git-gutter:popup-hunk)
   :custom-face
   (git-gutter:modified ((t (:background "#f1fa8c"))))
   (git-gutter:added    ((t (:background "#50fa7b"))))
@@ -699,8 +696,7 @@ If there are multiple windows, the 'other-window' is called."
 (use-package helm
   :ensure t
   :diminish helm-migemo-mode
-  :functions (helm-execute-persistent-action helm-kill-selection-and-quit
-              helm-select-action helm-migemo-mode)
+  :functions helm-migemo-mode
   :bind (("C-x C-f" . helm-find-files)
          ("C-c h" . helm-command-prefix)
          ("C-x C-b" . helm-for-files)
@@ -716,11 +712,11 @@ If there are multiple windows, the 'other-window' is called."
   (with-eval-after-load 'migemo
     (helm-migemo-mode 1))
   ;;; fuzzy matting
-  (set-variable 'helm-M-x-fuzzy-match t)
   (set-variable 'helm-buffers-fuzzy-matching t)
-  (set-variable 'helm-recentf-fuzzy-match t)
   (set-variable 'helm-apropos-fuzzy-match t)
   (set-variable 'helm-lisp-fuzzy-completion t)
+  ;;(set-variable 'helm-M-x-fuzzy-match t)
+  ;;(set-variable 'helm-recentf-fuzzy-match t)
   ;;; helm-for-files
   (set-variable 'helm-for-files-preferred-list
         '(helm-source-buffers-list
@@ -761,7 +757,10 @@ If there are multiple windows, the 'other-window' is called."
 ;;;; hydra
 (use-package hydra
   :ensure t :defer nil :no-require t
-  :functions (winner-redo winner-undo)
+  :functions (winner-redo winner-undo
+                          git-gutter:previous-hunk git-gutter:next-hunk
+                          git-gutter:stage-hunk git-gutter:revert-hunk
+                          git-gutter:toggle-popup-hunk)
   :config
   (defhydra hydra-git-gutter (:hint nil)
     "
@@ -835,7 +834,7 @@ If there are multiple windows, the 'other-window' is called."
 (use-package migemo
   :if (and migemo-command migemo-dictionary)
   :ensure t :defer nil :no-require t
-  :functions (migemo-init)
+  :functions migemo-init
   :config
   (set-variable 'migemo-options '("-q" "--emacs"))
   (set-variable 'migemo-coding-system 'utf-8-unix)
@@ -977,9 +976,7 @@ If there are multiple windows, the 'other-window' is called."
 (use-package winner
   :ensure t
   :commands (winner-redo winner-undo)
-  :config
-  (winner-mode 1)
-  (setq buffer-quit-function 'winner-undo))
+  :config (winner-mode 1))
 
 ;;;; yaml-mode.el
 ;; docker-compose-modeでインストールされる
