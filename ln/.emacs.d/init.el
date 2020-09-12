@@ -116,6 +116,9 @@ If there are multiple windows, the 'other-window' is called."
   ;;;; load-path
   (setq load-path (cons "~/.emacs.d/elisp" load-path))
 
+  ;;;; exec-path
+  (push (expand-file-name "~/.local/bin") exec-path)
+
   ;;;; proxy
   ;; ~/.emacs.d/elisp/secret/myproxy.elにプロキシ設定を書き込む
   (load "secret/myproxy" t)
@@ -672,6 +675,12 @@ If there are multiple windows, the 'other-window' is called."
   (elscreen-create))
 
 ;;;; flycheck.el
+;; dockerfile
+(when (executable-find "hadolint")
+  (message "flycheck: `hadolint' is unavailable! Please install it via `https://github.com/hadolint/hadolint' if possible."))
+;; python
+(when (executable-find "flake8")
+  (message "flycheck: `flake8' is unavailable! Please install it via `pip install flake8' if possible."))
 (use-package flycheck
   :ensure t
   :hook ((emacs-lisp-mode . flycheck-mode)
@@ -839,7 +848,7 @@ If there are multiple windows, the 'other-window' is called."
   (locate-file "migemo-dict"
                '("/usr/share/cmigemo/utf-8"))) ; debian
 (unless migemo-command
-  (warn "migemo: `cmigemo' is unavailable! Please install it via `sudo apt install cmigemo' if possible."))
+  (message "migemo: `cmigemo' is unavailable! Please install it via `sudo apt install cmigemo' if possible."))
 (use-package migemo
   :if (and migemo-command migemo-dictionary)
   :ensure t :defer nil :no-require t
