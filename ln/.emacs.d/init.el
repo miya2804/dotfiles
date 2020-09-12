@@ -570,8 +570,17 @@ If there are multiple windows, the 'other-window' is called."
   ;; ↓↓ custom banners ↓↓
   ;; 1: Ghost
   ;; 2: Isometric3
+  ;; 3: Alligator
+  ;; 4: ROMAN
+  ;; 5: Pawp
+  ;; 6: O8
+  ;; 7: Blocks
+  ;; 8: Graffiti
+  ;; 9: Slant Relief
+  ;; 10: Chunky
+  ;; 11: Cricket
   (setq dashboard-banners-directory (expand-file-name "~/.emacs.d/dashboard-banners/"))
-  (setq dashboard-startup-banner 1)
+  (setq dashboard-startup-banner 10)
   ;;; centering
   (setq dashboard-center-content t)
   ;;; icon
