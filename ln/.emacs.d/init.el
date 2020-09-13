@@ -317,14 +317,17 @@ If there are multiple windows, the 'other-window' is called."
 ;; Fonts
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 
-(when (display-graphic-p)
-  (when (x-list-fonts "SourceHanCodeJP")
-    ;;; create fontset
-    (create-fontset-from-ascii-font "SourceHanCodeJp-9:weight=normal:slant=normal" nil "SourceHanCodeJp")
-    ;;; set font
-    (set-fontset-font "fontset-SourceHanCodeJp" 'unicode "SourceHanCodeJp" nil 'append)
-    ;;; apply fontset to frame
-    (add-to-list 'default-frame-alist '(font . "fontset-SourceHanCodeJp"))))
+(when (member "Source Han Code JP" (font-family-list))
+  (push '(font . "SourceHanCodeJp-9:weight=normal:slant=normal")
+        default-frame-alist))
+;; (when (display-graphic-p)
+;;   (when (x-list-fonts "SourceHanCodeJP")
+;;     ;;; create fontset
+;;     (create-fontset-from-ascii-font "SourceHanCodeJp-9:weight=normal:slant=normal" nil "SourceHanCodeJp")
+;;     ;;; set font
+;;     (set-fontset-font "fontset-SourceHanCodeJp" 'unicode "SourceHanCodeJp" nil 'append)
+;;     ;;; apply fontset to frame
+;;     (add-to-list 'default-frame-alist '(font . "fontset-SourceHanCodeJp"))))
 
 
 
