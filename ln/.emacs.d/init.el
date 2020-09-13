@@ -530,8 +530,8 @@ If there are multiple windows, the 'other-window' is called."
   :ensure t :demand t
   :bind (("<tab>" . company-indent-or-complete-common)
          :map company-active-map
-         ("C-p" . company-select-previous)
-         ("C-n" . company-select-next))
+              ("C-p" . company-select-previous)
+              ("C-n" . company-select-next))
   :custom
   (company-idle-delay 0)                ; 手動補完
   (company-selection-wrap-around t)     ; 候補の最後の次は先頭に戻る
@@ -727,10 +727,10 @@ If there are multiple windows, the 'other-window' is called."
          ("M-x" . helm-M-x)
          ("M-y" . helm-show-kill-ring)
          :map helm-map
-         ("<tab>" . helm-execute-persistent-action)
-         ("C-c C-k" . helm-kill-selection-and-quit)
-         ("C-i" . helm-execute-persistent-action)
-         ("C-z" . helm-select-action))
+              ("<tab>" . helm-execute-persistent-action)
+              ("C-c C-k" . helm-kill-selection-and-quit)
+              ("C-i" . helm-execute-persistent-action)
+              ("C-z" . helm-select-action))
   :config
   (require 'helm-config)
   (with-eval-after-load 'migemo
@@ -756,13 +756,16 @@ If there are multiple windows, the 'other-window' is called."
 (use-package helm-flycheck
   :ensure t
   :bind (:map flycheck-mode-map
-         ("C-c ! h" . 'helm-flycheck)))
+              ("C-c ! h" . 'helm-flycheck)))
 
 ;;;; helm-swoop
 (use-package helm-swoop
   :ensure t
   :after helm
   :commands (helm-swoop helm-multi-swoop)
+  :bind (:map helm-swoop-map
+              ("C-r" . helm-previous-line)
+              ("C-s" . helm-next-line))
   :config
   (setq helm-swoop-move-to-line-cycle nil))
 
