@@ -307,6 +307,7 @@ If there are multiple windows, the 'other-window' is called."
 ;; Libraries
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 
+(use-package pkg-info :ensure t :defer t)
 (use-package diminish :ensure t :demand t)
 ;;(use-package use-package-ensure-system-package :ensure t :demand t)
 
@@ -335,6 +336,7 @@ If there are multiple windows, the 'other-window' is called."
 
 ;;;; doom-themes
 (use-package doom-themes
+  :ensure t
   :config
   (setq doom-themes-enable-italic t
         doom-themes-enable-bold t)
@@ -382,7 +384,7 @@ If there are multiple windows, the 'other-window' is called."
 
 ;;;; display-line-numbers.el
 ;;;; linum.el
-(if (version<= "26.0.50" emacs-version)
+(if (fboundp 'global-display-line-numbers-mode)
     (global-display-line-numbers-mode)
   (progn
     (global-linum-mode)
@@ -510,15 +512,15 @@ If there are multiple windows, the 'other-window' is called."
 ;;;; beacon
 (use-package beacon
   :ensure t
+  :if (version<= "2.14" (pkg-info-version-info 'seq))
   :diminish beacon-mode
   :hook (after-init . beacon-mode)
-  :custom
-  (beacon-blink-when-window-scrolls nil)
   :config
-  (setq beacon-size 20)
-  (setq beacon-blink-duration 0.2)
+  (set-variable 'beacon-size 20)
+  (set-variable 'beacon-blink-duration 0.2)
+  (set-variable 'beacon-blink-when-window-scrolls nil)
   (with-eval-after-load 'doom-dracula-theme
-    (setq beacon-color "yellow")))
+    (set-variable 'beacon-color "yellow")))
 
 ;;;; company.el
 (use-package company
@@ -550,10 +552,11 @@ If there are multiple windows, the 'other-window' is called."
 ;;;; company-box.el
 (use-package company-box
   :ensure t
+  :if (version<= "26" emacs-version)
   :hook (company-mode . company-box-mode)
   :config
   (with-eval-after-load 'all-the-icons
-    (setq company-box-icons-alist 'company-box-icons-all-the-icons)))
+    (set-variable 'company-box-icons-alist 'company-box-icons-all-the-icons)))
 
 ;;;; company-quickhelp.el
 (use-package company-quickhelp
@@ -561,53 +564,56 @@ If there are multiple windows, the 'other-window' is called."
   :hook (company-mode. company-quickhelp-mode))
 
 ;;;; dashboard
-(use-package dashboard
-  :ensure t
-  :config
-  (dashboard-setup-startup-hook)
-  ;;; set the title
-  (setq dashboard-banner-logo-title nil)
-  ;;; custom banner
-  ;; You can be "path/to/your/image.png"
-  ;; which displays whatever image you would prefer
-  ;; ↓↓ custom banners ↓↓
-  ;; 1: Ghost
-  ;; 2: Isometric3
-  ;; 3: Alligator
-  ;; 4: ROMAN
-  ;; 5: Pawp
-  ;; 6: O8
-  ;; 7: Blocks
-  ;; 8: Graffiti
-  ;; 9: Slant Relief
-  ;; 10: Chunky
-  ;; 11: Cricket
-  (setq dashboard-banners-directory (expand-file-name "~/.emacs.d/dashboard-banners/"))
-  (setq dashboard-startup-banner 10)
-  ;;; centering
-  (setq dashboard-center-content t)
-  ;;; icon
-  (setq dashboard-set-heading-icons t)
-  (setq dashboard-set-file-icons t)
-  ;;; init-info (default: init time)
-  (setq dashboard-set-init-info t)
-  (when (eq system-type 'gnu/linux)
-    (setq dashboard-init-info
-          (concat "Welcome to Emacs " emacs-version
-                  " - "
-                  "Kernel " (shell-command-to-string "uname -smo"))))
-  ;;; dashboard items
-  (setq dashboard-items '((recents  . 15)
-                        ;;(bookmarks . 5)
-                          (agenda . 5)))
-  ;;; footer
-  (setq dashboard-set-footer t)
-  ;;(setq dashboard-footer-messages '("Dashboard is pretty cool!"))
-  ;;(setq dashboard-footer-icon (all-the-icons-octicon "dashboard"
-  ;;                                                   :height 1.1
-  ;;                                                   :v-adjust -0.05
-  ;;                                                   :face 'font-lock-keyword-face))
-  )
+;;(when (version<= "25.3" emacs-version)
+  (use-package dashboard
+    :ensure t
+    :if (version<= "25.3" emacs-version)
+    :functions dashboard-setup-startup-hook
+    :config
+    (dashboard-setup-startup-hook)
+    ;;; set the title
+    (set-variable 'dashboard-banner-logo-title nil)
+    ;;; custom banner
+    ;; You can be "path/to/your/image.png"
+    ;; which displays whatever image you would prefer
+    ;; ↓↓ custom banners ↓↓
+    ;; 1: Ghost
+    ;; 2: Isometric3
+    ;; 3: Alligator
+    ;; 4: ROMAN
+    ;; 5: Pawp
+    ;; 6: O8
+    ;; 7: Blocks
+    ;; 8: Graffiti
+    ;; 9: Slant Relief
+    ;; 10: Chunky
+    ;; 11: Cricket
+    (set-variable 'dashboard-banners-directory (expand-file-name "~/.emacs.d/dashboard-banners/"))
+    (set-variable 'dashboard-startup-banner 10)
+    ;;; centering
+    (set-variable 'dashboard-center-content t)
+    ;;; icon
+    (set-variable 'dashboard-set-heading-icons t)
+    (set-variable 'dashboard-set-file-icons t)
+    ;;; init-info (default: init time)
+    (set-variable 'dashboard-set-init-info t)
+    (when (eq system-type 'gnu/linux)
+      (set-variable 'dashboard-init-info
+                    (concat "Welcome to Emacs " emacs-version
+                            " - "
+                            "Kernel " (shell-command-to-string "uname -smo"))))
+    ;;; dashboard items
+    (set-variable 'dashboard-items '((recents  . 15)
+                                     ;;(bookmarks . 5)
+                                     (agenda . 5)))
+    ;;; footer
+    (set-variable 'dashboard-set-footer t)
+    ;;(setq dashboard-footer-messages '("Dashboard is pretty cool!"))
+    ;;(setq dashboard-footer-icon (all-the-icons-octicon "dashboard"
+    ;;                                                   :height 1.1
+    ;;                                                   :v-adjust -0.05
+    ;;                                                   :face 'font-lock-keyword-face))
+    )
 
 ;;;; docker.el
 (use-package docker
@@ -676,11 +682,11 @@ If there are multiple windows, the 'other-window' is called."
 
 ;;;; flycheck.el
 ;; dockerfile
-(when (executable-find "hadolint")
-  (message "flycheck: `hadolint' is unavailable! Please install it via `https://github.com/hadolint/hadolint' if possible."))
+(unless (executable-find "hadolint")
+  (warn "flycheck: `hadolint' is unavailable! Please install it via `https://github.com/hadolint/hadolint' if possible."))
 ;; python
-(when (executable-find "flake8")
-  (message "flycheck: `flake8' is unavailable! Please install it via `pip install flake8' if possible."))
+(unless (executable-find "flake8")
+  (warn "flycheck: `flake8' is unavailable! Please install it via `pip install flake8' if possible."))
 (use-package flycheck
   :ensure t
   :hook ((emacs-lisp-mode . flycheck-mode)
@@ -848,7 +854,7 @@ If there are multiple windows, the 'other-window' is called."
   (locate-file "migemo-dict"
                '("/usr/share/cmigemo/utf-8"))) ; debian
 (unless migemo-command
-  (message "migemo: `cmigemo' is unavailable! Please install it via `sudo apt install cmigemo' if possible."))
+  (warn "migemo: `cmigemo' is unavailable! Please install it via `sudo apt install cmigemo' if possible."))
 (use-package migemo
   :if (and migemo-command migemo-dictionary)
   :ensure t :defer nil :no-require t
@@ -905,13 +911,14 @@ If there are multiple windows, the 'other-window' is called."
 ;;;; org-journal
 (use-package org-journal
   :ensure t
+  :if (version<= "9.1" (org-version))
   :bind ("C-c j" . org-journal-new-entry)
   :config
-  (setq org-journal-dir "~/Dropbox/document/org/journal")
-  (setq org-journal-date-format "%Y-%m-%d %A")
+  (set-variable 'org-journal-dir "~/Dropbox/document/org/journal")
+  (set-variable 'org-journal-date-format "%Y-%m-%d %A")
   ;;(setq org-journal-time-format "%R")
-  (setq org-journal-file-format "%Y%m%d.org")
-  (setq org-journal-find-file 'find-file)
+  (set-variable 'org-journal-file-format "%Y%m%d.org")
+  (set-variable 'org-journal-find-file 'find-file)
   (setq org-extend-today-until '3)
   ;;; 折返しが起こったときの挙動の修正
   (add-hook 'visual-line-mode-hook
