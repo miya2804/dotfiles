@@ -219,7 +219,7 @@ If there are multiple windows, the 'other-window' is called."
       (add-to-list 'backup-directory-alist
                    (cons ".*" backup-and-auto-save-dir-dropbox))
     (add-to-list 'backup-directory-alist
-                 (cons ".*" backup-and-auto-save-dir-dropbox)))
+                 (cons ".*" backup-and-auto-save-dir-local)))
   ;;; Save multiple backupfiles
   (setq make-backup-files t
         vc-make-backup-files t
