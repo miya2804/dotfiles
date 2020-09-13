@@ -564,56 +564,53 @@ If there are multiple windows, the 'other-window' is called."
   :hook (company-mode. company-quickhelp-mode))
 
 ;;;; dashboard
-;;(when (version<= "25.3" emacs-version)
-  (use-package dashboard
-    :ensure t
-    :if (version<= "25.3" emacs-version)
-    :functions dashboard-setup-startup-hook
-    :config
-    (dashboard-setup-startup-hook)
-    ;;; set the title
-    (set-variable 'dashboard-banner-logo-title nil)
-    ;;; custom banner
-    ;; You can be "path/to/your/image.png"
-    ;; which displays whatever image you would prefer
-    ;; ↓↓ custom banners ↓↓
-    ;; 1: Ghost
-    ;; 2: Isometric3
-    ;; 3: Alligator
-    ;; 4: ROMAN
-    ;; 5: Pawp
-    ;; 6: O8
-    ;; 7: Blocks
-    ;; 8: Graffiti
-    ;; 9: Slant Relief
-    ;; 10: Chunky
-    ;; 11: Cricket
-    (set-variable 'dashboard-banners-directory (expand-file-name "~/.emacs.d/dashboard-banners/"))
-    (set-variable 'dashboard-startup-banner 10)
-    ;;; centering
-    (set-variable 'dashboard-center-content t)
-    ;;; icon
-    (set-variable 'dashboard-set-heading-icons t)
-    (set-variable 'dashboard-set-file-icons t)
-    ;;; init-info (default: init time)
-    (set-variable 'dashboard-set-init-info t)
-    (when (eq system-type 'gnu/linux)
-      (set-variable 'dashboard-init-info
-                    (concat "Welcome to Emacs " emacs-version
-                            " - "
-                            "Kernel " (shell-command-to-string "uname -smo"))))
-    ;;; dashboard items
-    (set-variable 'dashboard-items '((recents  . 15)
-                                     ;;(bookmarks . 5)
-                                     (agenda . 5)))
-    ;;; footer
-    (set-variable 'dashboard-set-footer t)
-    ;;(setq dashboard-footer-messages '("Dashboard is pretty cool!"))
-    ;;(setq dashboard-footer-icon (all-the-icons-octicon "dashboard"
-    ;;                                                   :height 1.1
-    ;;                                                   :v-adjust -0.05
-    ;;                                                   :face 'font-lock-keyword-face))
-    )
+(use-package dashboard
+  :ensure t
+  :if (version<= "25.3" emacs-version)
+  :custom
+  ;;; set the title
+  (dashboard-banner-logo-title nil)
+  ;;; custom banner
+  ;; You can be "path/to/your/image.png"
+  ;; which displays whatever image you would prefer
+  ;; ↓↓ custom banners ↓↓
+  ;; 1: Ghost
+  ;; 2: Isometric3
+  ;; 3: Alligator
+  ;; 4: ROMAN
+  ;; 5: Pawp
+  ;; 6: O8
+  ;; 7: Blocks
+  ;; 8: Graffiti
+  ;; 9: Slant Relief
+  ;; 10: Chunky
+  ;; 11: Cricket
+  (dashboard-startup-banner 10)
+  ;;; dashboard items
+  (dashboard-items '((recents  . 15)
+                     ;;(bookmarks . 5)
+                     (agenda . 5)))
+  ;;; centering
+  (dashboard-center-content t)
+  ;;; icon
+  (dashboard-set-heading-icons t)
+  (dashboard-set-file-icons t)
+  ;;; init-info (default: init time)
+  (dashboard-set-init-info t)
+  ;;; footer
+  (dashboard-set-footer t)
+  ;;(dashboard-footer-messages '("Dashboard is pretty cool!"))
+  ;;(dashboard-footer-icon (all-the-icons-octicon "dashboard"
+  ;;                                              :height 1.1
+  ;;                                              :v-adjust -0.05
+  ;;                                              :face 'font-lock-keyword-face))
+  :hook (after-init . dashboard-setup-startup-hook)
+  :config
+  (when (eq system-type 'gnu/linux)
+    (set-variable 'dashboard-init-info
+                  (concat "Welcome to Emacs " emacs-version
+                          " - "
+                          "Kernel " (shell-command-to-string "uname -smo")))))
 
 ;;;; docker.el
 (use-package docker
