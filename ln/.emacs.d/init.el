@@ -179,10 +179,10 @@ If there are multiple windows, the 'other-window' is called."
 (setq-default tab-width 4 indent-tabs-mode nil)
 
 ;;;; scroll
-(setq mouse-wheel-scroll-amount '(5 ((shift) . 1) ((control)))
-      mouse-wheel-progressive-speed nil)
-(setq scroll-conservatively 30)
-(setq scroll-margin 5)
+(set-variable 'mouse-wheel-scroll-amount '(5 ((shift) . 1) ((control))))
+(set-variable 'mouse-wheel-progressive-speed nil)
+(set-variable 'scroll-conservatively 30)
+(set-variable 'scroll-margin 5)
 
 ;;;; windmove setting
 ;;(windmove-default-keybindings)          ; use shift+arrow
@@ -953,8 +953,8 @@ If there are multiple windows, the 'other-window' is called."
 ;;;; swap-buffers
 (use-package swap-buffers
   :ensure t
-  :bind (("C-M-o" . swap-buffers-keep-focus)
-         ("C-M-O" . swap-buffers))
+  :bind (("C-c o" . swap-buffers-keep-focus)
+         ("C-c O" . swap-buffers))
   :config
   (defun swap-buffers-keep-focus ()
     (interactive)
