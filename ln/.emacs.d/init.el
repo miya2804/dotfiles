@@ -422,12 +422,18 @@ If there are multiple windows, the 'other-window' is called."
 (bind-key "C-c c" 'org-capture)
 (bind-key "C-c n" '(lambda () (interactive) (show-org-buffer "/notes.org")))
 ;;; mode
-;;(add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
 (push '("\\.org\\'" . org-mode) auto-mode-alist)
 ;;; custom
 (with-eval-after-load 'org
-  (setq org-directory "~/Dropbox/document/org")
-  (set-variable 'org-agenda-files '("~/Dropbox/document/org/agenda/"))
+  (if (file-directory-p "~/Dropbox/document/org")
+      (progn
+        (setq org-directory "~/Dropbox/document/org")
+        (set-variable 'org-agenda-files
+                      '("~/Dropbox/document/org")))
+    (progn
+      (setq org-directory "~/.emacs.d/.org")
+      (set-variable 'org-agenda-files
+                    '("~/.emacs.d/.org"))))
   (set-variable 'org-default-notes-file
                 (concat org-directory "/notes.org"))
   (set-variable 'org-startup-truncated nil)
