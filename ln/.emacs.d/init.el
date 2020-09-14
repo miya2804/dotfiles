@@ -781,11 +781,13 @@ If there are multiple windows, the 'other-window' is called."
   :diminish highlight-indent-guides-mode
   :hook ((prog-mode . highlight-indent-guides-mode)
          (yaml-mode . highlight-indent-guides-mode))
-  :config
-  (setq highlight-indent-guides-auto-enabled t)
-  (setq highlight-indent-guides-responsive t)
-  (setq highlight-indent-guides-method
-        (if (display-graphic-p) 'bitmap 'character)))
+  :custom
+  (highlight-indent-guides-auto-enabled t)
+  (highlight-indent-guides-responsive t)
+  (highlight-indent-guides-method
+   (if (display-graphic-p) 'bitmap 'character))
+  (highlight-indent-guides-suppress-auto-error t))
+
 
 ;;;; hydra
 (use-package hydra
