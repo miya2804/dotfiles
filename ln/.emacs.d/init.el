@@ -954,7 +954,8 @@ If there are multiple windows, the 'other-window' is called."
 (use-package smart-newline
   :ensure t :defer t
   :diminish smart-newline-mode
-  :hook ((emacs-lisp-mode . smart-newline-mode)))
+  :hook ((emacs-lisp-mode . smart-newline-mode)
+         (python-mode . smart-newline-mode)))
 
 ;;;; smooth-scroll.el
 (use-package smooth-scroll
