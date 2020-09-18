@@ -126,13 +126,9 @@ GIT_PS1_SHOWUNTRACKEDFILES=1
 GIT_PS1_SHOWSTASHSTATE=1
 GIT_PS1_SHOWDIRTYSTATE=1
 
+# Settings.
 # disable overwrite (redirect >)
 # if want to overwrite then use >|.
-# use "set +C" to enable.
-set -C
-
-# local command path settings
-export PATH=$PATH:/usr/local/sbin
-
+set -o noclobber
 # avoid logout by "C-d"
-export IGNOREEOF=100
+set -o ignoreeof
