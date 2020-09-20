@@ -943,6 +943,7 @@ If there are multiple windows, the 'other-window' is called."
 (use-package redo+
   :pin manual :demand t
   :bind (("C-M-/" . redo)
+         ("C-c /" . redo)
          ("C-M-_" . redo)))
 
 ;;;; smart-newline
@@ -963,7 +964,9 @@ If there are multiple windows, the 'other-window' is called."
 ;;;; swap-buffers
 (use-package swap-buffers
   :ensure t
-  :bind (("C-c o" . swap-buffers-keep-focus)
+  :bind (("C-M-o" . swap-buffers-keep-focus)
+         ("C-c o" . swap-buffers-keep-focus)
+         ("C-M-O" . swap-buffers)
          ("C-c O" . swap-buffers))
   :config
   (defun swap-buffers-keep-focus ()
