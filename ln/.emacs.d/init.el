@@ -116,9 +116,6 @@ If there are multiple windows, the 'other-window' is called."
   ;;;; load-path
   (setq load-path (cons "~/.emacs.d/elisp" load-path))
 
-  ;;;; exec-path
-  (push (expand-file-name "~/.local/bin") exec-path)
-
   ;;;; proxy
   ;; ~/.emacs.d/elisp/secret/myproxy.elにプロキシ設定を書き込む
   (load "secret/myproxy" t)
@@ -688,11 +685,9 @@ If there are multiple windows, the 'other-window' is called."
 
 ;;;; flycheck.el
 ;; dockerfile
-(unless (executable-find "hadolint")
-  (warn "flycheck: `hadolint' is unavailable! Please install it via `https://github.com/hadolint/hadolint' if possible."))
+;;   checker: hadolint(https://github.com/hadolint/hadolint)
 ;; python
-(unless (executable-find "flake8")
-  (warn "flycheck: `flake8' is unavailable! Please install it via `pip install flake8' if possible."))
+;;   checker: flake8(pip install flake8)
 (use-package flycheck
   :ensure t
   :hook ((emacs-lisp-mode . flycheck-mode)
