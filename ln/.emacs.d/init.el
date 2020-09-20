@@ -696,23 +696,14 @@ If there are multiple windows, the 'other-window' is called."
 
 ;;;; git-gutter
 (use-package git-gutter
-  :ensure t :no-require t
+  :ensure t
   :diminish git-gutter-mode
   :hook (after-init . global-git-gutter-mode)
-  :functions (git-gutter:popup-buffer-window git-gutter:popup-hunk)
   :custom-face
   (git-gutter:modified ((t (:background "#f1fa8c"))))
   (git-gutter:added    ((t (:background "#50fa7b"))))
   (git-gutter:deleted  ((t (:background "#ff79c6"))))
   :config
-  (defun git-gutter:toggle-popup-hunk ()
-    "Toggle git-gutter hunk window."
-    (interactive)
-    (if (get-buffer "*git-gutter:diff*")
-        (progn
-          (delete-window (git-gutter:popup-buffer-window))
-          (kill-buffer "*git-gutter:diff*"))
-      (git-gutter:popup-hunk)))
   (set-variable 'git-gutter:modified-sign "~")
   (set-variable 'git-gutter:added-sign    "+")
   (set-variable 'git-gutter:deleted-sign  "-"))
@@ -790,7 +781,7 @@ If there are multiple windows, the 'other-window' is called."
   :functions (winner-redo winner-undo
                           git-gutter:previous-hunk git-gutter:next-hunk
                           git-gutter:stage-hunk git-gutter:revert-hunk
-                          git-gutter:toggle-popup-hunk)
+                          git-gutter:popup-hunk)
   :config
   (defhydra hydra-git-gutter (:hint nil)
     "
@@ -803,7 +794,7 @@ If there are multiple windows, the 'other-window' is called."
     ("n" git-gutter:next-hunk)
     ("s" git-gutter:stage-hunk)
     ("r" git-gutter:revert-hunk)
-    ("d" git-gutter:toggle-popup-hunk)
+    ("d" git-gutter:popup-hunk)
     ;;; magit
     ("m" magit-status :exit t))
   (defhydra hydra-window-and-buffer-manager (:hint nil :exit t)
