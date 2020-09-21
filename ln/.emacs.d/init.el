@@ -824,7 +824,7 @@ If there are multiple windows, the 'other-window' is called."
     ;;; window & buffer
     ("4" kill-buffer-and-window))
   (bind-key "C-c g" 'hydra-git-gutter/body)
-  (bind-key "C-c C-x" 'hydra-window-and-buffer-manager/body))
+  (bind-key "C-c x" 'hydra-window-and-buffer-manager/body))
 
 ;;;; iflipb
 ;; https://github.com/jrosdahl/iflipb
