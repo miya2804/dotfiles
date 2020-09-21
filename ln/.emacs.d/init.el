@@ -426,7 +426,7 @@ If there are multiple windows, the 'other-window' is called."
       (progn
         (setq org-directory "~/Dropbox/document/org")
         (set-variable 'org-agenda-files
-                      '("~/Dropbox/document/org")))
+                      '("~/Dropbox/document/org/agenda")))
     (progn
       (setq org-directory "~/.emacs.d/.org")
       (set-variable 'org-agenda-files
