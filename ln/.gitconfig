@@ -3,7 +3,7 @@
 	email = 32477854+miya2804@users.noreply.github.com 
 [core]
 	excludesfile = ~/.gitignore
-	editor = /usr/bin/emacs -nw -Q
+	editor = /usr/bin/emacs -nw --qq
 [merge]
 	ff = false
 [pull]
