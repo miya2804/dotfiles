@@ -244,14 +244,8 @@ dotfiles_install() {
     dotfiles_initialize "$@"
 }
 
-# for debug
-SCRIPT_DIR="$(cd "$(dirname -- "${BASH_SOURCE:-$0}")"; pwd -P)"
-echo "\$SCRIPT_DIR = $SCRIPT_DIR"
-echo "dotfile_dir = $(dirname "${SCRIPT_DIR}")"
-echo "\$0 = $0"
-echo "\${BASH_SOURCE:-} = ${BASH_SOURCE:-}"
-echo "\$- = $-"
-echo "\$VITALIZED = $VITALIZED"
+# memo
+# SCRIPT_DIR="$(cd "$(dirname -- "${BASH_SOURCE:-$0}")"; pwd -P)"
 
 # main:
 if echo "$-" | grep -q "i"; then
