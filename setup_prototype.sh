@@ -17,29 +17,12 @@ is_debug() {
     fi
 }
 
-e_arrow() {
-    printf " \033[37;1m%s\033[m\n" "➜ $*"
-}
-
-e_done() {
-    printf " \033[37;1m%s\033[m...\033[32mOK\033[m\n" "✔ $*"
-}
-
-e_error() {
-    printf " \033[31m%s\033[m\n" "✖ $*" 1>&2
-}
-
-e_header() {
-    printf " \033[37;1m%s\033[m\n" "$*"
-}
-
-e_newline() {
-    printf "\n"
-}
-
-e_warning() {
-    printf " \033[31m%s\033[m\n" "$*"
-}
+e_newline() { printf "\n"; }
+e_warning() { printf " \033[31m%s\033[m\n" "$*"; }
+e_arrow()   { printf " \033[37;1m%s\033[m\n" "➜ $*"; }
+e_header()  { printf " \r\033[37;1m%s\033[m\n" "$*"; }
+e_error()   { printf " \033[31m%s\033[m\n" "✖ $*" 1>&2; }
+e_done()    { printf " \033[37;1m%s\033[m...\033[32mOK\033[m\n" "✔ $*"; }
 
 ink() {
     if [ "$#" -eq 0 -o "$#" -gt 2 ]; then
@@ -193,13 +176,37 @@ dotfiles_download() {
     e_newline && e_done "Download"
 }
 
+dotfiles_deploy() {
+    e_newline
+    e_header "Deploying dotfiles..."
+
+    if [ ! -d $DOTPATH ]; then
+        log_fail "$DOTPATH: not found"
+        exit 1
+    fi
+
+    cd "$DOTPATH"
+
+    if is_debug; then
+        :
+    else
+        make deploy
+    fi &&
+
+        e_newline && e_done "Deploy"
+}
+
 dotfiles_install() {
-    e_header "*** dotfiles installing ***"
+    printf " \r\033[37;1m*** dotfiles install ***\033[m\n"
     # 1. Download the repository
     # ==> downloading
     #
     # Priority: git > curl > wget
-    dotfiles_download
+    dotfiles_download &&
+
+    # 2. Deploy dotfiles to your home directory
+    # ==> deploying
+    dotfiles_deploy
 }
 
 # for debug
@@ -211,6 +218,7 @@ echo "\${BASH_SOURCE:-} = ${BASH_SOURCE:-}"
 echo "\$- = $-"
 echo "\$VITALIZED = $VITALIZED"
 
+# main:
 if echo "$-" | grep -q "i"; then
     # -> source a.sh
     VITALIZED=1
@@ -228,7 +236,7 @@ else
         exit
     fi
 
-    # -> cat a.sh
+    # -> cat a.sh | bash
     # -> bash -c "$(cat a.sh)"
     if [ -n "${BASH_EXECUTION_STRING:-}" ] || [ -p /dev/stdin ]; then
         # if already vitalized, skip to run dotfiles_install
