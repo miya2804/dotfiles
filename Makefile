@@ -1,7 +1,8 @@
-DOTDIR_PATH  := $(realpath $(dir $(lastword $(MAKEFILE_LIST))))
-CANDIDATES   := $(wildcard .??*) #bin
-EXCLUSIONS   := .git
-DOTFILES     := $(filter-out $(EXCLUSIONS), $(CANDIDATES))
+DOTDIR_NAME := .dotfiles
+DOTDIR_PATH := $(realpath $(dir $(lastword $(MAKEFILE_LIST))))
+CANDIDATES  := $(wildcard .??*) #bin
+EXCLUSIONS  := .git
+DOTFILES    := $(filter-out $(EXCLUSIONS), $(CANDIDATES))
 
 .DEFAULT_GOAL := help
 
@@ -23,7 +24,7 @@ unlink: ## Remove symlink to home directory
 
 clean: unlink ## Remove the dot files and this repository
 	@echo 'Remove dotfiles repository...'
-	@-if [ "$(shell basename $(DOTDIR_PATH))" = ".dotfiles" ]; then rm -rf $(DOTDIR_PATH); fi # check whether dotfiles-dir name is ".dotfiles" and remove.
+	@-if [ "$(shell basename $(DOTDIR_PATH))" = "$(DOTDIR_NAME)" ]; then rm -rf $(DOTDIR_PATH); fi # check whether dotfiles-dir name is ".dotfiles" and remove.
 
 help: ## Self-documented Makefile
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
