@@ -193,7 +193,7 @@ dotfiles_deploy() {
         if ! is_exists "make"; then
             log_fail "make required"
             exit 1
-        elif [ -f Makefile ]; then
+        elif [ ! -f Makefile ]; then
             log_fail "Makefile: not found"
             exit 1
         else
