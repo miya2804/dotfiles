@@ -12,7 +12,7 @@ list: ## Show dotfiles link target to your home of this repo
 
 deploy: ## Create symlink to home directory
 	@echo '==> Start to deploy dotfiles to home directory.'
-	@$(foreach val, $(DOTFILES), ln -sfnv $(abspath $(val)) $(HOME)/$(val);)
+	@$(foreach val, $(DOTFILES), ln -sinv $(abspath $(val)) $(HOME)/$(val);)
 
 unlink: ## Remove symlink to home directory
 	@echo 'Remove dotfile symlinks in your home directory...'
