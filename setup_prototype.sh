@@ -153,7 +153,7 @@ dotfiles_download() {
             # --recursive equals to ...
             # git submodule init
             # git submodule update
-            git clone --recursive "$DOTFILES_GITHUB" "$DOTPATH"
+            git clone --recursive -b topic-change-dir-structure "$DOTFILES_GITHUB" "$DOTPATH"
         elif is_exists "curl" || is_exists "wget"; then
             # curl or wget
             local tarball="https://github.com/$GITHUB_USER/dotfiles/archive/master.tar.gz"
