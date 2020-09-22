@@ -106,9 +106,10 @@ log_fail() {
 
 # code:
 
-# Set DOTPATH as default variable
-if [ -z "${DOTPATH:-}" ]; then
-    DOTPATH=~/.dotfiles; export DOTPATH
+# SCRIPT_DIR="$(cd "$(dirname -- "${BASH_SOURCE:-$0}")"; pwd -P)"
+
+if [ -z "${DOTDIR_PATH:-}" ]; then
+    DOTDIR_PATH=~/.dotfiles; export DOTDIR_PATH
 fi
 
 GITHUB_USER="miya2804"
@@ -138,8 +139,8 @@ dotfiles_logo='
 '
 
 dotfiles_download() {
-    if [ -d "$DOTPATH" ]; then
-        log_fail "$DOTPATH: already exists"
+    if [ -d "$DOTDIR_PATH" ]; then
+        log_fail "$DOTDIR_PATH: already exists"
         exit 1
     fi
 
@@ -153,7 +154,7 @@ dotfiles_download() {
             # --recursive equals to ...
             # git submodule init
             # git submodule update
-            git clone --recursive -b topic-change-dir-structure "$DOTFILES_GITHUB" "$DOTPATH"
+            git clone --recursive -b topic-change-dir-structure "$DOTFILES_GITHUB" "$DOTDIR_PATH"
         elif is_exists "curl" || is_exists "wget"; then
             # curl or wget
             local tarball="https://github.com/$GITHUB_USER/dotfiles/archive/master.tar.gz"
@@ -167,7 +168,7 @@ dotfiles_download() {
                 log_fail "dotfiles-master: not found"
                 exit 1
             fi
-            command mv -f dotfiles-master "$DOTPATH"
+            command mv -f dotfiles-master "$DOTDIR_PATH"
         else
             log_fail "curl or wget required"
             exit 1
@@ -180,12 +181,12 @@ dotfiles_deploy() {
     e_newline
     e_header "Deploying dotfiles..."
 
-    if [ ! -d $DOTPATH ]; then
-        log_fail "$DOTPATH: not found"
+    if [ ! -d $DOTDIR_PATH ]; then
+        log_fail "$DOTDIR_PATH: not found"
         exit 1
     fi
 
-    cd "$DOTPATH"
+    cd "$DOTDIR_PATH"
 
     if is_debug; then
         :
@@ -244,10 +245,8 @@ dotfiles_install() {
     dotfiles_initialize "$@"
 }
 
-# memo
-# SCRIPT_DIR="$(cd "$(dirname -- "${BASH_SOURCE:-$0}")"; pwd -P)"
-
 # main:
+
 if echo "$-" | grep -q "i"; then
     # -> source a.sh
     VITALIZED=1
@@ -290,4 +289,4 @@ else
     fi
 fi
 
-# file end here.
+# setup ends here
