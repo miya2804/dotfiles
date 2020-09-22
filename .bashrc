@@ -126,7 +126,7 @@ if ! shopt -oq posix; then
 fi
 
 # git-prompt.sh setting.
-source ~/.git-prompt.sh
+source ~/bin/git-prompt.sh
 GIT_PS1_SHOWUPSTREAM=1
 GIT_PS1_SHOWUNTRACKEDFILES=1
 GIT_PS1_SHOWSTASHSTATE=1

@@ -1,6 +1,6 @@
 DOTDIR_NAME := .dotfiles
 DOTDIR_PATH := $(realpath $(dir $(lastword $(MAKEFILE_LIST))))
-CANDIDATES  := $(wildcard .??*) #bin
+CANDIDATES  := $(wildcard .??*) bin
 EXCLUSIONS  := .git
 DOTFILES    := $(filter-out $(EXCLUSIONS), $(CANDIDATES))
 
