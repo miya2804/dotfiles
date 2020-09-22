@@ -20,6 +20,7 @@ unlink: ## Remove symlink to home directory
 
 clean: unlink ## Remove the dot files and this repository
 	@echo 'Remove dotfiles repository...'
+	cd $(HOME)
 	@-if [ "$(shell basename $(DOTDIR_PATH))" = ".dotfiles" ]; then rm -rf $(DOTDIR_PATH); fi # check whether dotfiles-dir name is ".dotfiles" and remove.
 
 help: ## Self-documented Makefile
