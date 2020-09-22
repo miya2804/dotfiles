@@ -204,6 +204,29 @@ dotfiles_deploy() {
         e_newline && e_done "Deploy"
 }
 
+dotfiles_initialize() {
+    if [ "$1" = "init" ]; then
+        e_newline
+        e_header "Initializing dotfiles..."
+
+        if is_debug; then
+            :
+        else
+            if ! is_exists "make"; then
+                log_fail "make required"
+                exit 1
+            elif [ ! -f Makefile ]; then
+                log_fail "Makefile: not found"
+                exit 1
+            else
+                make init
+            fi
+        fi &&
+
+            e_newline && e_done "Initialize"
+    fi
+}
+
 dotfiles_install() {
     printf " \r\033[37;1m*** dotfiles install ***\033[m\n"
     # 1. Download the repository
@@ -215,6 +238,10 @@ dotfiles_install() {
     # 2. Deploy dotfiles to your home directory
     # ==> deploying
     dotfiles_deploy
+
+    # 3. Execute all sh files within etc/init/
+    # ==> initializing
+    dotfiles_initialize "$@"
 }
 
 # for debug

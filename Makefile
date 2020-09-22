@@ -14,6 +14,9 @@ deploy: ## Create symlink to home directory
 	@echo '==> Start to deploy dotfiles to home directory.'
 	@$(foreach val, $(DOTFILES), ln -nsv --backup=numbered $(abspath $(val)) $(HOME)/$(val);)
 
+init:
+    @$(foreach val, $(wildcard ./etc/init/*.sh), bash $(val);)
+
 unlink: ## Remove symlink to home directory
 	@echo 'Remove dotfile symlinks in your home directory...'
 	@-$(foreach val, $(DOTFILES), if [ -L $(HOME)/$(val) ]; then rm -vrf $(HOME)/$(val); fi;) # check whether link and remove.
