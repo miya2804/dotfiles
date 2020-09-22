@@ -190,7 +190,15 @@ dotfiles_deploy() {
     if is_debug; then
         :
     else
-        make deploy
+        if ! is_exists "make"; then
+            log_fail "make required"
+            exit 1
+        elif [ -f Makefile ]; then
+            log_fail "Makefile: not found"
+            exit 1
+        else
+            make deploy
+        fi
     fi &&
 
         e_newline && e_done "Deploy"
