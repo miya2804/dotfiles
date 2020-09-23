@@ -23,6 +23,7 @@ e_arrow()   { printf " \033[37;1m%s\033[m\n" "➜ $*"; }
 e_header()  { printf " \r\033[37;1m%s\033[m\n" "$*"; }
 e_error()   { printf " \033[31m%s\033[m\n" "✖ $*" 1>&2; }
 e_done()    { printf " \033[37;1m%s\033[m...\033[32mOK\033[m\n" "✔ $*"; }
+e_fail()    { printf " \033[37;1m%s\033[m...\033[31mFAILD\033[m\n" "✔ $*"; }
 
 ink() {
     if [ "$#" -eq 0 -o "$#" -gt 2 ]; then
@@ -172,7 +173,15 @@ dotfiles_download() {
             exit 1
         fi
     fi
-    e_newline && e_done "Download"
+
+    e_newline &&
+
+	if [ ! -d $DOTDIR_PATH ]; then
+            log_fail "Dotfiles download failed"
+            exit 1
+	else
+            e_done "Download"
+	fi
 }
 
 dotfiles_deploy() {
@@ -236,7 +245,7 @@ dotfiles_install() {
 
     # 2. Deploy dotfiles to your home directory
     # ==> deploying
-    dotfiles_deploy
+    dotfiles_deploy &&
 
     # 3. Execute all sh files within etc/init/
     # ==> initializing
