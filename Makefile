@@ -36,6 +36,7 @@ clean: unlink ## Remove the dot files and this repository
 	@echo 'Remove dotfiles repository...'
 # 	check whether dotfiles-dir name is ".dotfiles" and remove.
 	@-if [ "$(shell basename $(DOTDIR_PATH))" = "$(DOTDIR_NAME)" ]; then rm -rf $(DOTDIR_PATH); fi
+	cd $(HOME)
 
 help: ## Self-documented Makefile
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
