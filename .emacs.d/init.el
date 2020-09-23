@@ -421,38 +421,37 @@ If there are multiple windows, the 'other-window' is called."
 ;;; mode
 (push '("\\.org\\'" . org-mode) auto-mode-alist)
 ;;; custom
-(with-eval-after-load 'org
-  (if (file-directory-p "~/Dropbox/document/org")
-      (progn
-        (setq org-directory "~/Dropbox/document/org")
-        (set-variable 'org-agenda-files
-                      '("~/Dropbox/document/org/agenda")))
+(if (file-directory-p "~/Dropbox/document/org")
     (progn
-      (setq org-directory "~/.emacs.d/.org")
+      (setq org-directory "~/Dropbox/document/org")
       (set-variable 'org-agenda-files
-                    '("~/.emacs.d/.org"))))
-  (set-variable 'org-default-notes-file
-                (concat org-directory "/notes.org"))
-  (set-variable 'org-startup-truncated nil)
-  ;; org-dir外のrefile設定(bufferで開いていれば指定可能)
-  (set-variable 'org-refile-targets
-        '((nil :maxlevel . 3)
-          (mhatta/org-buffer-files :maxlevel . 1)
-          (org-agenda-files :maxlevel . 3)))
-  ;; templates
-  (set-variable 'org-capture-templates
-        '(("a" "Memoｃ⌒っﾟωﾟ)っφ　ﾒﾓﾒﾓ..."
-           plain (file "memos.org")
-           "* %?%U"
-           :empty-lines 1 :jump-to-captured 1)
-          ("n" "Notes....φ(・ω・｀ )ｶｷｶｷ"
-           entry (file+headline org-default-notes-file "NOTES")
-           "* %?%U"
-           :empty-lines 1)
-          ("m" "Minutes( ´・ω) (´・ω・) (・ω・｀) (ω・｀ )"
-           entry (file+datetree "minutes.org" "MINUTES")
-           "* %?%U"
-           :empty-lines 1 :jump-to-captured 1))))
+                    '("~/Dropbox/document/org/agenda")))
+  (progn
+    (setq org-directory "~/.emacs.d/.org")
+    (set-variable 'org-agenda-files
+                  '("~/.emacs.d/.org"))))
+(set-variable 'org-default-notes-file
+              (concat org-directory "/notes.org"))
+(set-variable 'org-startup-truncated nil)
+;; org-dir外のrefile設定(bufferで開いていれば指定可能)
+(set-variable 'org-refile-targets
+              '((nil :maxlevel . 3)
+                (mhatta/org-buffer-files :maxlevel . 1)
+                (org-agenda-files :maxlevel . 3)))
+;; templates
+(set-variable 'org-capture-templates
+              '(("a" "Memoｃ⌒っﾟωﾟ)っφ　ﾒﾓﾒﾓ..."
+                 plain (file "memos.org")
+                 "* %?%U"
+                 :empty-lines 1 :jump-to-captured 1)
+                ("n" "Notes....φ(・ω・｀ )ｶｷｶｷ"
+                 entry (file+headline org-default-notes-file "NOTES")
+                 "* %?%U"
+                 :empty-lines 1)
+                ("m" "Minutes( ´・ω) (´・ω・) (・ω・｀) (ω・｀ )"
+                 entry (file+datetree "minutes.org" "MINUTES")
+                 "* %?%U"
+                 :empty-lines 1 :jump-to-captured 1)))
 
 ;;;; paren.el
 (show-paren-mode t)                ; illuminate corresponding brackets
