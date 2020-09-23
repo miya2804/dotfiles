@@ -1,0 +1,14 @@
+*~
+*.elc
+*.log
+/.backup/
+/bookmarks
+/elpa/
+/kkcrc
+/recentf
+/themes/
+/tramp
+/transient/
+custom.el
+myproxy.el
+!.gitkeep
