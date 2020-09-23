@@ -13,18 +13,29 @@ list: ## Show dotfiles link target to your home of this repo
 
 deploy: ## Create symlink to home directory
 	@echo '==> Start to deploy dotfiles to home directory.'
-	@$(foreach val, $(DOTFILES), ln -nsv --backup=numbered $(abspath $(val)) $(HOME)/$(val);)
+	@$(foreach val, $(DOTFILES), \
+		if [ -d $(HOME)/$(val) ]; then \
+			mv $(HOME)/$(val) $(HOME)/$(val).bak; \
+			ln -nsv --backup=numbered $(abspath $(val)) $(HOME)/$(val); \
+		else \
+			ln -nsv --backup=numbered $(abspath $(val)) $(HOME)/$(val); \
+		fi;)
 
 init:
 	@$(foreach val, $(wildcard ./etc/init/*.sh), bash $(val);)
 
 unlink: ## Remove symlink to home directory
 	@echo 'Remove dotfile symlinks in your home directory...'
-	@-$(foreach val, $(DOTFILES), if [ -L $(HOME)/$(val) ]; then rm -vrf $(HOME)/$(val); fi;) # check whether link and remove.
+# 	check whether link and remove.
+	@-$(foreach val, $(DOTFILES), \
+		if [ -L $(HOME)/$(val) ]; then \
+			rm -vrf $(HOME)/$(val); \
+		fi;)
 
 clean: unlink ## Remove the dot files and this repository
 	@echo 'Remove dotfiles repository...'
-	@-if [ "$(shell basename $(DOTDIR_PATH))" = "$(DOTDIR_NAME)" ]; then rm -rf $(DOTDIR_PATH); fi # check whether dotfiles-dir name is ".dotfiles" and remove.
+# 	check whether dotfiles-dir name is ".dotfiles" and remove.
+	@-if [ "$(shell basename $(DOTDIR_PATH))" = "$(DOTDIR_NAME)" ]; then rm -rf $(DOTDIR_PATH); fi
 
 help: ## Self-documented Makefile
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
