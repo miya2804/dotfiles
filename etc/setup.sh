@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# functions:
+# *** general utilities ***
 
 # is_exists returns true if executable $1 exists in $PATH
 is_exists() {
@@ -96,15 +96,13 @@ logging() {
     timestamp; ink "$color" "$text"; echo
 }
 
-log_fail() {
-    logging ERROR "$1" 1>&2
-}
+log_fail() { logging WARN "$1"; }
+log_fail() { logging ERROR "$1" 1>&2; }
+log_pass() { logging SUCCESS "$1"; }
+log_info() { logging INFO "$1"; }
+log_echo() { logging TITLE "$1"; }
 
-# log_fail() {
-#     logging WARN "$1"
-# }
-
-# code:
+# *** preparation ***
 
 # SCRIPT_DIR="$(cd "$(dirname -- "${BASH_SOURCE:-$0}")"; pwd -P)"
 
@@ -245,7 +243,7 @@ dotfiles_install() {
     dotfiles_initialize "$@"
 }
 
-# main:
+# *** body ***
 
 if echo "$-" | grep -q "i"; then
     # -> source a.sh
@@ -254,7 +252,7 @@ if echo "$-" | grep -q "i"; then
 
     : return
 else
-    # can be executed below
+    # three patterns
     # -> cat a.sh | bash
     # -> bash -c "$(cat a.sh)"
     # -> bash a.sh
@@ -273,7 +271,7 @@ else
         fi
     fi
 
-    trap "e_error 'terminated'; exit 1" INT ERR # 割り込み終了
+    trap "e_error 'terminated'; exit 1" INT ERR
     echo "$dotfiles_logo"
     dotfiles_install "$0"
 
@@ -289,4 +287,4 @@ else
     fi
 fi
 
-# setup ends here
+# setup script ends here
