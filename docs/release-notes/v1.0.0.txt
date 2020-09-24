@@ -1,0 +1,118 @@
+dotfiles v1.0.0 [2020-09-24 Thu.]
+=================================
+
+general
+-------
+
+    * dotfilesのディレクトリ構成の変更
+    * dotfilesのセットアップスクリプトの作成
+    * .fonts, bin/hadolint..., unitのdotfilesでの管理
+    * git-prompt.shをbinに移動、それに伴う.bashrcでの読み込みパスを変更
+
+
+bash config
+-----------
+
+    * .bash_profileの追加
+      - .bash_profile内で.profile, .bashrcを読み込み
+      - 環境変数、GUI設定は各環境に合わせて.profileに記述
+    * .bashrcにデフォルトで適用したaliasを記述するように変更
+      - それに伴い.bash_aliasesはdotfilesから廃止, 都度その環境ごとの設定時に作成
+    * aliasの追加
+      - xdg-open -> open
+    * .dircolorsによるLS_COLORSの設定
+    * promptのカスタマイズ
+      - color of username@hostname -> #87FFC5
+      - 絵文字等のunicodeをechoで挿入できる関数を追加
+
+
+.gitconfig
+----------
+
+    * git editorを'emacs -nw --qq'に設定
+
+
+emacs
+-----
+
+    Added Packages
+    --------------
+      * migemoの追加
+      * ace-isearchの追加
+        - 依存パッケージの追加
+          - ace-jump-mode
+      * helm
+        - 日本語検索に戸惑った
+          - helm-find-files時に日本語検索するにはpath後に1スペースを挿入後に検索ワードを打ち込む必要がある
+          - helm-select-actionからのファイルナビゲーションはprojectileを利用したほうが効率的？
+        - helm-swoop
+      * beaconの追加
+      * neotreeの追加
+      * which-keyの追加
+      * hydraの追加
+      * git-gutterの追加
+        - hydraへの割当("C-c g")
+      * highlight-indent-guidesの追加
+      * zenburn-themeを利用可能に
+      * redo+の追加
+      * auto-async-byte-compileの追加
+      * docker関係パッケージの追加
+        - docker.el
+        - dockerfile-mode.el
+        - docker-compose-mode.el
+        - docker-tramp.el
+        - yaml-mode.el
+      * winnerの追加
+      * magitの追加
+      * 補完パッケージの追加
+        - company-mode
+        - company-box
+        - company-quickhelp
+      * シンタックスチェックパッケージの追加
+        - flycheck
+        - python(flake8), dockerfile(hadolint), elispの有効化
+        - helm-flycheck
+      * smooth-scrollの追加
+
+    Added functions
+    ---------------
+
+      * startup timeの表示
+      * with-eval-after-load(emacs 24.4以上搭載)が定義されていない場合、eval-after-loadで置き換える
+      * use-packageの抑制機能追加(option "--qq")
+        - use-packageがインストールされていない or 抑制時 に空マクロに置き換え
+      * proxy設定を外部ファイルから取り込む形に修正(.../elisp/secret/myproxy.el or elc)
+      * 行末の空白表示
+      * hydraによるwindow,buffer,frameの操作を定義
+
+    other fix
+    ---------
+
+      * doom-modelineをdoom-themesパッケージに依存させないように変更
+      * all-the-iconsをdoom-modelineに依存させないように変更
+        - neo-treeなどでもall-the-iconsを利用するため
+      * 言語設定の有効化(必要ないかも？)
+        - custom-file分離設定の記述位置をSettingsに変更
+        - custom-fileのpathを.../elisp/custom.elに変更
+      * フリンジインジケーターの設定をline numberの設定から分離
+      * 外部コマンド依存関係管理に利用していたuse-package-ensure-system-packageの利用を停止
+        - exeutable-findによる有無の確認を行うように変更
+      * highlight-indent-guidesが-nw起動時に表示されていない問題を修正
+        - method bitmapがgui限定であることが原因
+      * migemo-directoryの有無も確認して設定を読み込むように変更
+      * bind-key.elの導入と読み込めない場合(use-packageがないなど)に普通のbind-keyとして振る舞う処理の追加
+        - 今までのキーバインド設定をbind-keyで置き換え
+      * smart-newlineを遅延読み込みに変更
+        - 必要だと感じたmejor-modeでhookする運用に切り替え
+      * byte-compileによるWarningを修正
+      * lexical bindingの導入
+      * C-x C-c をアンセット, save-buffers-kill-emacsのエイリアスexitを定義
+      * backup, auto-saveをDropboxに保存するように変更
+        - ディレクトリがない場合(Dropbox導入してないホスト)の.backupディレクトリの追加
+      * package.elのrefreshの記述を追加
+      * terminal起動時の動作を最適化
+        - mouse scroll の有効化
+        - keybindの修正
+          - show-org-bufferのkeybind"C-M-^"を"C-c n"へ変更
+      * chromebook termux上でC-Mが動作しないのでC-cにも同時に割り当てる
+        - redo+, swap-buffers

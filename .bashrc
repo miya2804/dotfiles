@@ -56,8 +56,14 @@ if [ -n "$force_color_prompt" ]; then
     fi
 fi
 
+function _echo_unicode() {
+    echo -e "\U$1"
+}
+
+# [01;38;2;<R>;<G>;<B>m\] (Foreground)
+# [01;48;2;<R>;<G>;<B>m\] (Background)
 if [ "$color_prompt" = yes ]; then
-    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;33m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w \[\033[01;34m\]$(__git_ps1 "(%s)")\[\033[00m\]\$ '
+    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;38;2;135;255;197m\]$(_echo_unicode '1F340')\u@\h\[\033[00m\]:\[\033[01;34m\]\w \[\033[01;34m\]$(__git_ps1 "(%s)")\[\033[00m\]\$ '
 else
     PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w $(__git_ps1 "(%s)")\$ '
 fi
@@ -87,20 +93,23 @@ fi
 # colored GCC warnings and errors
 #export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
 
-# some more ls aliases
-#alias ll='ls -alF'
-#alias la='ls -A'
-#alias l='ls -CF'
-
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
 #alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 
-# Alias definitions.
+# Default alias definitions.
+alias ll='ls -alF'
+alias la='ls -AF'
+alias l='ls -CF'
+alias rm='rm -i'
+alias mv='mv -i'
+alias cp='cp -i'
+alias open='xdg-open'
+
+# Local Alias definitions.
 # You may want to put all your additions into a separate file like
 # ~/.bash_aliases, instead of adding them here directly.
 # See /usr/share/doc/bash-doc/examples in the bash-doc package.
-
 if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
 fi
@@ -117,19 +126,15 @@ if ! shopt -oq posix; then
 fi
 
 # git-prompt.sh setting.
-source ~/.git-prompt.sh
+source ~/bin/git-prompt.sh
 GIT_PS1_SHOWUPSTREAM=1
 GIT_PS1_SHOWUNTRACKEDFILES=1
 GIT_PS1_SHOWSTASHSTATE=1
 GIT_PS1_SHOWDIRTYSTATE=1
 
+# Settings.
 # disable overwrite (redirect >)
 # if want to overwrite then use >|.
-# use "set +C" to enable.
-set -C
-
-# local command path settings
-export PATH=$PATH:/usr/local/sbin
-
+set -o noclobber
 # avoid logout by "C-d"
-export IGNOREEOF=100
+set -o ignoreeof

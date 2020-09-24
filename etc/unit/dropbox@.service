@@ -1,0 +1,12 @@
+[Unit]
+Description=Dropbox cliant (user: %i)
+After=syslog.target network.target
+
+[Service]
+ExecStart=/bin/bash -c  "sudo -u '%i' /usr/bin/dropbox start"
+ExecStop=/bin/bash -c "sudo -u '%i' /usr/bin/dropbox stop"
+Restart=always
+Type=forking
+
+[Install]
+WantedBy=multi-user.target
