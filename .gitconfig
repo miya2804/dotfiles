@@ -1,0 +1,10 @@
+[user]
+	name = miya2804
+	email = 32477854+miya2804@users.noreply.github.com 
+[core]
+	excludesfile = ~/.gitignore
+	editor = /usr/bin/emacs -nw
+[merge]
+	ff = false
+[pull]
+	ff = only
