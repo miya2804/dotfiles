@@ -877,7 +877,11 @@ If there are multiple windows, the 'other-window' is called."
 ;;;; neotree
 (use-package neotree
   :ensure t
-  :bind ("C-q" . neotree-toggle)
+  :bind (("C-q" . neotree-toggle)
+         :map neotree-mode-map
+              ("a" . neotree-hidden-file-toggle)
+              ("<left>" . neotree-select-up-node)
+              ("<right>" . neotree-change-root))
   :config
   (setq neo-theme
         (if (display-graphic-p) 'nerd2 'arrow))
