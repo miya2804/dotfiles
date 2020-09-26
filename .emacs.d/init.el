@@ -659,7 +659,7 @@ If there are multiple windows, the 'other-window' is called."
   (setq doom-modeline-buffer-modification-icon t) ; respect doom-modeline-buffer-state-icon
   (setq doom-modeline-persp-icon t)
   (setq doom-modeline-modal-icon t)
-  (setq doom-modeline-unicode-fallback nil)
+  (setq doom-modeline-unicode-fallback t)
   (setq doom-modeline-github-interval (* 30 60))
   ;;; persp
   ;;(setq doom-modeline-persp-name t)
