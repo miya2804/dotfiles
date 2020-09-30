@@ -648,6 +648,7 @@ If there are multiple windows, the 'other-window' is called."
   (setq doom-modeline-buffer-file-name-style 'truncate-with-project)
   (setq doom-modeline-minor-modes nil)
   (setq doom-modeline-buffer-encoding nil)
+  (setq doom-modeline-github-interval (* 30 60))
   ;;; display env version
   (setq doom-modeline-env-version t)
   (setq doom-modeline-env-load-string "...")
@@ -657,10 +658,9 @@ If there are multiple windows, the 'other-window' is called."
   (setq doom-modeline-major-mode-color-icon t)
   (setq doom-modeline-buffer-state-icon t)
   (setq doom-modeline-buffer-modification-icon t) ; respect doom-modeline-buffer-state-icon
-  (setq doom-modeline-persp-icon t)
-  (setq doom-modeline-modal-icon t)
   (setq doom-modeline-unicode-fallback t)
-  (setq doom-modeline-github-interval (* 30 60))
+  ;;(setq doom-modeline-persp-icon t)
+  ;;(setq doom-modeline-modal-icon t)
   ;;; persp
   ;;(setq doom-modeline-persp-name t)
   ;;(setq doom-modeline-display-default-persp-name nil)
