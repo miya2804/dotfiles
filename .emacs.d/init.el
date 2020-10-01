@@ -566,7 +566,7 @@ If there are multiple windows, the 'other-window' is called."
 ;;;; company-quickhelp.el
 (use-package company-quickhelp
   :ensure t
-  :hook (company-mode. company-quickhelp-mode))
+  :hook (company-mode . company-quickhelp-mode))
 
 ;;;; dashboard
 (use-package dashboard
