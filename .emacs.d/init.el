@@ -668,18 +668,19 @@ If there are multiple windows, the 'other-window' is called."
   ;;(setq doom-modeline-lsp t)
   )
 
-;;;; elscreen
+;;;; elscreen.el
 (use-package elscreen
   :ensure t :defer nil :no-require t
   :functions (elscreen-create)
   :bind ("<f5>" . elscreen-next)
+  :custom
+  (elscreen-prefix-key (kbd "C-z"))
+  ;;(set-variable 'elscreen-display-tab nil)
+  (elscreen-tab-display-kill-screen nil)
+  (elscreen-tab-display-control nil)
   :config
-  ;;; Turn off peripheral functions of tab.
-  (set-variable 'elscreen-display-tab nil)
-  (set-variable 'elscreen-tab-display-kill-screen nil)
-  (set-variable 'elscreen-tab-display-control nil)
-  ;;; init
   (elscreen-start)
+  ;; create scratch tab
   (elscreen-create))
 
 ;;;; flycheck.el
