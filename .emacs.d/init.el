@@ -304,7 +304,6 @@ If there are multiple windows, the 'other-window' is called."
 ;; Libraries
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 
-(use-package pkg-info :ensure t :defer t)
 (use-package diminish :ensure t :demand t)
 ;;(use-package use-package-ensure-system-package :ensure t :demand t)
 
@@ -521,7 +520,6 @@ If there are multiple windows, the 'other-window' is called."
 ;;;; beacon
 (use-package beacon
   :ensure t
-  :if (version<= "2.14" (pkg-info-version-info 'seq))
   :diminish beacon-mode
   :hook (after-init . beacon-mode)
   :config
@@ -561,7 +559,6 @@ If there are multiple windows, the 'other-window' is called."
 ;;;; company-box.el
 (use-package company-box
   :ensure t
-  :if (version<= "26" emacs-version)
   :hook (company-mode . company-box-mode)
   :config
   (with-eval-after-load 'all-the-icons
@@ -575,7 +572,6 @@ If there are multiple windows, the 'other-window' is called."
 ;;;; dashboard
 (use-package dashboard
   :ensure t
-  :if (version<= "25.3" emacs-version)
   :custom
   ;;; set the title
   (dashboard-banner-logo-title nil)
@@ -916,7 +912,6 @@ If there are multiple windows, the 'other-window' is called."
 ;;;; org-journal
 (use-package org-journal
   :ensure t
-  :if (version<= "9.1" (org-version))
   :bind ("C-c j" . org-journal-new-entry)
   :config
   (set-variable 'org-journal-dir "~/Dropbox/document/org/journal")
