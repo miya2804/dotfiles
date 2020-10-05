@@ -340,7 +340,11 @@ If there are multiple windows, the 'other-window' is called."
   :config
   (setq doom-themes-enable-italic t
         doom-themes-enable-bold t)
- (load-theme 'doom-dracula t)
+  ;;(load-theme 'doom-dracula t)
+  ;;(load-theme 'doom-challenger-deep)
+  ;;(load-theme 'doom-horizon)
+  ;;(load-theme 'doom-oceanic-next)
+  (load-theme 'doom-vibrant t)
   (doom-themes-visual-bell-config)
   (doom-themes-neotree-config)
   (doom-themes-org-config)
