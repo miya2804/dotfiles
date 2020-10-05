@@ -110,7 +110,7 @@ If there are multiple windows, the 'other-window' is called."
        ;;("maralade" . "https://marmalade-repo.org/packages/")
        ))
     (package-initialize)
-    (package-refresh-contents)
+    ;;(package-refresh-contents)
     (set-variable 'package-enable-at-startup nil))
 
   ;;;; load-path
