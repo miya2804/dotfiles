@@ -899,10 +899,10 @@ If there are multiple windows, the 'other-window' is called."
   :hook
   (after-init . nyan-mode)
   (nyan-mode . nyan-start-animation)
-  :config
-  (setq nyan-bar-length 10)
-  (setq nyan-cat-face-number 4)
-  (setq nyan-minimum-window-width 50))
+  :custom
+  (nyan-bar-length 15)
+  (nyan-cat-face-number 4)
+  (nyan-minimum-window-width 50))
 
 ;;;; org-bullets
 ;; https://github.com/sabof/org-bullets
