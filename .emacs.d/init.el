@@ -947,6 +947,9 @@ If there are multiple windows, the 'other-window' is called."
             '(lambda()
                (setq word-wrap nil))))
 
+;;;; org-preview-html.el
+(use-package org-preview-html :ensure t :defer t)
+
 ;;;; rainbow-delimiters
 (use-package rainbow-delimiters
   :ensure t
