@@ -694,9 +694,27 @@ If there are multiple windows, the 'other-window' is called."
 ;;   checker: hadolint(https://github.com/hadolint/hadolint)
 ;; python
 ;;   checker: flake8(pip install flake8)
+;; yaml
+;;   checker: yamllint(pip install yamllint)
 (use-package flycheck
   :ensure t
-  :hook (after-init . global-flycheck-mode))
+  :hook (after-init . global-flycheck-mode)
+  :config
+  (flycheck-define-checker yaml-docker-compose-yamllint
+    "Yaml and Docker-compose flycheck-checker using yamllint in python package."
+    :command ("yamllint" source)
+    :error-patterns ((error line-start
+                            (zero-or-more blank) line ":" column
+                            (zero-or-more blank) "warning"
+                            (zero-or-more blank) (message)
+                            line-end)
+                     (warning line-start
+                              (zero-or-more blank) line ":" column
+                              (zero-or-more blank) "error"
+                              (zero-or-more blank) (message)
+                              line-end))
+    :modes (yaml-mode docker-compose-mode))
+  (add-to-list 'flycheck-checkers 'yaml-docker-compose-yamllint))
 
 ;;;; git-gutter
 (use-package git-gutter
