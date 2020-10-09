@@ -532,21 +532,21 @@ If there are multiple windows, the 'other-window' is called."
               ("C-p" . company-select-previous)
               ("C-n" . company-select-next))
   :custom
-  (company-idle-delay 0)                ; 手動補完
+  (company-idle-delay 0)
   (company-selection-wrap-around t)     ; 候補の最後の次は先頭に戻る
   (completion-ignore-case t)
   (company-require-match 'never)
   (company-backends '((company-capf company-dabbrev)
-                      ;;company-bbdb
-                      ;;company-eclim
+                      company-bbdb
+                      ;; company-eclim
                       company-semantic
-                      ;;company-clang
-                      ;;company-xcode
-                      ;;company-cmake
+                      company-clang
+                      ;; company-xcode
+                      company-cmake
                       company-files
                       (company-dabbrev-code company-gtags
                                             company-etags company-keywords)
-                      ;;company-oddmuse
+                      company-oddmuse
                       ))
   :config
   (global-company-mode))
