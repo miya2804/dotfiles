@@ -163,6 +163,12 @@ If there are multiple windows, the 'other-window' is called."
       (define-key (or keymap global-map) (kbd key) cmd))
     (defun bind-key* (key cmd) (global-set-key (kbd key) cmd))))
 
+;;;; exec-path
+(use-package exec-path-from-shell
+  :ensure t :defer nil
+  :config
+  (exec-path-from-shell-initialize))
+
 
 
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
