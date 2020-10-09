@@ -690,9 +690,7 @@ If there are multiple windows, the 'other-window' is called."
 ;;   checker: flake8(pip install flake8)
 (use-package flycheck
   :ensure t
-  :hook ((emacs-lisp-mode . flycheck-mode)
-         (dockerfile-mode . flycheck-mode)
-         (python-mode . flycheck-mode)))
+  :hook (after-init . global-flycheck-mode))
 
 ;;;; git-gutter
 (use-package git-gutter
