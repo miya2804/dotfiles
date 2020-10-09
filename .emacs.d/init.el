@@ -359,18 +359,7 @@ If there are multiple windows, the 'other-window' is called."
        '(region ((t (:background "#00cd00"))))
        ))))
 
-;;;; ice-berg-theme
-(use-package iceberg-theme :disabled
-  :config
-  (iceberg-theme-create-theme-file)
-  (load-theme 'solarized-iceberg-dark t))
-
-;;;; zenburn-theme
-(use-package zenburn-theme :disabled
-  :config
-  (load-theme 'zenburn t))
-
-;;;
+;;;;
 ;; Check if any enabled themes.
 ;; If nothing enabled themes, load my-default-faces.
 (if custom-enabled-themes
