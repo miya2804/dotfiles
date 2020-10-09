@@ -856,14 +856,14 @@ If there are multiple windows, the 'other-window' is called."
   :mode ("\\.md\\'"
          "\\.markdown\\'"))
 
-;;;; migemo
-(defvar migemo-command (executable-find "cmigemo"))
-(defvar migemo-dictionary
-  (locate-file "migemo-dict"
-               '("/usr/share/cmigemo/utf-8"))) ; debian
-(unless migemo-command
-  (message "migemo: `cmigemo' is unavailable! Please install it via `sudo apt install cmigemo' if possible."))
 (use-package migemo
+  :preface
+  (defvar migemo-command (executable-find "cmigemo"))
+  (defvar migemo-dictionary
+    (locate-file "migemo-dict"
+                 '("/usr/share/cmigemo/utf-8"))) ; debian
+  (unless migemo-command
+    (message "migemo: `cmigemo' is unavailable! Please install it via `sudo apt install cmigemo' if possible."))
   :if (and migemo-command migemo-dictionary)
   :ensure t :defer nil :no-require t
   :functions migemo-init
@@ -875,12 +875,12 @@ If there are multiple windows, the 'other-window' is called."
   (load-library "migemo")
   (migemo-init))
 
-;;;; mozc
 ;; require external package -> "emacs-mozc-bin"
-(defvar mozc-emacs-helper (executable-find "mozc_emacs_helper"))
-(unless mozc-emacs-helper
-  (message "mozc: `mozc_emacs_helmper' is unavailable! Please install it via `sudo apt install emacs-mozc-bin' if possible."))
 (use-package mozc
+  :preface
+  (defvar mozc-emacs-helper (executable-find "mozc_emacs_helper"))
+  (unless mozc-emacs-helper
+    (message "mozc: `mozc_emacs_helmper' is unavailable! Please install it via `sudo apt install emacs-mozc-bin' if possible."))
   :if mozc-emacs-helper
   :ensure t :defer t
   :config
