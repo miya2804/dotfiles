@@ -19,7 +19,7 @@
 ;; Functions and Macros
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 
-;;;; with-eval-after-load (Emacs 24.4 以上)
+;; with-eval-after-load (Emacs 24.4 以上)
 (unless (fboundp 'with-eval-after-load)
   (defmacro with-eval-after-load (file &rest body)
     `(eval-after-load ,file
@@ -80,7 +80,7 @@ If there are multiple windows, the 'other-window' is called."
     (split-window-horizontally))
   (other-window 1))
 
-;;;; trailing-whitespace
+;; trailing-whitespace
 (defun enable-show-trailing-whitespace  ()
   "Enable display of trailing whitespace."
   (interactive) (setq show-trailing-whitespace t))
@@ -97,10 +97,9 @@ If there are multiple windows, the 'other-window' is called."
 ;; Environments
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 
+;; package manager
 (eval-and-compile
-
-  ;;;; Package Manager
-  ;;; package.el
+  ;; package.el
   (when (require 'package nil t)
     (set-variable
      'package-archives
@@ -111,16 +110,15 @@ If there are multiple windows, the 'other-window' is called."
        ))
     (package-initialize)
     ;;(package-refresh-contents)
-    (set-variable 'package-enable-at-startup nil))
+    (set-variable 'package-enable-at-startup nil)))
 
-  ;;;; load-path
+;; load-path, proxy, debug
+(eval-and-compile
   (setq load-path (cons "~/.emacs.d/elisp" load-path))
 
-  ;;;; proxy
   ;; ~/.emacs.d/elisp/secret/myproxy.elにプロキシ設定を書き込む
   (load "secret/myproxy" t)
 
-  ;;;; debug
   (if init-file-debug
       (progn
         (setq debug-on-error t)
@@ -133,29 +131,34 @@ If there are multiple windows, the 'other-window' is called."
       (set-variable 'use-package-expand-minimally t))))
 
 ;;;; use-package
+
 ;; - https://github.com/jwiegley/use-package
 ;;   非標準パッケージは use-package で管理する。（標準ライブラリは use-package では管理しない）
 ;; - 起動時の use-package の抑止
 ;;   init.el を外部に持ちだした時など、use-package を抑止したいときはEmacs を、オプション "--qq" で起動する。
 ;; - use-package が未インストールか、抑止されている場合は空マクロにする。
-;;; インストールされていなければインストールを実行
-;;(unless (package-installed-p 'use-package)
+
+;; インストールされていなければインストールを実行
+;; (unless (package-installed-p 'use-package)
 ;;  (package-refresh-contents)
 ;;  (package-install 'use-package))
-;;;
+
 (eval-and-compile
   (when (or (member "--qq" command-line-args)
             (null (require 'use-package nil t)))
     (warn "`use-package' is unavailable!  Please install it via `M-x list-packages' if possible.")
     (defmacro use-package (&rest _args))))
+
 ;; 後の startup.el におけるオプション認識エラーを防止
 (add-to-list 'command-switch-alist '("--qq" . (lambda (switch) nil)))
 (use-package use-package :ensure t :defer t) ; 形式的宣言
 
 ;;;; bind-key
+
 ;; bind-key* は、emulation-mode-map-alists を利用することにより、
 ;; minor-mode よりも優先させたいキーのキーマップを定義できる。
 ;; bind-key.el がない場合は普通のbind-key として振る舞う。
+
 (use-package bind-key :ensure t :defer t)
 (eval-and-compile
   (unless (require 'bind-key nil t)
@@ -178,16 +181,20 @@ If there are multiple windows, the 'other-window' is called."
 ;; -------------------------------------
 ;; General
 
-;;;; tab幅
 (setq-default tab-width 4 indent-tabs-mode nil)
 
-;;;; scroll
-(set-variable 'mouse-wheel-scroll-amount '(5 ((shift) . 1) ((control))))
-(set-variable 'mouse-wheel-progressive-speed nil)
-(set-variable 'scroll-conservatively 30)
-(set-variable 'scroll-margin 5)
+(setq mouse-wheel-scroll-amount '(5 ((shift) . 1) ((control))))
+(setq mouse-wheel-progressive-speed nil)
+(setq scroll-conservatively 30)
+(setq scroll-margin 5)
+(setq custom-file (locate-user-emacs-file "elisp/custom.el"))
 
-;;;; windmove setting
+;; terminal起動時のマウス設定
+(unless (display-graphic-p) (xterm-mouse-mode t))
+
+;; startup window size
+(add-to-list 'initial-frame-alist '(fullscreen . maximized))
+
 ;;(windmove-default-keybindings)          ; use shift+arrow
 ;;(windmove-default-keybindings 'meta)    ; use alt+arrow
 
@@ -195,35 +202,38 @@ If there are multiple windows, the 'other-window' is called."
 (bind-key "C-o" 'other-window-or-split)
 (bind-key "C-i" 'indent-for-tab-command)
 (bind-key "<zenkaku-hankaku>" 'toggle-input-method)
-;;; "C-x C-c" -> exit
+
+;; "C-x C-c" -> exit
 (global-unset-key (kbd "C-x C-c"))
 (defalias 'exit 'save-buffers-kill-emacs)
-;;;
+
 ;; helm-for-filesが後に置き換え
 ;; 置き換えられない場合コチラがセット
 (bind-key "C-x C-b" 'buffer-menu)
 
+;;;; backup, auto-save, lock
 (eval-and-compile
-  ;;;; backup and auto-save dir
   (defvar backup-and-auto-save-dir-dropbox
     (expand-file-name "~/Dropbox/backup/emacs/"))
   (defvar backup-and-auto-save-dir-local
     (expand-file-name "~/.emacs.d/.backup/"))
 
-  ;;;; backup (xxx~)
-  ;;; 保存するたびにバックアップを作る設定
-  ;;; https://www.ncaq.net/2018/04/19/10/57/08/
+  ;; backup (xxx~)
+
+  ;; 保存するたびにバックアップを作る設定
+  ;; https://www.ncaq.net/2018/04/19/10/57/08/
   (defun setq-buffer-backed-up-nil ()
     "Set nil to 'buffer-backed-up'."
     (interactive) (setq buffer-backed-up nil))
   (advice-add 'save-buffer :before 'setq-buffer-backed-up-nil)
-  ;;; Change backup directory
+
+  ;; Change backup directory
   (if (file-directory-p backup-and-auto-save-dir-dropbox)
       (add-to-list 'backup-directory-alist
                    (cons ".*" backup-and-auto-save-dir-dropbox))
     (add-to-list 'backup-directory-alist
                  (cons ".*" backup-and-auto-save-dir-local)))
-  ;;; Save multiple backupfiles
+
   (setq make-backup-files t
         vc-make-backup-files t
         backup-by-copying t
@@ -232,9 +242,9 @@ If there are multiple windows, the 'other-window' is called."
         kept-old-versions 0         ; 古いバックアップをいくつ残すか
         delete-old-versions t)      ; Delete out of range
 
-  ;;;; auto-save (#xxx#)
+  ;; auto-save (#xxx#)
   (setq auto-save-timeout 1             ; (def:30)
-        delete-auto-save-files t ; delete auto save file when successful completion.
+        delete-auto-save-files t        ; delete auto save file when successful completion.
         auto-save-list-file-prefix nil)
   (if (file-directory-p backup-and-auto-save-dir-dropbox)
       (setq auto-save-file-name-transforms
@@ -242,7 +252,7 @@ If there are multiple windows, the 'other-window' is called."
     (setq auto-save-file-name-transforms
           `((".*", backup-and-auto-save-dir-local t))))
 
-  ;;;; lockfile (.#xxx)
+  ;; lockfile (.#xxx)
   (setq create-lockfiles nil))
 
 ;;;; language
@@ -253,53 +263,27 @@ If there are multiple windows, the 'other-window' is called."
 (set-terminal-coding-system 'utf-8)
 (set-default 'buffer-file-cording-system 'utf-8)
 
-;;;; saving customization
-(setq custom-file (locate-user-emacs-file "elisp/custom.el"))
-
-;;;; terminalでのマウス使用
-(unless (display-graphic-p) (xterm-mouse-mode t))
-
 ;; -------------------------------------
 ;; Appearance
 
-;;;; hide startup message
 (setq inhibit-startup-message t)
-
-;;;; hide *scratch* buffer message
 (setq initial-scratch-message nil)
-
-;;;; hide menu bar
 (menu-bar-mode 0)
-
-;;;; hide tool bar
+(scroll-bar-mode 0)
 (if (display-graphic-p)
     (tool-bar-mode 0))
-
-;;;; show full path in title
-(setq frame-title-format "%f")
-
-;;;; region highlight
 (transient-mark-mode t)
-
-;;;; alpha
 (if (display-graphic-p) (set-alpha 90))
 
-;;;; window size settings
-(add-to-list 'initial-frame-alist '(fullscreen . maximized))
-
-;;;; display-time
 ;;(setq display-time-day-and-date nil)
 ;;(setq display-time-24hr-format t)
 ;;(display-time)
 
-;;;; indicater
 (setq-default indicate-empty-lines nil)
 (setq-default indicate-buffer-boundaries 'left)
 
-;;;; visualization of space and tab
 ;;(global-whitespace-mode 1)
 
-;;;; 行末の空白表示
 (setq-default show-trailing-whitespace nil)
 (add-hook 'prog-mode-hook 'enable-show-trailing-whitespace)
 (add-hook 'org-mode-hook 'enable-show-trailing-whitespace)
@@ -380,8 +364,7 @@ If there are multiple windows, the 'other-window' is called."
 ;; -------------------------------------
 ;; standard packages
 
-;;;; display-line-numbers.el
-;;;; linum.el
+;;;; linum.el, display-line-numbers.el
 (if (fboundp 'global-display-line-numbers-mode)
     (global-display-line-numbers-mode)
   (progn
@@ -399,12 +382,14 @@ If there are multiple windows, the 'other-window' is called."
 ;;;; org.el
 (defvar org-directory)
 (declare-function org-buffer-list "org")
-;;; cf. https://www.emacswiki.org/emacs/OrgMode#toc21
+
+;; cf. https://www.emacswiki.org/emacs/OrgMode#toc21
 (defun mhatta/org-buffer-files ()
   "Return list of opened Org mode buffer files."
   (mapcar (function buffer-file-name)
           (org-buffer-list 'files)))
-;;; org-directory内の(file)を確認できる関数
+
+;; org-directory内の(file)を確認できる関数
 (defun show-org-buffer (file)
   "Show an org-file FILE on the current buffer."
   (interactive)
@@ -413,12 +398,13 @@ If there are multiple windows, the 'other-window' is called."
         (switch-to-buffer buffer)
         (message "%s" file))
     (find-file (concat org-directory file))))
-;;; key binds
+
 (bind-key "C-c c" 'org-capture)
-(bind-key "C-c n" '(lambda () (interactive) (show-org-buffer "/notes.org")))
-;;; mode
+(bind-key "C-c n"
+          '(lambda () (interactive) (show-org-buffer "/notes.org")))
+
 (push '("\\.org\\'" . org-mode) auto-mode-alist)
-;;; custom
+
 (if (file-directory-p "~/Dropbox/document/org")
     (progn
       (setq org-directory "~/Dropbox/document/org")
@@ -428,14 +414,18 @@ If there are multiple windows, the 'other-window' is called."
     (setq org-directory "~/.emacs.d/.org")
     (set-variable 'org-agenda-files
                   '("~/.emacs.d/.org"))))
+
 (set-variable 'org-default-notes-file
               (concat org-directory "/notes.org"))
+
 (set-variable 'org-startup-truncated nil)
+
 ;; org-dir外のrefile設定(bufferで開いていれば指定可能)
 (set-variable 'org-refile-targets
               '((nil :maxlevel . 3)
                 (mhatta/org-buffer-files :maxlevel . 1)
                 (org-agenda-files :maxlevel . 3)))
+
 ;; templates
 (set-variable 'org-capture-templates
               '(("a" "Memoｃ⌒っﾟωﾟ)っφ　ﾒﾓﾒﾓ..."
@@ -456,7 +446,6 @@ If there are multiple windows, the 'other-window' is called."
 (set-variable 'show-paren-style 'mixed)
 (set-variable 'show-paren-when-point-inside-paren t)
 (set-variable ' show-paren-when-point-in-periphery t)
-;;; custom-face
 (with-eval-after-load 'doom-dracula-theme
   (custom-set-faces
    '(show-paren-match ((nil (:background "#44475a" :foreground "#f1fa8c"))))
@@ -471,14 +460,12 @@ If there are multiple windows, the 'other-window' is called."
 ;; -------------------------------------
 ;; Non-standard Packages
 
-;;;; ace-isearch
 (use-package ace-isearch
   :ensure t
   :diminish ace-isearch-mode
   :hook (after-init . global-ace-isearch-mode)
   :config (setq ace-isearch-jump-delay 0.7))
 
-;;;; ace-jump-mode
 (use-package ace-jump-mode
   :ensure t :defer t
   :config
@@ -487,12 +474,10 @@ If there are multiple windows, the 'other-window' is called."
   ;; ace-jump-word-modeのとき文字を尋ねないようにする
   (setq ace-jump-word-mode-use-query-char nil))
 
-;;;; all-the-icons
 ;; Make dependent with doom-themes.
 ;; Fonts install ->  "M-x all-the-icons-install-fonts"
 (use-package all-the-icons :ensure t :defer t)
 
-;;;; anzu
 (use-package anzu
   :ensure t
   :diminish anzu-mode
@@ -512,7 +497,6 @@ If there are multiple windows, the 'other-window' is called."
   :config
   (set-variable 'auto-async-byte-compile-exclude-files-regexp "/secret/"))
 
-;;;; beacon
 (use-package beacon
   :ensure t
   :diminish beacon-mode
@@ -524,7 +508,6 @@ If there are multiple windows, the 'other-window' is called."
   (with-eval-after-load 'doom-dracula-theme
     (set-variable 'beacon-color "yellow")))
 
-;;;; company.el
 (use-package company
   :ensure t :demand t
   :bind (("<tab>" . company-indent-or-complete-common)
@@ -551,7 +534,6 @@ If there are multiple windows, the 'other-window' is called."
   :config
   (global-company-mode))
 
-;;;; company-box.el
 (use-package company-box
   :ensure t
   :hook (company-mode . company-box-mode)
@@ -559,18 +541,17 @@ If there are multiple windows, the 'other-window' is called."
   (with-eval-after-load 'all-the-icons
     (set-variable 'company-box-icons-alist 'company-box-icons-all-the-icons)))
 
-;;;; company-quickhelp.el
 (use-package company-quickhelp
   :ensure t
   :hook (company-mode . company-quickhelp-mode))
 
-;;;; dashboard
 (use-package dashboard
   :ensure t
   :custom
-  ;;; set the title
   (dashboard-banner-logo-title nil)
-  ;;; custom banner
+  (dashboard-center-content t)
+
+  ;; custom banner
   ;; You can be "path/to/your/image.png"
   ;; which displays whatever image you would prefer
   ;; ↓↓ custom banners ↓↓
@@ -586,24 +567,27 @@ If there are multiple windows, the 'other-window' is called."
   ;; 10: Chunky
   ;; 11: Cricket
   (dashboard-startup-banner 10)
-  ;;; dashboard items
+
+  ;; dashboard items
   (dashboard-items '((recents  . 15)
                      ;;(bookmarks . 5)
                      (agenda . 5)))
-  ;;; centering
-  (dashboard-center-content t)
-  ;;; icon
+
+  ;; icon
   (dashboard-set-heading-icons t)
   (dashboard-set-file-icons t)
-  ;;; init-info (default: init time)
+
+  ;; init-info (default: init time)
   (dashboard-set-init-info t)
-  ;;; footer
+
+  ;; footer
   (dashboard-set-footer t)
   ;;(dashboard-footer-messages '("Dashboard is pretty cool!"))
   ;;(dashboard-footer-icon (all-the-icons-octicon "dashboard"
   ;;                                              :height 1.1
   ;;                                              :v-adjust -0.05
   ;;                                              :face 'font-lock-keyword-face))
+
   :hook (after-init . dashboard-setup-startup-hook)
   :config
   (when (eq system-type 'gnu/linux)
@@ -612,26 +596,21 @@ If there are multiple windows, the 'other-window' is called."
                           " - "
                           "Kernel " (shell-command-to-string "uname -smo")))))
 
-;;;; docker.el
 (use-package docker
   :ensure t
   :bind ("C-c d" . docker))
 
-;;;; dockerfile-mode.el
 (use-package dockerfile-mode
   :ensure t
   :mode ("/Dockerfile\\'"))
 
-;;;; docker-compose-mode
 ;; yaml-modeも兼ねる
 (use-package docker-compose-mode :ensure t :defer t)
 
-;;;; docker-tramp.el
 (use-package docker-tramp
   :ensure t :defer t
   :config (set-variable 'docker-tramp-use-names t))
 
-;;;; doom-modeline
 ;; https://github.com/seagle0128/doom-modeline
 ;; Make dependent with doom-themes.
 (use-package doom-modeline
@@ -644,10 +623,12 @@ If there are multiple windows, the 'other-window' is called."
   (setq doom-modeline-minor-modes nil)
   (setq doom-modeline-buffer-encoding nil)
   (setq doom-modeline-github-interval (* 30 60))
-  ;;; display env version
+
+  ;; display env version
   (setq doom-modeline-env-version t)
   (setq doom-modeline-env-load-string "...")
-  ;;; icon
+
+  ;; icon
   (setq doom-modeline-icon (display-graphic-p))
   (setq doom-modeline-major-mode-icon t)
   (setq doom-modeline-major-mode-color-icon t)
@@ -656,14 +637,15 @@ If there are multiple windows, the 'other-window' is called."
   (setq doom-modeline-unicode-fallback t)
   ;;(setq doom-modeline-persp-icon t)
   ;;(setq doom-modeline-modal-icon t)
-  ;;; persp
+
+  ;; persp
   ;;(setq doom-modeline-persp-name t)
   ;;(setq doom-modeline-display-default-persp-name nil)
-  ;;; lsp
+
+  ;; lsp
   ;;(setq doom-modeline-lsp t)
   )
 
-;;;; elscreen.el
 (use-package elscreen
   :ensure t :defer nil :no-require t
   :functions (elscreen-create)
@@ -675,10 +657,10 @@ If there are multiple windows, the 'other-window' is called."
   (elscreen-tab-display-control nil)
   :config
   (elscreen-start)
+
   ;; create scratch tab
   (elscreen-create))
 
-;;;; flycheck.el
 ;; dockerfile
 ;;   checker: hadolint(https://github.com/hadolint/hadolint)
 ;; python
@@ -705,7 +687,6 @@ If there are multiple windows, the 'other-window' is called."
     :modes (yaml-mode docker-compose-mode))
   (add-to-list 'flycheck-checkers 'yaml-docker-compose-yamllint))
 
-;;;; git-gutter
 (use-package git-gutter
   :ensure t
   :diminish git-gutter-mode
@@ -719,7 +700,6 @@ If there are multiple windows, the 'other-window' is called."
   (set-variable 'git-gutter:added-sign    "+")
   (set-variable 'git-gutter:deleted-sign  "-"))
 
-;;;; helm
 (use-package helm
   :ensure t
   :diminish helm-migemo-mode
@@ -738,13 +718,15 @@ If there are multiple windows, the 'other-window' is called."
   (require 'helm-config)
   (with-eval-after-load 'migemo
     (helm-migemo-mode 1))
-  ;;; fuzzy matting
+
+  ;; fuzzy matting
   (set-variable 'helm-buffers-fuzzy-matching t)
   (set-variable 'helm-apropos-fuzzy-match t)
   (set-variable 'helm-lisp-fuzzy-completion t)
   ;;(set-variable 'helm-M-x-fuzzy-match t)
   ;;(set-variable 'helm-recentf-fuzzy-match t)
-  ;;; helm-for-files
+
+  ;; helm-for-files
   (set-variable 'helm-for-files-preferred-list
         '(helm-source-buffers-list
           helm-source-recentf
@@ -755,13 +737,11 @@ If there are multiple windows, the 'other-window' is called."
           ;;helm-source-locate
           )))
 
-;;;; helm-flycheck.el
 (use-package helm-flycheck
   :ensure t
   :bind (:map flycheck-mode-map
               ("C-c ! h" . 'helm-flycheck)))
 
-;;;; helm-swoop
 (use-package helm-swoop
   :ensure t
   :after helm
@@ -772,7 +752,6 @@ If there are multiple windows, the 'other-window' is called."
   :config
   (setq helm-swoop-move-to-line-cycle nil))
 
-;;;; highlight-indent-guides
 (use-package highlight-indent-guides
   :ensure t
   :diminish highlight-indent-guides-mode
@@ -786,7 +765,6 @@ If there are multiple windows, the 'other-window' is called."
   (highlight-indent-guides-suppress-auto-error t))
 
 
-;;;; hydra
 (use-package hydra
   :ensure t :defer nil :no-require t
   :functions (winner-redo winner-undo
@@ -799,15 +777,16 @@ If there are multiple windows, the 'other-window' is called."
     ^Git-gutter^ | [_l_]: reload [_p_]: previous [_n_]: next [_s_]: stage [_r_]: revert [_d_]: diffinfo
     ^Magit^      | [_m_]: magit-status
     "
-    ;;; git-gutter
+    ;; git-gutter
     ("l" git-gutter)
     ("p" git-gutter:previous-hunk)
     ("n" git-gutter:next-hunk)
     ("s" git-gutter:stage-hunk)
     ("r" git-gutter:revert-hunk)
     ("d" git-gutter:popup-hunk)
-    ;;; magit
+    ;; magit
     ("m" magit-status :exit t))
+
   (defhydra hydra-window-and-buffer-manager (:hint nil :exit t)
     "
     frame           | [_n_]: make [_w_]: delete
@@ -817,10 +796,10 @@ If there are multiple windows, the 'other-window' is called."
     buffer          | [_b_]: menu [_k_]: kill
     window & buffer | [_4_]: kill
     "
-    ;;; frame
+    ;; frame
     ("n" make-frame)
     ("w" delete-frame)
-    ;;; window
+    ;; window
     ("1" delete-other-windows)
     ("2" split-window-below)
     ("3" split-window-right)
@@ -829,15 +808,15 @@ If there are multiple windows, the 'other-window' is called."
     ("0" delete-window)
     ("r" window-resizer)
     ("c" balance-windows)
-    ;;; buffer
+    ;; buffer
     ("b" buffer-menu)
     ("k" kill-buffer)
-    ;;; window & buffer
+    ;; window & buffer
     ("4" kill-buffer-and-window))
+
   (bind-key "C-c g" 'hydra-git-gutter/body)
   (bind-key "C-c x" 'hydra-window-and-buffer-manager/body))
 
-;;;; iflipb
 ;; https://github.com/jrosdahl/iflipb
 (use-package iflipb
   :ensure t
@@ -847,10 +826,8 @@ If there are multiple windows, the 'other-window' is called."
   (setq iflipb-ignore-buffers (list "^[*]" "^magit-process:"))
   (setq iflipb-wrap-around t))
 
-;;;; magit.el
 (use-package magit :ensure t :defer t)
 
-;;;; markdown-mode
 (use-package markdown-mode
   :ensure t
   :mode ("\\.md\\'"
@@ -886,7 +863,6 @@ If there are multiple windows, the 'other-window' is called."
   :config
   (setq default-input-method "japanese-mozc"))
 
-;;;; neotree
 (use-package neotree
   :ensure t
   :bind (("C-q" . neotree-toggle)
@@ -900,7 +876,6 @@ If there are multiple windows, the 'other-window' is called."
   (setq neo-show-hidden-files t)
   (setq neo-smart-open t))
 
-;;;; nyan-mode
 (use-package nyan-mode
   :ensure t
   :hook
@@ -911,7 +886,6 @@ If there are multiple windows, the 'other-window' is called."
   (nyan-cat-face-number 4)
   (nyan-minimum-window-width 50))
 
-;;;; org-bullets
 ;; https://github.com/sabof/org-bullets
 (use-package org-bullets
   :ensure t
@@ -920,7 +894,6 @@ If there are multiple windows, the 'other-window' is called."
   ;;(setq org-bullets-bullet-list '("" "" "" "" "" "" "" "" "" ""))
   )
 
-;;;; org-journal
 (use-package org-journal
   :ensure t
   :bind ("C-c j" . org-journal-new-entry)
@@ -931,37 +904,32 @@ If there are multiple windows, the 'other-window' is called."
   (set-variable 'org-journal-file-format "%Y%m%d.org")
   (set-variable 'org-journal-find-file 'find-file)
   (setq org-extend-today-until '3)
-  ;;; 折返しが起こったときの挙動の修正
+
+  ;; 折返しが起こったときの挙動の修正
   (add-hook 'visual-line-mode-hook
             '(lambda()
                (setq word-wrap nil))))
 
-;;;; org-preview-html.el
 (use-package org-preview-html :ensure t :defer t)
 
-;;;; rainbow-delimiters
 (use-package rainbow-delimiters
   :ensure t
   :hook (prog-mode . rainbow-delimiters-mode))
 
-;;;; recentf-ext
 (use-package recentf-ext :ensure t :defer nil)
 
-;;;; redo+
 (use-package redo+
   :pin manual :demand t
   :bind (("C-M-/" . redo)
          ("C-c /" . redo)
          ("C-M-_" . redo)))
 
-;;;; smart-newline
 (use-package smart-newline
   :ensure t :defer t
   :diminish smart-newline-mode
   :hook ((emacs-lisp-mode . smart-newline-mode)
          (python-mode . smart-newline-mode)))
 
-;;;; smooth-scroll.el
 (use-package smooth-scroll
   :ensure t
   :custom
@@ -969,7 +937,6 @@ If there are multiple windows, the 'other-window' is called."
   :config
   (smooth-scroll-mode t))
 
-;;;; swap-buffers
 (use-package swap-buffers
   :ensure t
   :bind (("C-M-o" . swap-buffers-keep-focus)
@@ -981,19 +948,17 @@ If there are multiple windows, the 'other-window' is called."
     (interactive)
     (swap-buffers t)))
 
-;;;; volatile-highlights
 (use-package volatile-highlights
   :ensure t
   :diminish volatile-highlights-mode
   :hook (after-init . volatile-highlights-mode)
   :config
-  ;;; custom-face
+  ;; custom-face
   (with-eval-after-load 'doom-dracula-theme
     (custom-set-faces
      '(vhl/default-face ((nil (:foreground "#FF3333" :background "#FFCDCD"))))
      )))
 
-;;;; web-mode
 (use-package web-mode
   :ensure t
   :mode ("\\.phtml\\'"
@@ -1009,19 +974,16 @@ If there are multiple windows, the 'other-window' is called."
         '(("php" . "\\.phtml\\'")
           ("blade" . "\\.blade\\'"))))
 
-;;;; which-key
 (use-package which-key
   :ensure t
   :diminish which-key-mode
   :hook (after-init . which-key-mode))
 
-;;;; winner
 (use-package winner
   :ensure t
   :commands (winner-redo winner-undo)
   :config (winner-mode 1))
 
-;;;; yaml-mode.el
 ;; docker-compose-modeでインストールされる
 (use-package yaml-mode :disabled
   :ensure t
@@ -1046,6 +1008,6 @@ If there are multiple windows, the 'other-window' is called."
                         ,load-file-name elapsed))) t)
 
 
-;;(provide 'init)
+;; (provide 'init)
 
 ;;; init.el ends here
