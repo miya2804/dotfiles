@@ -830,6 +830,11 @@ If there are multiple windows, the 'other-window' is called."
 
 (use-package markdown-mode
   :ensure t
+  :bind (:map markdown-mode-map
+              ("<tab>" . markdown-cycle)
+              ("<S-tab>" . markdown-shifttab)
+              ("M-n" . markdown-next-visible-heading)
+              ("M-p" . markdown-previous-visible-heading))
   :mode ("\\.md\\'"
          "\\.markdown\\'"))
 
