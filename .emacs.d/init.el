@@ -137,14 +137,19 @@ If there are multiple windows, the 'other-window' is called."
 ;;  (package-install 'use-package))
 
 (if init-file-debug
-    (defvar use-package-expand-minimally nil)
-  (defvar use-package-expand-minimally t))
-
-(defvar use-package-minimum-reported-time 0)
-(defvar use-package-verbose t)
-(defvar use-package-compute-statistics t)
+    (progn
+      (defvar use-package-expand-minimally nil)
+      (defvar use-package-verbose t))
+  (progn
+    (defvar use-package-expand-minimally t)
+    (defvar use-package-verbose nil)))
 
 (eval-and-compile
+  ;; use-package-report
+  (defvar use-package-minimum-reported-time 0)
+  (defvar use-package-compute-statistics t)
+
+  ;; option --qq
   (when (or (member "--qq" command-line-args)
             (null (require 'use-package nil t)))
     (warn "`use-package' is unavailable!  Please install it via `M-x list-packages' if possible.")
