@@ -287,6 +287,7 @@ If there are multiple windows, the 'other-window' is called."
 (setq-default show-trailing-whitespace nil)
 (add-hook 'prog-mode-hook 'enable-show-trailing-whitespace)
 (add-hook 'org-mode-hook 'enable-show-trailing-whitespace)
+(add-hook 'markdown-mode-hook 'enable-show-trailing-whitespace)
 
 
 
