@@ -938,13 +938,6 @@ If there are multiple windows, the 'other-window' is called."
   :hook ((emacs-lisp-mode . smart-newline-mode)
          (python-mode . smart-newline-mode)))
 
-(use-package smooth-scroll
-  :ensure t
-  :custom
-  (smooth-scroll/vscroll-step-size 4)
-  :config
-  (smooth-scroll-mode t))
-
 (use-package swap-buffers
   :ensure t
   :bind (("C-M-o" . swap-buffers-keep-focus)
