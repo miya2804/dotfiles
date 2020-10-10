@@ -12,6 +12,9 @@
 (defconst emacs-start-time (current-time))
 (message (format "[Startup time: %s]" (format-time-string "%Y/%m/%d %H:%M:%S")))
 (eval-when-compile (require 'cl))
+(when init-file-debug
+  (setq debug-on-error t)
+  (setq force-load-messages t))
 
 
 
@@ -97,12 +100,11 @@ If there are multiple windows, the 'other-window' is called."
 ;; Environments
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
 
-;; package manager
+;;;; package manager
 (eval-and-compile
   ;; package.el
   (when (require 'package nil t)
-    (set-variable
-     'package-archives
+    (setq package-archives
      '(("melpa" . "https://melpa.org/packages/")
        ;;("melpa-stable" . "https://stable.melpa.org/packages/")
        ;;("org" . "https://orgmode.org/elpa/")
@@ -110,25 +112,16 @@ If there are multiple windows, the 'other-window' is called."
        ))
     (package-initialize)
     ;;(package-refresh-contents)
-    (set-variable 'package-enable-at-startup nil)))
+    (setq package-enable-at-startup nil)))
 
-;; load-path, proxy, debug
+;;;; load-path
 (eval-and-compile
-  (setq load-path (cons "~/.emacs.d/elisp" load-path))
+  (setq load-path (cons "~/.emacs.d/elisp" load-path)))
 
+;;;; proxy
+(eval-and-compile
   ;; ~/.emacs.d/elisp/secret/myproxy.elにプロキシ設定を書き込む
-  (load "secret/myproxy" t)
-
-  (if init-file-debug
-      (progn
-        (setq debug-on-error t)
-        (setq force-load-messages t)
-        (set-variable 'use-package-verbose t)
-	    (set-variable 'use-package-expand-minimally nil)
-	    (set-variable 'use-package-compute-statistics t))
-    (progn
-      (set-variable 'use-package-verbose nil)
-      (set-variable 'use-package-expand-minimally t))))
+  (load "secret/myproxy" t))
 
 ;;;; use-package
 
@@ -143,6 +136,14 @@ If there are multiple windows, the 'other-window' is called."
 ;;  (package-refresh-contents)
 ;;  (package-install 'use-package))
 
+(if init-file-debug
+    (defvar use-package-expand-minimally nil)
+  (defvar use-package-expand-minimally t))
+
+(defvar use-package-minimum-reported-time 0)
+(defvar use-package-verbose t)
+(defvar use-package-compute-statistics t)
+
 (eval-and-compile
   (when (or (member "--qq" command-line-args)
             (null (require 'use-package nil t)))
@@ -151,6 +152,7 @@ If there are multiple windows, the 'other-window' is called."
 
 ;; 後の startup.el におけるオプション認識エラーを防止
 (add-to-list 'command-switch-alist '("--qq" . (lambda (switch) nil)))
+
 (use-package use-package :ensure t :defer t) ; 形式的宣言
 
 ;;;; bind-key
@@ -168,9 +170,15 @@ If there are multiple windows, the 'other-window' is called."
 
 ;;;; exec-path
 (use-package exec-path-from-shell
-  :ensure t :defer nil
+  :ensure t :demand t
   :config
   (exec-path-from-shell-initialize))
+
+;;;; auto-compile
+(use-package auto-async-byte-compile
+  :ensure t :defer t
+  :hook (emacs-lisp-mode . enable-auto-async-byte-compile-mode)
+  :custom (auto-async-byte-compile-exclude-files-regexp "/secret/"))
 
 
 
@@ -370,7 +378,7 @@ If there are multiple windows, the 'other-window' is called."
     (global-display-line-numbers-mode)
   (progn
     (global-linum-mode)
-    (set-variable 'linum-format "%3d ")))
+    (defvar linum-format "%3d ")))
 
 ;;;; hl-line.el
 (global-hl-line-mode)
@@ -411,26 +419,26 @@ If there are multiple windows, the 'other-window' is called."
 (if (file-directory-p "~/Dropbox/document/org")
     (progn
       (setq org-directory "~/Dropbox/document/org")
-      (set-variable 'org-agenda-files
+      (defvar org-agenda-files
                     '("~/Dropbox/document/org/agenda")))
   (progn
     (setq org-directory "~/.emacs.d/.org")
-    (set-variable 'org-agenda-files
+    (setq org-agenda-files
                   '("~/.emacs.d/.org"))))
 
-(set-variable 'org-default-notes-file
+(defvar org-default-notes-file
               (concat org-directory "/notes.org"))
 
-(set-variable 'org-startup-truncated nil)
+(defvar org-startup-truncated nil)
 
 ;; org-dir外のrefile設定(bufferで開いていれば指定可能)
-(set-variable 'org-refile-targets
+(defvar org-refile-targets
               '((nil :maxlevel . 3)
                 (mhatta/org-buffer-files :maxlevel . 1)
                 (org-agenda-files :maxlevel . 3)))
 
 ;; templates
-(set-variable 'org-capture-templates
+(defvar org-capture-templates
               '(("a" "Memoｃ⌒っﾟωﾟ)っφ　ﾒﾓﾒﾓ..."
                  plain (file "memos.org")
                  "* %?%U"
@@ -445,20 +453,19 @@ If there are multiple windows, the 'other-window' is called."
                  :empty-lines 1 :jump-to-captured 1)))
 
 ;;;; paren.el
-(show-paren-mode t)                ; illuminate corresponding brackets
-(set-variable 'show-paren-style 'mixed)
-(set-variable 'show-paren-when-point-inside-paren t)
-(set-variable ' show-paren-when-point-in-periphery t)
+(defvar show-paren-style 'mixed)
+(defvar show-paren-when-point-inside-paren t)
+(defvar show-paren-when-point-in-periphery t)
 (with-eval-after-load 'doom-dracula-theme
   (custom-set-faces
    '(show-paren-match ((nil (:background "#44475a" :foreground "#f1fa8c"))))
    ))
+(show-paren-mode t)                ; illuminate corresponding brackets
 
 ;;;; recentf.el
-(set-variable 'recentf-max-saved-items 500)
-(set-variable 'recentf-auto-cleanup 'never)
-(set-variable 'recentf-exclude
-              '("/recentf\\'" "/bookmarks\\'"))
+(defvar recentf-max-saved-items 500)
+(defvar recentf-auto-cleanup 'never)
+(defvar recentf-exclude '("/recentf\\'" "/bookmarks\\'"))
 
 ;; -------------------------------------
 ;; Non-standard Packages
@@ -494,22 +501,16 @@ If there are multiple windows, the 'other-window' is called."
   (with-eval-after-load 'migemo
     (setq anzu-use-migemo t)))
 
-(use-package auto-async-byte-compile
-  :ensure t :defer t
-  :hook (emacs-lisp-mode . enable-auto-async-byte-compile-mode)
-  :config
-  (set-variable 'auto-async-byte-compile-exclude-files-regexp "/secret/"))
-
 (use-package beacon
   :ensure t
   :diminish beacon-mode
   :hook (after-init . beacon-mode)
   :config
-  (set-variable 'beacon-size 20)
-  (set-variable 'beacon-blink-duration 0.2)
-  (set-variable 'beacon-blink-when-window-scrolls nil)
+  (setq beacon-size 20)
+  (setq beacon-blink-duration 0.2)
+  (setq beacon-blink-when-window-scrolls nil)
   (with-eval-after-load 'doom-dracula-theme
-    (set-variable 'beacon-color "yellow")))
+    (setq beacon-color "yellow")))
 
 (use-package company
   :ensure t :demand t
@@ -542,7 +543,7 @@ If there are multiple windows, the 'other-window' is called."
   :hook (company-mode . company-box-mode)
   :config
   (with-eval-after-load 'all-the-icons
-    (set-variable 'company-box-icons-alist 'company-box-icons-all-the-icons)))
+    (setq company-box-icons-alist 'company-box-icons-all-the-icons)))
 
 (use-package company-quickhelp
   :ensure t
@@ -594,7 +595,7 @@ If there are multiple windows, the 'other-window' is called."
   :hook (after-init . dashboard-setup-startup-hook)
   :config
   (when (eq system-type 'gnu/linux)
-    (set-variable 'dashboard-init-info
+    (setq dashboard-init-info
                   (concat "Welcome to Emacs " emacs-version
                           " - "
                           "Kernel " (shell-command-to-string "uname -smo")))))
@@ -612,7 +613,7 @@ If there are multiple windows, the 'other-window' is called."
 
 (use-package docker-tramp
   :ensure t :defer t
-  :config (set-variable 'docker-tramp-use-names t))
+  :config (setq docker-tramp-use-names t))
 
 ;; https://github.com/seagle0128/doom-modeline
 ;; Make dependent with doom-themes.
@@ -655,7 +656,7 @@ If there are multiple windows, the 'other-window' is called."
   :bind ("<f5>" . elscreen-next)
   :custom
   (elscreen-prefix-key (kbd "C-z"))
-  ;;(set-variable 'elscreen-display-tab nil)
+  ;;(setq elscreen-display-tab nil)
   (elscreen-tab-display-kill-screen nil)
   (elscreen-tab-display-control nil)
   :config
@@ -699,9 +700,9 @@ If there are multiple windows, the 'other-window' is called."
   (git-gutter:added    ((t (:background "#50fa7b"))))
   (git-gutter:deleted  ((t (:background "#ff79c6"))))
   :config
-  (set-variable 'git-gutter:modified-sign "~")
-  (set-variable 'git-gutter:added-sign    "+")
-  (set-variable 'git-gutter:deleted-sign  "-"))
+  (setq git-gutter:modified-sign "~")
+  (setq git-gutter:added-sign    "+")
+  (setq git-gutter:deleted-sign  "-"))
 
 (use-package helm
   :ensure t
@@ -717,28 +718,28 @@ If there are multiple windows, the 'other-window' is called."
               ("C-c C-k" . helm-kill-selection-and-quit)
               ("C-i" . helm-execute-persistent-action)
               ("C-z" . helm-select-action))
+  :custom
+  ;; fuzzy matting
+  (helm-buffers-fuzzy-matching t)
+  (helm-apropos-fuzzy-match t)
+  (helm-lisp-fuzzy-completion t)
+  ;;(helm-M-x-fuzzy-match t)
+  ;;(helm-recentf-fuzzy-match t)
+
+  ;; helm-for-files
+  (helm-for-files-preferred-list
+   '(helm-source-buffers-list
+     helm-source-recentf
+     helm-source-bookmarks
+     helm-source-file-cache
+     helm-source-files-in-current-dir
+     helm-source-bookmark-set
+     ;;helm-source-locate
+     )))
   :config
   (require 'helm-config)
   (with-eval-after-load 'migemo
     (helm-migemo-mode 1))
-
-  ;; fuzzy matting
-  (set-variable 'helm-buffers-fuzzy-matching t)
-  (set-variable 'helm-apropos-fuzzy-match t)
-  (set-variable 'helm-lisp-fuzzy-completion t)
-  ;;(set-variable 'helm-M-x-fuzzy-match t)
-  ;;(set-variable 'helm-recentf-fuzzy-match t)
-
-  ;; helm-for-files
-  (set-variable 'helm-for-files-preferred-list
-        '(helm-source-buffers-list
-          helm-source-recentf
-          helm-source-bookmarks
-          helm-source-file-cache
-          helm-source-files-in-current-dir
-          helm-source-bookmark-set
-          ;;helm-source-locate
-          )))
 
 (use-package helm-flycheck
   :ensure t
@@ -852,11 +853,12 @@ If there are multiple windows, the 'other-window' is called."
   :if (and migemo-command migemo-dictionary)
   :ensure t :defer nil :no-require t
   :functions migemo-init
+  :custom
+  (migemo-options '("-q" "--emacs"))
+  (migemo-coding-system 'utf-8-unix)
+  (migemo-user-dictionary nil)
+  (migemo-regex-dictionary nil)
   :config
-  (set-variable 'migemo-options '("-q" "--emacs"))
-  (set-variable 'migemo-coding-system 'utf-8-unix)
-  (set-variable 'migemo-user-dictionary nil)
-  (set-variable 'migemo-regex-dictionary nil)
   (load-library "migemo")
   (migemo-init))
 
@@ -906,11 +908,11 @@ If there are multiple windows, the 'other-window' is called."
   :ensure t
   :bind ("C-c j" . org-journal-new-entry)
   :config
-  (set-variable 'org-journal-dir "~/Dropbox/document/org/journal")
-  (set-variable 'org-journal-date-format "%Y-%m-%d %A")
+  (setq org-journal-dir "~/Dropbox/document/org/journal")
+  (setq org-journal-date-format "%Y-%m-%d %A")
   ;;(setq org-journal-time-format "%R")
-  (set-variable 'org-journal-file-format "%Y%m%d.org")
-  (set-variable 'org-journal-find-file 'find-file)
+  (setq org-journal-file-format "%Y%m%d.org")
+  (setq org-journal-find-file 'find-file)
   (setq org-extend-today-until '3)
 
   ;; 折返しが起こったときの挙動の修正
