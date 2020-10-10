@@ -335,9 +335,10 @@ If there are multiple windows, the 'other-window' is called."
 ;;;; doom-themes
 (use-package doom-themes
   :ensure t
+  :custom
+  (doom-themes-enable-italic t)
+  (doom-themes-enable-bold t)
   :config
-  (setq doom-themes-enable-italic t
-        doom-themes-enable-bold t)
   ;;(load-theme 'doom-dracula t)
   ;;(load-theme 'doom-challenger-deep)
   ;;(load-theme 'doom-horizon)
@@ -478,11 +479,11 @@ If there are multiple windows, the 'other-window' is called."
 
 (use-package ace-jump-mode
   :ensure t :defer t
-  :config
-  (setq ace-jump-mode-move-keys
-        (append "asdfghjkl;:]qwertyuiop@zxcvbnm,." nil))
+  :custom
+  (ace-jump-mode-move-keys
+   (append "asdfghjkl;:]qwertyuiop@zxcvbnm,." nil))
   ;; ace-jump-word-modeのとき文字を尋ねないようにする
-  (setq ace-jump-word-mode-use-query-char nil))
+  (ace-jump-word-mode-use-query-char nil))
 
 ;; Make dependent with doom-themes.
 ;; Fonts install ->  "M-x all-the-icons-install-fonts"
@@ -494,10 +495,11 @@ If there are multiple windows, the 'other-window' is called."
   :hook (after-init . global-anzu-mode)
   :bind (([remap query-replace] . anzu-query-replace)
          ([remap query-replace-regexp] . anzu-query-replace-regexp))
+  :custom
+  (anzu-search-threshold 1000)
+  (anzu-replace-threshold 1000)
+  (anzu-minimum-input-length 3)
   :config
-  (setq anzu-search-threshold 1000)
-  (setq anzu-replace-threshold 1000)
-  (setq anzu-minimum-input-length 3)
   (with-eval-after-load 'migemo
     (setq anzu-use-migemo t)))
 
@@ -505,10 +507,11 @@ If there are multiple windows, the 'other-window' is called."
   :ensure t
   :diminish beacon-mode
   :hook (after-init . beacon-mode)
+  :custom
+  (beacon-size 20)
+  (beacon-blink-duration 0.2)
+  (beacon-blink-when-window-scrolls nil)
   :config
-  (setq beacon-size 20)
-  (setq beacon-blink-duration 0.2)
-  (setq beacon-blink-when-window-scrolls nil)
   (with-eval-after-load 'doom-dracula-theme
     (setq beacon-color "yellow")))
 
@@ -591,7 +594,6 @@ If there are multiple windows, the 'other-window' is called."
   ;;                                              :height 1.1
   ;;                                              :v-adjust -0.05
   ;;                                              :face 'font-lock-keyword-face))
-
   :hook (after-init . dashboard-setup-startup-hook)
   :config
   (when (eq system-type 'gnu/linux)
@@ -613,42 +615,42 @@ If there are multiple windows, the 'other-window' is called."
 
 (use-package docker-tramp
   :ensure t :defer t
-  :config (setq docker-tramp-use-names t))
+  :custom (docker-tramp-use-names t))
 
 ;; https://github.com/seagle0128/doom-modeline
 ;; Make dependent with doom-themes.
 (use-package doom-modeline
   :ensure t
   :hook (after-init . doom-modeline-mode)
-  :config
-  (line-number-mode 0)
-  (column-number-mode 0)
-  (setq doom-modeline-buffer-file-name-style 'truncate-with-project)
-  (setq doom-modeline-minor-modes nil)
-  (setq doom-modeline-buffer-encoding nil)
-  (setq doom-modeline-github-interval (* 30 60))
+  :custom
+  (doom-modeline-buffer-file-name-style 'truncate-with-project)
+  (doom-modeline-minor-modes nil)
+  (doom-modeline-buffer-encoding nil)
+  (doom-modeline-github-interval (* 30 60))
 
   ;; display env version
-  (setq doom-modeline-env-version t)
-  (setq doom-modeline-env-load-string "...")
+  (doom-modeline-env-version t)
+  (doom-modeline-env-load-string "...")
 
   ;; icon
-  (setq doom-modeline-icon (display-graphic-p))
-  (setq doom-modeline-major-mode-icon t)
-  (setq doom-modeline-major-mode-color-icon t)
-  (setq doom-modeline-buffer-state-icon t)
-  (setq doom-modeline-buffer-modification-icon t) ; respect doom-modeline-buffer-state-icon
-  (setq doom-modeline-unicode-fallback t)
-  ;;(setq doom-modeline-persp-icon t)
-  ;;(setq doom-modeline-modal-icon t)
+  (doom-modeline-icon (display-graphic-p))
+  (doom-modeline-major-mode-icon t)
+  (doom-modeline-major-mode-color-icon t)
+  (doom-modeline-buffer-state-icon t)
+  (doom-modeline-buffer-modification-icon t) ; respect doom-modeline-buffer-state-icon
+  (doom-modeline-unicode-fallback t)
+  ;;(doom-modeline-persp-icon t)
+  ;;(doom-modeline-modal-icon t)
 
   ;; persp
-  ;;(setq doom-modeline-persp-name t)
-  ;;(setq doom-modeline-display-default-persp-name nil)
+  ;;(doom-modeline-persp-name t)
+  ;;(doom-modeline-display-default-persp-name nil)
 
   ;; lsp
-  ;;(setq doom-modeline-lsp t)
-  )
+  ;;(doom-modeline-lsp t)
+  :config
+  (line-number-mode 0)
+  (column-number-mode 0))
 
 (use-package elscreen
   :ensure t :defer nil :no-require t
@@ -656,14 +658,13 @@ If there are multiple windows, the 'other-window' is called."
   :bind ("<f5>" . elscreen-next)
   :custom
   (elscreen-prefix-key (kbd "C-z"))
-  ;;(setq elscreen-display-tab nil)
+  ;;(elscreen-display-tab nil)
   (elscreen-tab-display-kill-screen nil)
   (elscreen-tab-display-control nil)
   :config
   (elscreen-start)
-
-  ;; create scratch tab
-  (elscreen-create))
+  (elscreen-create) ; create scratch tab
+  )
 
 ;; dockerfile
 ;;   checker: hadolint(https://github.com/hadolint/hadolint)
@@ -695,14 +696,14 @@ If there are multiple windows, the 'other-window' is called."
   :ensure t
   :diminish git-gutter-mode
   :hook (after-init . global-git-gutter-mode)
+  :custom
+  (git-gutter:modified-sign "~")
+  (git-gutter:added-sign    "+")
+  (git-gutter:deleted-sign  "-")
   :custom-face
   (git-gutter:modified ((t (:background "#f1fa8c"))))
   (git-gutter:added    ((t (:background "#50fa7b"))))
-  (git-gutter:deleted  ((t (:background "#ff79c6"))))
-  :config
-  (setq git-gutter:modified-sign "~")
-  (setq git-gutter:added-sign    "+")
-  (setq git-gutter:deleted-sign  "-"))
+  (git-gutter:deleted  ((t (:background "#ff79c6")))))
 
 (use-package helm
   :ensure t
@@ -753,8 +754,7 @@ If there are multiple windows, the 'other-window' is called."
   :bind (:map helm-swoop-map
               ("C-r" . helm-previous-line)
               ("C-s" . helm-next-line))
-  :config
-  (setq helm-swoop-move-to-line-cycle nil))
+  :custom (helm-swoop-move-to-line-cycle nil))
 
 (use-package highlight-indent-guides
   :ensure t
@@ -826,9 +826,9 @@ If there are multiple windows, the 'other-window' is called."
   :ensure t
   :bind (("M-o" . iflipb-next-buffer)
          ("M-O" . iflipb-previous-buffer))
-  :config
-  (setq iflipb-ignore-buffers (list "^[*]" "^magit-process:"))
-  (setq iflipb-wrap-around t))
+  :custom
+  (iflipb-ignore-buffers (list "^[*]" "^magit-process:"))
+  (iflipb-wrap-around t))
 
 (use-package magit :ensure t :defer t)
 
@@ -870,8 +870,7 @@ If there are multiple windows, the 'other-window' is called."
     (message "mozc: `mozc_emacs_helmper' is unavailable! Please install it via `sudo apt install emacs-mozc-bin' if possible."))
   :if mozc-emacs-helper
   :ensure t :defer t
-  :config
-  (setq default-input-method "japanese-mozc"))
+  :custom (default-input-method "japanese-mozc"))
 
 (use-package neotree
   :ensure t
@@ -880,11 +879,10 @@ If there are multiple windows, the 'other-window' is called."
               ("a" . neotree-hidden-file-toggle)
               ("<left>" . neotree-select-up-node)
               ("<right>" . neotree-change-root))
-  :config
-  (setq neo-theme
-        (if (display-graphic-p) 'nerd2 'arrow))
-  (setq neo-show-hidden-files t)
-  (setq neo-smart-open t))
+  :custom
+  (neo-theme (if (display-graphic-p) 'nerd2 'arrow))
+  (neo-show-hidden-files t)
+  (neo-smart-open t))
 
 (use-package nyan-mode
   :ensure t
@@ -900,21 +898,21 @@ If there are multiple windows, the 'other-window' is called."
 (use-package org-bullets
   :ensure t
   :hook (org-mode . org-bullets-mode)
-  :config
-  ;;(setq org-bullets-bullet-list '("" "" "" "" "" "" "" "" "" ""))
+  ;; :custom
+  ;; (org-bullets-bullet-list '("" "" "" "" "" "" "" "" "" ""))
   )
 
 (use-package org-journal
   :ensure t
   :bind ("C-c j" . org-journal-new-entry)
+  :custom
+  (org-journal-dir "~/Dropbox/document/org/journal")
+  (org-journal-date-format "%Y-%m-%d %A")
+  ;;(org-journal-time-format "%R")
+  (org-journal-file-format "%Y%m%d.org")
+  (org-journal-find-file 'find-file)
+  (org-extend-today-until '3)
   :config
-  (setq org-journal-dir "~/Dropbox/document/org/journal")
-  (setq org-journal-date-format "%Y-%m-%d %A")
-  ;;(setq org-journal-time-format "%R")
-  (setq org-journal-file-format "%Y%m%d.org")
-  (setq org-journal-find-file 'find-file)
-  (setq org-extend-today-until '3)
-
   ;; 折返しが起こったときの挙動の修正
   (add-hook 'visual-line-mode-hook
             '(lambda()
@@ -972,10 +970,10 @@ If there are multiple windows, the 'other-window' is called."
          "\\.mustache\\'"
          "\\.djhtml\\'"
          "\\.html?\\'")
-  :config
-  (setq web-mode-engines-alist
-        '(("php" . "\\.phtml\\'")
-          ("blade" . "\\.blade\\'"))))
+  :custom
+  (web-mode-engines-alist
+   '(("php" . "\\.phtml\\'")
+     ("blade" . "\\.blade\\'"))))
 
 (use-package which-key
   :ensure t
