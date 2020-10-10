@@ -995,6 +995,10 @@ If there are multiple windows, the 'other-window' is called."
   :ensure t
   :mode ("\\.ya?ml\\'"))
 
+(use-package zoom
+  :ensure t
+  :config (custom-set-variables '(zoom-mode t)))
+
 
 
 ;; ++++++++++++++++++++++++++++++++++++++++++++++++++
