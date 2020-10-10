@@ -402,6 +402,8 @@ If there are multiple windows, the 'other-window' is called."
 (bind-key "C-c c" 'org-capture)
 (bind-key "C-c n"
           '(lambda () (interactive) (show-org-buffer "/notes.org")))
+(bind-key "M-n" 'org-next-visible-heading)
+(bind-key "M-p" 'org-previous-visible-heading)
 
 (push '("\\.org\\'" . org-mode) auto-mode-alist)
 
