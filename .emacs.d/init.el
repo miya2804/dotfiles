@@ -269,9 +269,9 @@ If there are multiple windows, the 'other-window' is called."
 (setq inhibit-startup-message t)
 (setq initial-scratch-message nil)
 (menu-bar-mode 0)
-(scroll-bar-mode 0)
-(if (display-graphic-p)
-    (tool-bar-mode 0))
+(tool-bar-mode 0)
+(when (fboundp 'set-scroll-bar-mode)
+  (set-scroll-bar-mode nil))
 (transient-mark-mode t)
 (if (display-graphic-p) (set-alpha 90))
 
