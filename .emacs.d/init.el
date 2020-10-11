@@ -741,11 +741,11 @@ If there are multiple windows, the 'other-window' is called."
      helm-source-files-in-current-dir
      helm-source-bookmark-set
      ;;helm-source-locate
-     )))
+     ))
   :config
   (require 'helm-config)
   (with-eval-after-load 'migemo
-    (helm-migemo-mode 1))
+    (helm-migemo-mode 1)))
 
 (use-package helm-flycheck
   :ensure t
