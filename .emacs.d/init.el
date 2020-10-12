@@ -521,30 +521,21 @@ If there are multiple windows, the 'other-window' is called."
     (setq beacon-color "yellow")))
 
 (use-package company
-  :ensure t :demand t
+  :ensure t
   :bind (("<tab>" . company-indent-or-complete-common)
          :map company-active-map
               ("C-p" . company-select-previous)
               ("C-n" . company-select-next))
+  :hook
+  (after-init . global-company-mode)
+  (eshell-mode . (lambda () (company-mode -1)))
   :custom
   (company-idle-delay 0)
   (company-selection-wrap-around t)     ; 候補の最後の次は先頭に戻る
   (completion-ignore-case t)
   (company-require-match 'never)
-  (company-backends '((company-capf company-dabbrev)
-                      company-bbdb
-                      ;; company-eclim
-                      company-semantic
-                      company-clang
-                      ;; company-xcode
-                      company-cmake
-                      company-files
-                      (company-dabbrev-code company-gtags
-                                            company-etags company-keywords)
-                      company-oddmuse
-                      ))
-  :config
-  (global-company-mode))
+  (company-dabbrev-downcase nil)        ; debbrev 小文字での補完
+  (company-dabbrev-char-regexp "\\(\\sw\\|\\s_\\|_\\|-\\)"))
 
 (use-package company-box
   :ensure t
