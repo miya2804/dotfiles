@@ -522,8 +522,7 @@ If there are multiple windows, the 'other-window' is called."
 
 (use-package company
   :ensure t
-  :bind (("<tab>" . company-indent-or-complete-common)
-         :map company-active-map
+  :bind (:map company-active-map
               ("C-p" . company-select-previous)
               ("C-n" . company-select-next))
   :hook
