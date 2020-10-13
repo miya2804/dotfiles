@@ -18,9 +18,8 @@
 
 
 
-;; ++++++++++++++++++++++++++++++++++++++++++++++++++
-;; Functions and Macros
-;; ++++++++++++++++++++++++++++++++++++++++++++++++++
+;;;; -----------------------------------
+;;;; Functions and Macros
 
 ;; with-eval-after-load (Emacs 24.4 以上)
 (unless (fboundp 'with-eval-after-load)
@@ -96,11 +95,10 @@ If there are multiple windows, the 'other-window' is called."
 
 
 
-;; ++++++++++++++++++++++++++++++++++++++++++++++++++
-;; Environments
-;; ++++++++++++++++++++++++++++++++++++++++++++++++++
+;;;; -----------------------------------
+;;;; Environments
 
-;;;; package manager
+;;;;; package manager
 (eval-and-compile
   ;; package.el
   (when (require 'package nil t)
@@ -114,16 +112,16 @@ If there are multiple windows, the 'other-window' is called."
     ;;(package-refresh-contents)
     (setq package-enable-at-startup nil)))
 
-;;;; load-path
+;;;;; load-path
 (eval-and-compile
   (setq load-path (cons "~/.emacs.d/elisp" load-path)))
 
-;;;; proxy
+;;;;; proxy
 (eval-and-compile
   ;; ~/.emacs.d/elisp/secret/myproxy.elにプロキシ設定を書き込む
   (load "secret/myproxy" t))
 
-;;;; use-package
+;;;;; use-package
 
 ;; - https://github.com/jwiegley/use-package
 ;;   非標準パッケージは use-package で管理する。（標準ライブラリは use-package では管理しない）
@@ -160,7 +158,7 @@ If there are multiple windows, the 'other-window' is called."
 
 (use-package use-package :ensure t :defer t) ; 形式的宣言
 
-;;;; bind-key
+;;;;; bind-key
 
 ;; bind-key* は、emulation-mode-map-alists を利用することにより、
 ;; minor-mode よりも優先させたいキーのキーマップを定義できる。
@@ -173,13 +171,13 @@ If there are multiple windows, the 'other-window' is called."
       (define-key (or keymap global-map) (kbd key) cmd))
     (defun bind-key* (key cmd) (global-set-key (kbd key) cmd))))
 
-;;;; exec-path
+;;;;; exec-path
 (use-package exec-path-from-shell
   :ensure t :demand t
   :config
   (exec-path-from-shell-initialize))
 
-;;;; auto-compile
+;;;;; auto-compile
 (use-package auto-async-byte-compile
   :ensure t :defer t
   :hook (emacs-lisp-mode . enable-auto-async-byte-compile-mode)
@@ -187,12 +185,8 @@ If there are multiple windows, the 'other-window' is called."
 
 
 
-;; ++++++++++++++++++++++++++++++++++++++++++++++++++
-;; Settings
-;; ++++++++++++++++++++++++++++++++++++++++++++++++++
-
-;; -------------------------------------
-;; General
+;;;; -----------------------------------
+;;;; General settings
 
 (setq-default tab-width 4 indent-tabs-mode nil)
 
@@ -211,7 +205,7 @@ If there are multiple windows, the 'other-window' is called."
 ;;(windmove-default-keybindings)          ; use shift+arrow
 ;;(windmove-default-keybindings 'meta)    ; use alt+arrow
 
-;;;; my-keybinds
+;;;;; my-keybinds
 (bind-key "C-o" 'other-window-or-split)
 (bind-key "C-i" 'indent-for-tab-command)
 (bind-key "<zenkaku-hankaku>" 'toggle-input-method)
@@ -224,7 +218,7 @@ If there are multiple windows, the 'other-window' is called."
 ;; 置き換えられない場合コチラがセット
 (bind-key "C-x C-b" 'buffer-menu)
 
-;;;; backup, auto-save, lock
+;;;;; backup, auto-save, lock
 (eval-and-compile
   (defvar backup-and-auto-save-dir-dropbox
     (expand-file-name "~/Dropbox/backup/emacs/"))
@@ -268,7 +262,7 @@ If there are multiple windows, the 'other-window' is called."
   ;; lockfile (.#xxx)
   (setq create-lockfiles nil))
 
-;;;; language
+;;;;; language
 (set-language-environment "Japanese")
 (prefer-coding-system 'utf-8)
 (set-keyboard-coding-system 'utf-8)
@@ -276,8 +270,10 @@ If there are multiple windows, the 'other-window' is called."
 (set-terminal-coding-system 'utf-8)
 (set-default 'buffer-file-cording-system 'utf-8)
 
-;; -------------------------------------
-;; Appearance
+
+
+;;;; -----------------------------------
+;;;; Appearance settings
 
 (setq inhibit-startup-message t)
 (setq initial-scratch-message nil)
@@ -304,18 +300,16 @@ If there are multiple windows, the 'other-window' is called."
 
 
 
-;; ++++++++++++++++++++++++++++++++++++++++++++++++++
-;; Libraries
-;; ++++++++++++++++++++++++++++++++++++++++++++++++++
+;;;; -----------------------------------
+;;;; Libraries
 
 (use-package diminish :ensure t :demand t)
 ;;(use-package use-package-ensure-system-package :ensure t :demand t)
 
 
 
-;; ++++++++++++++++++++++++++++++++++++++++++++++++++
-;; Fonts
-;; ++++++++++++++++++++++++++++++++++++++++++++++++++
+;;;; -----------------------------------
+;;;; Fonts
 
 (when (member "Source Han Code JP" (font-family-list))
   (push '(font . "SourceHanCodeJp-9:weight=normal:slant=normal")
@@ -331,13 +325,12 @@ If there are multiple windows, the 'other-window' is called."
 
 
 
-;; ++++++++++++++++++++++++++++++++++++++++++++++++++
-;; Themes
-;; ++++++++++++++++++++++++++++++++++++++++++++++++++
+;;;; -----------------------------------
+;;;; Themes
 
 (when init-file-debug (message "Loading themes..."))
 
-;;;; doom-themes
+;;;;; doom-themes
 (use-package doom-themes
   :ensure t
   :custom
@@ -358,9 +351,11 @@ If there are multiple windows, the 'other-window' is called."
        '(region ((t (:background "#00cd00"))))
        ))))
 
-;;;;
+;;;;; check theme
+
 ;; Check if any enabled themes.
 ;; If nothing enabled themes, load my-default-faces.
+
 (if custom-enabled-themes
     (when init-file-debug
       (message "Enabled themes: %s" custom-enabled-themes))
@@ -372,21 +367,17 @@ If there are multiple windows, the 'other-window' is called."
 
 
 
-;; ++++++++++++++++++++++++++++++++++++++++++++++++++
-;; Packages
-;; ++++++++++++++++++++++++++++++++++++++++++++++++++
+;;;; -----------------------------------
+;;;; Standard packages
 
-;; -------------------------------------
-;; standard packages
-
-;;;; linum.el, display-line-numbers.el
+;;;;; linum, display-line-numbers
 (if (fboundp 'global-display-line-numbers-mode)
     (global-display-line-numbers-mode)
   (progn
     (global-linum-mode)
     (defvar linum-format "%3d ")))
 
-;;;; hl-line.el
+;;;;; hl-line
 (global-hl-line-mode)
 (with-eval-after-load 'doom-dracula-theme
   (unless (display-grayscale-p)
@@ -394,7 +385,7 @@ If there are multiple windows, the 'other-window' is called."
      '(hl-line ((t (:background "#3a3a3a"))))
      )))
 
-;;;; org.el
+;;;;; org
 (defvar org-directory)
 (declare-function org-buffer-list "org")
 
@@ -458,7 +449,13 @@ If there are multiple windows, the 'other-window' is called."
                  "* %?%U"
                  :empty-lines 1 :jump-to-captured 1)))
 
-;;;; paren.el
+;;;;; outline
+(add-hook 'emacs-lisp-mode-hook
+          '(lambda ()
+             (outline-minor-mode t)
+             (outline-hide-body)))
+
+;;;;; paren
 (defvar show-paren-style 'mixed)
 (defvar show-paren-when-point-inside-paren t)
 (defvar show-paren-when-point-in-periphery t)
@@ -468,13 +465,15 @@ If there are multiple windows, the 'other-window' is called."
    ))
 (show-paren-mode t)                ; illuminate corresponding brackets
 
-;;;; recentf.el
+;;;;; recentf
 (defvar recentf-max-saved-items 500)
 (defvar recentf-auto-cleanup 'never)
 (defvar recentf-exclude '("/recentf\\'" "/bookmarks\\'"))
 
-;; -------------------------------------
-;; Non-standard Packages
+
+
+;;;; -----------------------------------
+;;;; Non-standard Packages
 
 (use-package ace-isearch
   :ensure t
@@ -997,11 +996,10 @@ If there are multiple windows, the 'other-window' is called."
 
 
 
-;; ++++++++++++++++++++++++++++++++++++++++++++++++++
-;; Finalization
-;; ++++++++++++++++++++++++++++++++++++++++++++++++++
+;;;; -----------------------------------
+;;;; Finalization
 
-;;;; Load time mesurement of init.el
+;;;;; Load time mesurement of init.el
 (let ((elapsed (float-time (time-subtract (current-time)
                                           emacs-start-time))))
   (message "Loading %s...done (%.3fs)" load-file-name elapsed))
@@ -1012,7 +1010,6 @@ If there are multiple windows, the 'other-window' is called."
                      (time-subtract (current-time) emacs-start-time))))
                (message "Loading %s...done (%.3fs) [after-init]"
                         ,load-file-name elapsed))) t)
-
 
 ;; (provide 'init)
 
