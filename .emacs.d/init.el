@@ -450,7 +450,7 @@ If there are multiple windows, the 'other-window' is called."
                  :empty-lines 1 :jump-to-captured 1)))
 
 ;;;;; outline
-(bind-key "<backtab>" 'outline-cycle)
+(bind-key "<backtab>" 'outline-toggle-children)
 (add-hook 'emacs-lisp-mode-hook
           '(lambda ()
              (outline-minor-mode t)
