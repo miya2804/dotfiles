@@ -932,6 +932,10 @@ If there are multiple windows, the 'other-window' is called."
          ("C-c /" . redo)
          ("C-M-_" . redo)))
 
+(use-package restart-emacs
+  :ensure t
+  :commands (restart-emacs))
+
 (use-package smart-newline
   :ensure t :defer t
   :diminish smart-newline-mode
