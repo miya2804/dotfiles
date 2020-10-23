@@ -999,6 +999,14 @@ If there are multiple windows, the 'other-window' is called."
     (interactive)
     (swap-buffers t)))
 
+(use-package synctex-for-evince-yatex
+  :pin manual
+  :init (synctex-for-evince-dbus-initialize)
+  :commands synctex-for-evince-dbus-initialize
+  :hook (yatex-mode . (lambda ()
+                        (YaTeX-define-key
+                         "e" 'synctex-for-evince-yatex-forward-search))))
+
 (use-package volatile-highlights
   :ensure t
   :diminish volatile-highlights-mode
