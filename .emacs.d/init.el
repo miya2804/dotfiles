@@ -1036,6 +1036,25 @@ If there are multiple windows, the 'other-window' is called."
   :ensure t
   :mode ("\\.ya?ml\\'"))
 
+(use-package yatex
+  :ensure t
+  :mode (("\\.tex\\'" . yatex-mode)
+         ("\\.ltx\\'" . yatex-mode)
+         ("\\.cls\\'" . yatex-mode)
+         ("\\.sty\\'" . yatex-mode)
+         ("\\.clo\\'" . yatex-mode)
+         ("\\.bbl\\'" . yatex-mode))
+  :custom
+  (YaTeX-inhibit-prefix-letter t)
+  (YaTeX-kanji-code nil)
+  (YaTeX-latex-message-code 'utf-8)
+  (YaTeX-use-LaTeX2e t)
+  (YaTeX-use-AMS-LaTeX t)
+  (tex-command "ptex2pdf -l -ot '-synctex=1'")
+  (dvi2-command "evince")
+  (bibtex-command "pbibtex")
+  (tex-pdfview-command "evince"))
+
 (use-package zoom
   :ensure t
   :config (custom-set-variables '(zoom-mode t)))
