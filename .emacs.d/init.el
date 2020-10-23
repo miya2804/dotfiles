@@ -672,22 +672,26 @@ If there are multiple windows, the 'other-window' is called."
 (use-package flycheck
   :ensure t
   :hook (after-init . global-flycheck-mode)
+  :commands (flycheck-add-mode)
   :config
-  (flycheck-define-checker yaml-docker-compose-yamllint
-    "Yaml and Docker-compose flycheck-checker using yamllint in python package."
-    :command ("yamllint" source)
-    :error-patterns ((error line-start
-                            (zero-or-more blank) line ":" column
-                            (zero-or-more blank) "warning"
-                            (zero-or-more blank) (message)
-                            line-end)
-                     (warning line-start
-                              (zero-or-more blank) line ":" column
-                              (zero-or-more blank) "error"
-                              (zero-or-more blank) (message)
-                              line-end))
-    :modes (yaml-mode docker-compose-mode))
-  (add-to-list 'flycheck-checkers 'yaml-docker-compose-yamllint))
+  (flycheck-add-mode 'tex-chktex 'yatex-mode)
+  (flycheck-add-mode 'yaml-yamllint 'docker-compose-mode)
+  ;; (flycheck-define-checker yaml-docker-compose-yamllint
+  ;;   "Yaml and Docker-compose flycheck-checker using yamllint in python package."
+  ;;   :command ("yamllint" source)
+  ;;   :error-patterns ((error line-start
+  ;;                           (zero-or-more blank) line ":" column
+  ;;                           (zero-or-more blank) "warning"
+  ;;                           (zero-or-more blank) (message)
+  ;;                           line-end)
+  ;;                    (warning line-start
+  ;;                             (zero-or-more blank) line ":" column
+  ;;                             (zero-or-more blank) "error"
+  ;;                             (zero-or-more blank) (message)
+  ;;                             line-end))
+  ;;   :modes (yaml-mode docker-compose-mode))
+  ;; (add-to-list 'flycheck-checkers 'yaml-docker-compose-yamllint)
+  )
 
 (use-package git-gutter
   :ensure t
