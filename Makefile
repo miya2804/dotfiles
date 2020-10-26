@@ -21,7 +21,7 @@ deploy: ## Create symlink to home directory
 			ln -nsv --backup=numbered $(abspath $(val)) $(HOME)/$(val); \
 		fi;)
 
-init:
+init: ## Run initialization scripts (.dotfiles/etc/init/*.sh)
 	@$(foreach val, $(wildcard ./etc/init/*.sh), bash $(val);)
 
 unlink: ## Remove symlink to home directory
