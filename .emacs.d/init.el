@@ -672,22 +672,26 @@ If there are multiple windows, the 'other-window' is called."
 (use-package flycheck
   :ensure t
   :hook (after-init . global-flycheck-mode)
+  :commands (flycheck-add-mode)
   :config
-  (flycheck-define-checker yaml-docker-compose-yamllint
-    "Yaml and Docker-compose flycheck-checker using yamllint in python package."
-    :command ("yamllint" source)
-    :error-patterns ((error line-start
-                            (zero-or-more blank) line ":" column
-                            (zero-or-more blank) "warning"
-                            (zero-or-more blank) (message)
-                            line-end)
-                     (warning line-start
-                              (zero-or-more blank) line ":" column
-                              (zero-or-more blank) "error"
-                              (zero-or-more blank) (message)
-                              line-end))
-    :modes (yaml-mode docker-compose-mode))
-  (add-to-list 'flycheck-checkers 'yaml-docker-compose-yamllint))
+  (flycheck-add-mode 'tex-chktex 'yatex-mode)
+  (flycheck-add-mode 'yaml-yamllint 'docker-compose-mode)
+  ;; (flycheck-define-checker yaml-docker-compose-yamllint
+  ;;   "Yaml and Docker-compose flycheck-checker using yamllint in python package."
+  ;;   :command ("yamllint" source)
+  ;;   :error-patterns ((error line-start
+  ;;                           (zero-or-more blank) line ":" column
+  ;;                           (zero-or-more blank) "warning"
+  ;;                           (zero-or-more blank) (message)
+  ;;                           line-end)
+  ;;                    (warning line-start
+  ;;                             (zero-or-more blank) line ":" column
+  ;;                             (zero-or-more blank) "error"
+  ;;                             (zero-or-more blank) (message)
+  ;;                             line-end))
+  ;;   :modes (yaml-mode docker-compose-mode))
+  ;; (add-to-list 'flycheck-checkers 'yaml-docker-compose-yamllint)
+  )
 
 (use-package git-gutter
   :ensure t
@@ -995,6 +999,14 @@ If there are multiple windows, the 'other-window' is called."
     (interactive)
     (swap-buffers t)))
 
+(use-package synctex-for-evince-yatex
+  :pin manual
+  :init (synctex-for-evince-dbus-initialize)
+  :commands synctex-for-evince-dbus-initialize
+  :hook (yatex-mode . (lambda ()        ; C-c C-e ; forward-search
+                        (YaTeX-define-key
+                         "e" 'synctex-for-evince-yatex-forward-search))))
+
 (use-package volatile-highlights
   :ensure t
   :diminish volatile-highlights-mode
@@ -1035,6 +1047,25 @@ If there are multiple windows, the 'other-window' is called."
 (use-package yaml-mode :disabled
   :ensure t
   :mode ("\\.ya?ml\\'"))
+
+(use-package yatex
+  :ensure t
+  :mode (("\\.tex\\'" . yatex-mode)
+         ("\\.ltx\\'" . yatex-mode)
+         ("\\.cls\\'" . yatex-mode)
+         ("\\.sty\\'" . yatex-mode)
+         ("\\.clo\\'" . yatex-mode)
+         ("\\.bbl\\'" . yatex-mode))
+  :custom
+  (YaTeX-inhibit-prefix-letter t)
+  (YaTeX-kanji-code nil)
+  (YaTeX-latex-message-code 'utf-8)
+  (YaTeX-use-LaTeX2e t)
+  (YaTeX-use-AMS-LaTeX t)
+  (tex-command "ptex2pdf -l -ot '-synctex=1'")
+  (dvi2-command "evince")
+  (bibtex-command "pbibtex")
+  (tex-pdfview-command "evince"))
 
 (use-package zoom
   :ensure t
