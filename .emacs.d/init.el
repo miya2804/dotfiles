@@ -1003,7 +1003,7 @@ If there are multiple windows, the 'other-window' is called."
   :pin manual
   :init (synctex-for-evince-dbus-initialize)
   :commands synctex-for-evince-dbus-initialize
-  :hook (yatex-mode . (lambda ()
+  :hook (yatex-mode . (lambda ()        ; C-c C-e ; forward-search
                         (YaTeX-define-key
                          "e" 'synctex-for-evince-yatex-forward-search))))
 
