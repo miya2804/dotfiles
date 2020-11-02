@@ -755,7 +755,7 @@ If there are multiple windows, the 'other-window' is called."
 (use-package helm-flycheck
   :ensure t
   :bind (:map flycheck-mode-map
-              ("C-c ! h" . 'helm-flycheck)))
+              ("C-c e" . 'helm-flycheck)))
 
 (use-package helm-swoop
   :ensure t
