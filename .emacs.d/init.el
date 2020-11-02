@@ -183,6 +183,11 @@ If there are multiple windows, the 'other-window' is called."
   :hook (emacs-lisp-mode . enable-auto-async-byte-compile-mode)
   :custom (auto-async-byte-compile-exclude-files-regexp "/secret/"))
 
+;;;;; flag
+(defvar android-flag nil)
+(when (string= "Android\n" (shell-command-to-string "uname -o"))
+  (setq android-flag t))
+
 
 
 ;;;; -----------------------------------
