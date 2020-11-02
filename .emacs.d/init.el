@@ -195,8 +195,6 @@ If there are multiple windows, the 'other-window' is called."
 
 (setq-default tab-width 4 indent-tabs-mode nil)
 
-(setq mouse-wheel-scroll-amount '(5 ((shift) . 1) ((control))))
-(setq mouse-wheel-progressive-speed nil)
 (setq scroll-conservatively 30)
 (setq scroll-margin 5)
 (setq custom-file (locate-user-emacs-file "elisp/custom.el"))
