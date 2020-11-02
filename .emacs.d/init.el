@@ -375,19 +375,25 @@ If there are multiple windows, the 'other-window' is called."
 ;;;; -----------------------------------
 ;;;; Standard packages
 
-;;;;; linum, display-line-numbers
+;;;;; line number, highlight
+;; linum, display-line-numbers, hl-line
 (if (fboundp 'global-display-line-numbers-mode)
     (global-display-line-numbers-mode)
   (progn
+    (global-hl-line-mode)
     (global-linum-mode)
     (defvar linum-format "%3d ")))
 
-;;;;; hl-line
-(global-hl-line-mode)
+;; hl-line face
 (with-eval-after-load 'doom-dracula-theme
   (unless (display-grayscale-p)
     (custom-set-faces
-     '(hl-line ((t (:background "#3a3a3a"))))
+     '(hl-line ((t (:background "#303030"))))
+     )))
+(with-eval-after-load 'doom-vibrant-theme
+  (unless (display-grayscale-p)
+    (custom-set-faces
+     '(hl-line ((t (:background "#303030"))))
      )))
 
 ;;;;; org
