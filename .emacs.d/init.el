@@ -680,8 +680,8 @@ If there are multiple windows, the 'other-window' is called."
 ;;   checker: mdl(gem install mdl)
 (use-package flycheck
   :ensure t
-  :hook (after-init . global-flycheck-mode)
   :commands (flycheck-add-mode)
+  :hook (after-init . global-flycheck-mode)
   :config
   (flycheck-add-mode 'tex-chktex 'yatex-mode)
   (flycheck-add-mode 'yaml-yamllint 'docker-compose-mode)
