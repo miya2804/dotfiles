@@ -93,6 +93,15 @@ If there are multiple windows, the 'other-window' is called."
   "Toggle display of trailing whitespace."
   (interactive) (callf null show-trailing-whitespace))
 
+(defun shortcut-file (file)
+  "Show a file FILE on the current buffer shortcut function."
+  (interactive)
+  (if (get-buffer file)
+      (let ((buffer (get-buffer file)))
+        (switch-to-buffer buffer)
+        (message "%s" file))
+    (find-file file)))
+
 
 
 ;;;; -----------------------------------
@@ -212,6 +221,10 @@ If there are multiple windows, the 'other-window' is called."
 (bind-key "C-o" 'other-window-or-split)
 (bind-key "C-i" 'indent-for-tab-command)
 (bind-key "<zenkaku-hankaku>" 'toggle-input-method)
+(bind-key "C-c n"
+          '(lambda ()
+             (interactive)
+             (shortcut-file "~/Dropbox/document/notes/note.md")))
 
 ;; "C-x C-c" -> exit
 (global-unset-key (kbd "C-x C-c"))
@@ -404,19 +417,7 @@ If there are multiple windows, the 'other-window' is called."
   (mapcar (function buffer-file-name)
           (org-buffer-list 'files)))
 
-;; org-directory内の(file)を確認できる関数
-(defun show-org-buffer (file)
-  "Show an org-file FILE on the current buffer."
-  (interactive)
-  (if (get-buffer file)
-      (let ((buffer (get-buffer file)))
-        (switch-to-buffer buffer)
-        (message "%s" file))
-    (find-file (concat org-directory file))))
-
-(bind-key "C-c c" 'org-capture)
-(bind-key "C-c n"
-          '(lambda () (interactive) (show-org-buffer "/notes.org")))
+;; (bind-key "C-c c" 'org-capture)
 (bind-key "M-n" 'org-next-visible-heading)
 (bind-key "M-p" 'org-previous-visible-heading)
 
