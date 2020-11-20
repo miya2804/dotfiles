@@ -28,8 +28,8 @@
        `(funcall (function ,(lambda () ,@body))))))
 
 (defun transparency (value)
-  "Set the transparency of the frame windows. 0=tranceparent/100=opaque"
-  (interactive "nAlpha: ")
+  "Set the transparency of the frame windows, VALUE 0=tranceparent/100=opaque."
+  (interactive "nTransparency Value 0 - 100: ")
   (set-frame-parameter nil 'alpha value))
 
 (defun set-my-default-faces ()
