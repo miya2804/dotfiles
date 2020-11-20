@@ -27,10 +27,10 @@
     `(eval-after-load ,file
        `(funcall (function ,(lambda () ,@body))))))
 
-(defun set-alpha (value)
-  "Set frame parameter 'alpha by VALUE."
+(defun transparency (value)
+  "Set the transparency of the frame windows. 0=tranceparent/100=opaque"
   (interactive "nAlpha: ")
-  (set-frame-parameter nil 'alpha (cons value '(90))))
+  (set-frame-parameter nil 'alpha value))
 
 (defun set-my-default-faces ()
   "Can be used to set a default faces if the themes isn't installed."
@@ -299,7 +299,7 @@ If there are multiple windows, the 'other-window' is called."
 (when (fboundp 'set-scroll-bar-mode)
   (set-scroll-bar-mode nil))
 ;;(transient-mark-mode t)
-(if (display-graphic-p) (set-alpha 98))
+(if (display-graphic-p) (transparency 98))
 
 ;;(setq display-time-day-and-date nil)
 ;;(setq display-time-24hr-format t)
