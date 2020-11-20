@@ -1012,7 +1012,7 @@ If there are multiple windows, the 'other-window' is called."
 
 (use-package synctex-for-evince-yatex
   :pin manual
-  :if (not android-flag)
+  :if (executable-find "evince")
   :commands synctex-for-evince-dbus-initialize
   :functions YaTeX-define-key
   :init (synctex-for-evince-dbus-initialize)
