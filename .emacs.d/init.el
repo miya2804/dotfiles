@@ -182,6 +182,7 @@ If there are multiple windows, the 'other-window' is called."
 
 ;;;;; exec-path
 (use-package exec-path-from-shell
+  :unless (eq system-type 'windows-nt)
   :ensure t :demand t
   :config
   (exec-path-from-shell-initialize))
