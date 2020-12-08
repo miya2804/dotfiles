@@ -630,7 +630,7 @@ If there are multiple windows, the 'other-window' is called."
   :custom
   (doom-modeline-buffer-file-name-style 'truncate-with-project)
   (doom-modeline-minor-modes nil)
-  (doom-modeline-buffer-encoding nil)
+  (doom-modeline-buffer-encoding t)
   (doom-modeline-github-interval (* 30 60))
 
   ;; display env version
