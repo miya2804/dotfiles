@@ -281,6 +281,22 @@ If there are multiple windows, the 'other-window' is called."
   (setq create-lockfiles nil))
 
 ;;;;; language
+
+;; 文字・改行コード変更
+;; C-x RET-f
+
+;; character code
+;; shift_jis
+;; cp932
+;; euc-jp
+;; utf-8
+;; utf-8-with-signature ; BOM付きutf-8
+
+;; newline code
+;; -dos  ; CR+LF
+;; -mac  ; CR
+;; -unix ; LF
+
 (set-language-environment "Japanese")
 (set-default 'buffer-file-cording-system 'utf-8-unix)
 (prefer-coding-system 'utf-8-unix)
