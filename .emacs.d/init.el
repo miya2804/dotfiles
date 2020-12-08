@@ -282,11 +282,13 @@ If there are multiple windows, the 'other-window' is called."
 
 ;;;;; language
 (set-language-environment "Japanese")
-(prefer-coding-system 'utf-8)
-(set-keyboard-coding-system 'utf-8)
-(set-file-name-coding-system 'utf-8)
-(set-terminal-coding-system 'utf-8)
-(set-default 'buffer-file-cording-system 'utf-8)
+(set-default 'buffer-file-cording-system 'utf-8-unix)
+(prefer-coding-system 'utf-8-unix)
+;; advanced settings of prefer-coding-system↑
+;;(set-keyboard-coding-system 'utf-8-unix)
+;;(set-file-name-coding-system 'utf-8-unix)
+;;(set-terminal-coding-system 'utf-8-unix)
+
 
 
 
@@ -632,7 +634,7 @@ If there are multiple windows, the 'other-window' is called."
   :custom
   (doom-modeline-buffer-file-name-style 'truncate-with-project)
   (doom-modeline-minor-modes nil)
-  (doom-modeline-buffer-encoding nil)
+  (doom-modeline-buffer-encoding t)
   (doom-modeline-github-interval (* 30 60))
 
   ;; display env version
