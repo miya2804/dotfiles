@@ -208,6 +208,7 @@ If there are multiple windows, the 'other-window' is called."
 (setq scroll-conservatively 30)
 (setq scroll-margin 5)
 (setq custom-file (locate-user-emacs-file "elisp/custom.el"))
+(setq default-directory "~/")
 
 ;; terminal起動時のマウス設定
 (unless (display-graphic-p) (xterm-mouse-mode t))
