@@ -108,7 +108,11 @@ If there are multiple windows, the 'other-window' is called."
 ;;;; Environments
 
 ;;;;; network
-(defvar gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
+(eval-and-compile
+  (defvar gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
+  ;; proxy
+  ;; ~/.emacs.d/elisp/secret/myproxy.elにプロキシ設定を書き込む
+  (load "secret/myproxy" t))
 
 ;;;;; package manager
 (eval-and-compile
@@ -127,11 +131,6 @@ If there are multiple windows, the 'other-window' is called."
 ;;;;; load-path
 (eval-and-compile
   (setq load-path (cons "~/.emacs.d/elisp" load-path)))
-
-;;;;; proxy
-(eval-and-compile
-  ;; ~/.emacs.d/elisp/secret/myproxy.elにプロキシ設定を書き込む
-  (load "secret/myproxy" t))
 
 ;;;;; use-package
 
