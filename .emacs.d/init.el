@@ -620,7 +620,6 @@ If there are multiple windows, the 'other-window' is called."
   :ensure t
   :mode ("/Dockerfile\\'"))
 
-;; yaml-modeも兼ねる
 (use-package docker-compose-mode :ensure t :defer t)
 
 (use-package docker-tramp
@@ -690,7 +689,6 @@ If there are multiple windows, the 'other-window' is called."
   :hook (after-init . global-flycheck-mode)
   :config
   (flycheck-add-mode 'tex-chktex 'yatex-mode)
-  (flycheck-add-mode 'yaml-yamllint 'docker-compose-mode)
   ;; (flycheck-define-checker yaml-docker-compose-yamllint
   ;;   "Yaml and Docker-compose flycheck-checker using yamllint in python package."
   ;;   :command ("yamllint" source)
@@ -1060,8 +1058,7 @@ If there are multiple windows, the 'other-window' is called."
   :commands (winner-redo winner-undo)
   :config (winner-mode 1))
 
-;; docker-compose-modeでインストールされる
-(use-package yaml-mode :disabled
+(use-package yaml-mode
   :ensure t
   :mode ("\\.ya?ml\\'"))
 
