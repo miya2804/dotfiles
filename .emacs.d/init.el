@@ -115,7 +115,7 @@ If there are multiple windows, the 'other-window' is called."
      '(("melpa" . "https://melpa.org/packages/")
        ;;("melpa-stable" . "https://stable.melpa.org/packages/")
        ;;("org" . "https://orgmode.org/elpa/")
-       ;;("maralade" . "https://marmalade-repo.org/packages/")
+       ;;("marmalade" . "https://marmalade-repo.org/packages/")
        ))
     (package-initialize)
     ;;(package-refresh-contents)
