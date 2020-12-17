@@ -156,11 +156,14 @@ If there are multiple windows, the 'other-window' is called."
   (defvar use-package-minimum-reported-time 0)
   (defvar use-package-compute-statistics t)
 
-  ;; option --qq
-  (when (or (member "--qq" command-line-args)
-            (null (require 'use-package nil t)))
-    (warn "`use-package' is unavailable!  Please install it via `M-x list-packages' if possible.")
-    (defmacro use-package (&rest _args))))
+  ;; option --qq (disable use-package)
+  (if (member "--qq" command-line-args)
+      (defmacro use-package (&rest _args))
+    (progn
+      ;; when use-package is not available
+      (when (null (require 'use-package nil t))
+        (warn "`use-package' is unavailable!  Please install it via `M-x list-packages' if possible.")
+        (defmacro use-package (&rest _args))))))
 
 ;; 後の startup.el におけるオプション認識エラーを防止
 (add-to-list 'command-switch-alist '("--qq" . (lambda (switch) nil)))
