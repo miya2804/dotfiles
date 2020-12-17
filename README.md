@@ -1,13 +1,13 @@
 # installation
 
 ``` bash
-bash -c "$(curl https://raw.githubusercontent.com/miya2804/dotfiles/master/etc/setup.sh)"
+bash -c "$(curl https://raw.githubusercontent.com/mmugi/dotfiles/master/etc/setup.sh)"
 ```
 
 or
 
 ``` sh
-git clone https://github.com/miya2804/dotfiles.git .dotfiles
+git clone https://github.com/mmugi/dotfiles.git .dotfiles
 cd .dotfiles
 make deploy
 ```
