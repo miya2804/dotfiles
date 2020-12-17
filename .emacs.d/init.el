@@ -107,6 +107,9 @@ If there are multiple windows, the 'other-window' is called."
 ;;;; -----------------------------------
 ;;;; Environments
 
+;;;;; network
+(defvar gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
+
 ;;;;; package manager
 (eval-and-compile
   ;; package.el
