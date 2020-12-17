@@ -583,7 +583,7 @@ If there are multiple windows, the 'other-window' is called."
   ;; 9: Slant Relief
   ;; 10: Chunky
   ;; 11: Cricket
-  (dashboard-startup-banner 10)
+  (dashboard-startup-banner "~/.emacs.d/dashboard-banners/10.txt")
 
   ;; dashboard items
   (dashboard-items '((recents  . 15)
