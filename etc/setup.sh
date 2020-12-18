@@ -111,7 +111,7 @@ if [ -z "${DOTDIR_PATH:-}" ]; then
     DOTDIR_PATH=~/.dotfiles; export DOTDIR_PATH
 fi
 
-GITHUB_USER="miya2804"
+GITHUB_USER="mmugi"
 DOTFILES_GITHUB="https://github.com/$GITHUB_USER/dotfiles.git"; export DOTFILES_GITHUB
 DOTFILES_GITHUB_BRANCH="master"
 

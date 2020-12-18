@@ -107,6 +107,13 @@ If there are multiple windows, the 'other-window' is called."
 ;;;; -----------------------------------
 ;;;; Environments
 
+;;;;; network
+(eval-and-compile
+  (defvar gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
+  ;; proxy
+  ;; ~/.emacs.d/elisp/secret/myproxy.elにプロキシ設定を書き込む
+  (load "secret/myproxy" t))
+
 ;;;;; package manager
 (eval-and-compile
   ;; package.el
@@ -115,7 +122,7 @@ If there are multiple windows, the 'other-window' is called."
      '(("melpa" . "https://melpa.org/packages/")
        ;;("melpa-stable" . "https://stable.melpa.org/packages/")
        ;;("org" . "https://orgmode.org/elpa/")
-       ;;("maralade" . "https://marmalade-repo.org/packages/")
+       ;;("marmalade" . "https://marmalade-repo.org/packages/")
        ))
     (package-initialize)
     ;;(package-refresh-contents)
@@ -124,11 +131,6 @@ If there are multiple windows, the 'other-window' is called."
 ;;;;; load-path
 (eval-and-compile
   (setq load-path (cons "~/.emacs.d/elisp" load-path)))
-
-;;;;; proxy
-(eval-and-compile
-  ;; ~/.emacs.d/elisp/secret/myproxy.elにプロキシ設定を書き込む
-  (load "secret/myproxy" t))
 
 ;;;;; use-package
 
@@ -156,11 +158,14 @@ If there are multiple windows, the 'other-window' is called."
   (defvar use-package-minimum-reported-time 0)
   (defvar use-package-compute-statistics t)
 
-  ;; option --qq
-  (when (or (member "--qq" command-line-args)
-            (null (require 'use-package nil t)))
-    (warn "`use-package' is unavailable!  Please install it via `M-x list-packages' if possible.")
-    (defmacro use-package (&rest _args))))
+  ;; option --qq (disable use-package)
+  (if (member "--qq" command-line-args)
+      (defmacro use-package (&rest _args))
+    (progn
+      ;; when use-package is not available
+      (when (null (require 'use-package nil t))
+        (warn "`use-package' is unavailable!  Please install it via `M-x package-list-packages' if possible.")
+        (defmacro use-package (&rest _args))))))
 
 ;; 後の startup.el におけるオプション認識エラーを防止
 (add-to-list 'command-switch-alist '("--qq" . (lambda (switch) nil)))
@@ -329,10 +334,8 @@ If there are multiple windows, the 'other-window' is called."
 
 ;;(global-whitespace-mode 1)
 
-(setq-default show-trailing-whitespace nil)
-(add-hook 'prog-mode-hook 'enable-show-trailing-whitespace)
-(add-hook 'org-mode-hook 'enable-show-trailing-whitespace)
-(add-hook 'markdown-mode-hook 'enable-show-trailing-whitespace)
+(setq-default show-trailing-whitespace t)
+(add-hook 'dashboard-mode-hook 'disable-show-trailing-whitespace)
 
 
 
@@ -598,7 +601,7 @@ If there are multiple windows, the 'other-window' is called."
   ;; 9: Slant Relief
   ;; 10: Chunky
   ;; 11: Cricket
-  (dashboard-startup-banner 10)
+  (dashboard-startup-banner "~/.emacs.d/dashboard-banners/10.txt")
 
   ;; dashboard items
   (dashboard-items '((recents  . 15)
@@ -635,7 +638,6 @@ If there are multiple windows, the 'other-window' is called."
   :ensure t
   :mode ("/Dockerfile\\'"))
 
-;; yaml-modeも兼ねる
 (use-package docker-compose-mode :ensure t :defer t)
 
 (use-package docker-tramp
@@ -705,7 +707,6 @@ If there are multiple windows, the 'other-window' is called."
   :hook (after-init . global-flycheck-mode)
   :config
   (flycheck-add-mode 'tex-chktex 'yatex-mode)
-  (flycheck-add-mode 'yaml-yamllint 'docker-compose-mode)
   ;; (flycheck-define-checker yaml-docker-compose-yamllint
   ;;   "Yaml and Docker-compose flycheck-checker using yamllint in python package."
   ;;   :command ("yamllint" source)
@@ -1075,8 +1076,7 @@ If there are multiple windows, the 'other-window' is called."
   :commands (winner-redo winner-undo)
   :config (winner-mode 1))
 
-;; docker-compose-modeでインストールされる
-(use-package yaml-mode :disabled
+(use-package yaml-mode
   :ensure t
   :mode ("\\.ya?ml\\'"))
 
