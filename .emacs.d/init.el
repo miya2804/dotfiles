@@ -919,11 +919,7 @@ If there are multiple windows, the 'other-window' is called."
 
 ;; require external package -> "emacs-mozc-bin"
 (use-package mozc
-  :preface
-  (defvar mozc-emacs-helper (executable-find "mozc_emacs_helper"))
-  (unless mozc-emacs-helper
-    (message "mozc: `mozc_emacs_helmper' is unavailable! Please install it via `sudo apt install emacs-mozc-bin' if possible."))
-  :if mozc-emacs-helper
+  :if (executable-find "mozc_emacs_helper")
   :ensure t :defer t
   :custom (default-input-method "japanese-mozc")
   :config
