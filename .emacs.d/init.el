@@ -466,10 +466,10 @@ If there are multiple windows, the 'other-window' is called."
 
 ;;;;; outline
 (bind-key "<backtab>" 'outline-toggle-children)
-(add-hook 'emacs-lisp-mode-hook
-          '(lambda ()
-             (outline-minor-mode t)
-             (outline-hide-body)))
+;; (add-hook 'emacs-lisp-mode-hook
+;;           '(lambda ()
+;;              (outline-minor-mode t)
+;;              (outline-hide-body)))
 
 ;;;;; paren
 (defvar show-paren-style 'mixed)
