@@ -587,7 +587,7 @@ If there are multiple windows, the 'other-window' is called."
 
   ;; dashboard items
   (dashboard-items '((recents  . 15)
-                     ;;(bookmarks . 5)
+                     (bookmarks . 5)
                      (agenda . 5)))
 
   ;; icon
