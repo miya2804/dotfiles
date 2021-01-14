@@ -921,7 +921,9 @@ If there are multiple windows, the 'other-window' is called."
 (use-package mozc
   :if (executable-find "mozc_emacs_helper")
   :ensure t :defer t
-  :custom (default-input-method "japanese-mozc")
+  :custom
+  (default-input-method "japanese-mozc")
+  (mozc-leim-title "かな")
   :config
   (with-eval-after-load 'helm
     (bind-key "M-x" 'helm-M-x mozc-mode-map)
