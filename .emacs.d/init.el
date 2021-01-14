@@ -326,6 +326,7 @@ If there are multiple windows, the 'other-window' is called."
 ;;;; Libraries
 
 (use-package diminish :ensure t :demand t)
+(use-package popup :ensure t :defer t)
 ;;(use-package use-package-ensure-system-package :ensure t :demand t)
 
 
@@ -938,6 +939,11 @@ If there are multiple windows, the 'other-window' is called."
     (advice-add 'helm-select-action
                 :before (lambda ()
                           (deactivate-input-method)))))
+
+(use-package mozc-popup
+  :ensure t
+  :after mozc
+  :custom (mozc-candidate-style 'popup))
 
 (use-package neotree
   ;; memo
