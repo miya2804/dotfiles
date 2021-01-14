@@ -294,7 +294,6 @@ If there are multiple windows, the 'other-window' is called."
 
 
 
-
 ;;;; -----------------------------------
 ;;;; Appearance settings
 
