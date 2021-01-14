@@ -927,12 +927,16 @@ If there are multiple windows, the 'other-window' is called."
   :custom (default-input-method "japanese-mozc"))
 
 (use-package neotree
+  ;; memo
+  ;; neotree-find (カレントバッファのファイルをneotree上で表示)
   :ensure t
   :bind (("C-q" . neotree-toggle)
          :map neotree-mode-map
               ("a" . neotree-hidden-file-toggle)
               ("<left>" . neotree-select-up-node)
-              ("<right>" . neotree-change-root))
+              ("C-b" . neotree-select-up-node)
+              ("<right>" . neotree-change-root)
+              ("C-f" . neotree-change-root))
   :custom
   (neo-theme (if (display-graphic-p) 'nerd2 'arrow))
   (neo-show-hidden-files t)
