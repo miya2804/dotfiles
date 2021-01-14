@@ -11,7 +11,9 @@
 
 (defconst emacs-start-time (current-time))
 (message (format "[Startup time: %s]" (format-time-string "%Y/%m/%d %H:%M:%S")))
-(eval-when-compile (require 'cl))
+(eval-when-compile
+  (require 'cl)
+  (require 'cl-lib))
 (when init-file-debug
   (setq debug-on-error t)
   (setq force-load-messages t))
@@ -923,7 +925,21 @@ If there are multiple windows, the 'other-window' is called."
     (message "mozc: `mozc_emacs_helmper' is unavailable! Please install it via `sudo apt install emacs-mozc-bin' if possible."))
   :if mozc-emacs-helper
   :ensure t :defer t
-  :custom (default-input-method "japanese-mozc"))
+  :custom (default-input-method "japanese-mozc")
+  :config
+  (with-eval-after-load 'helm
+    (bind-key "M-x" 'helm-M-x mozc-mode-map)
+    ;;helm でミニバッファの入力時に IME の状態を継承しない
+    (setq helm-inherit-input-method nil)
+    ;; helm の検索パターンを mozc を使って入力した場合にエラーが発生することがあるのを改善する
+    (advice-add 'mozc-helper-process-recv-response
+                :around (lambda (orig-fun &rest args)
+                          (cl-loop for return-value = (apply orig-fun args)
+                                   if return-value return it)))
+    ;; helm で候補のアクションを表示する際に IME を OFF にする
+    (advice-add 'helm-select-action
+                :before (lambda ()
+                          (deactivate-input-method)))))
 
 (use-package neotree
   ;; memo
