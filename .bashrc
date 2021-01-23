@@ -63,9 +63,9 @@ function _echo_unicode() {
 # [01;38;2;<R>;<G>;<B>m\] (Foreground)
 # [01;48;2;<R>;<G>;<B>m\] (Background)
 if [ "$color_prompt" = yes ]; then
-    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;38;2;135;255;197m\]$(_echo_unicode '1F340')\u@\h\[\033[00m\]:\[\033[01;34m\]\w \[\033[01;34m\]$(__git_ps1 "(%s)")\[\033[00m\]\$ '
+    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;38;2;135;255;197m\]$(_echo_unicode '1F340')\u@\h\[\033[00m\]:\[\033[01;34m\]\w$(__git_ps1 " (%s)")\[\033[00m\]> '
 else
-    PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w $(__git_ps1 "(%s)")\$ '
+    PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w$(__git_ps1 " (%s)")> '
 fi
 unset color_prompt force_color_prompt
 
