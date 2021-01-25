@@ -214,6 +214,7 @@ If there are multiple windows, the 'other-window' is called."
 (setq scroll-conservatively 30)
 (setq scroll-margin 5)
 (setq custom-file (locate-user-emacs-file "elisp/custom.el"))
+(setq select-enable-clipboard t)
 
 ;; terminal起動時のマウス設定
 (unless (display-graphic-p) (xterm-mouse-mode t))
@@ -226,6 +227,7 @@ If there are multiple windows, the 'other-window' is called."
 
 ;;;;; my-keybinds
 (bind-key "C-o" 'other-window-or-split)
+(bind-key "C-c o" 'other-window)
 (bind-key "C-i" 'indent-for-tab-command)
 (bind-key "<zenkaku-hankaku>" 'toggle-input-method)
 (bind-key "C-c n"
@@ -1028,9 +1030,8 @@ If there are multiple windows, the 'other-window' is called."
 (use-package swap-buffers
   :ensure t
   :bind (("C-M-o" . swap-buffers-keep-focus)
-         ("C-c o" . swap-buffers-keep-focus)
-         ("C-M-O" . swap-buffers)
-         ("C-c O" . swap-buffers))
+         ("C-M-O" . swap-buffers))
+
   :config
   (defun swap-buffers-keep-focus ()
     (interactive)
