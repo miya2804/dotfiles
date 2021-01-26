@@ -124,7 +124,7 @@ If there are multiple windows, the 'other-window' is called."
   ;; default is "my-org-dir/agenda"
   ;; if you want to add the agenda file,
   ;; please add it to the list below.
-  (defvar my-org-agenda-files '("~/Dropbox/document/a.org")))
+  (defvar my-org-agenda-files '()))
 
 ;;;;; network
 (eval-and-compile
