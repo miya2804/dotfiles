@@ -219,10 +219,9 @@ function tmux_automatically_attach_session()
     else
         # Shell on tmux
         if [ -e "$HOME/.dotfiles/etc/ascii-art/tmux.txt" ]; then
-            echo "Welcome to the tmux!"
-            echo -n "Session ["
-            echo -n "$(echo $TMUX | awk 'BEGIN {FS=",";OFS="."} {print $3}')"
-            echo "]"
+            echo 'Welcome to the tmux!'
+            echo -n 'Session: '
+            tmux display-message -p '#S'
             cat "$HOME/.dotfiles/etc/ascii-art/tmux.txt"
         fi
     fi
