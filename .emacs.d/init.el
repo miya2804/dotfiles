@@ -109,6 +109,23 @@ If there are multiple windows, the 'other-window' is called."
 ;;;; -----------------------------------
 ;;;; Environments
 
+;;;;; variable
+(eval-and-compile
+  (defvar shortcut-file-path "~/Dropbox/document/note/note.md")
+
+  ;; backup and auto-save
+  (defvar backup-and-auto-save-dir-dropbox
+    (expand-file-name "~/Dropbox/backup/emacs/"))
+  (defvar backup-and-auto-save-dir-local
+    (expand-file-name "~/.emacs.d/.backup/"))
+
+  ;; org
+  (defvar my-org-dir "~/Dropbox/document/org")
+  ;; default is "my-org-dir/agenda"
+  ;; if you want to add the agenda file,
+  ;; please add it to the list below.
+  (defvar my-org-agenda-files '("~/Dropbox/document/a.org")))
+
 ;;;;; network
 (eval-and-compile
   (defvar gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
@@ -233,7 +250,7 @@ If there are multiple windows, the 'other-window' is called."
 (bind-key "C-c n"
           '(lambda ()
              (interactive)
-             (shortcut-file "~/Dropbox/document/notes/note.md")))
+             (shortcut-file shortcut-file-path)))
 
 ;; "C-x C-c" -> exit
 (global-unset-key (kbd "C-x C-c"))
@@ -245,11 +262,6 @@ If there are multiple windows, the 'other-window' is called."
 
 ;;;;; backup, auto-save, lock
 (eval-and-compile
-  (defvar backup-and-auto-save-dir-dropbox
-    (expand-file-name "~/Dropbox/backup/emacs/"))
-  (defvar backup-and-auto-save-dir-local
-    (expand-file-name "~/.emacs.d/.backup/"))
-
   ;; backup (xxx~)
 
   ;; 保存するたびにバックアップを作る設定
@@ -418,6 +430,7 @@ If there are multiple windows, the 'other-window' is called."
 
 ;;;;; org
 (defvar org-directory)
+(defvar org-agenda-files)
 (declare-function org-buffer-list "org")
 
 ;; cf. https://www.emacswiki.org/emacs/OrgMode#toc21
@@ -432,15 +445,16 @@ If there are multiple windows, the 'other-window' is called."
 
 (push '("\\.org\\'" . org-mode) auto-mode-alist)
 
-(if (file-directory-p "~/Dropbox/document/org")
+(if (file-directory-p my-org-dir)
     (progn
-      (setq org-directory "~/Dropbox/document/org")
-      (defvar org-agenda-files
-                    '("~/Dropbox/document/org/agenda")))
+      (setq org-directory my-org-dir)
+      (setq org-agenda-files
+                    (list (concat my-org-dir "/agenda"))))
   (progn
     (setq org-directory "~/.emacs.d/.org")
     (setq org-agenda-files
                   '("~/.emacs.d/.org"))))
+(setq org-agenda-files (append org-agenda-files my-org-agenda-files))
 
 (defvar org-default-notes-file
               (concat org-directory "/notes.org"))
