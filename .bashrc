@@ -171,7 +171,7 @@ function precmd() {
 # tmux
 # if not inside a tmux session, and if no session is started,
 # start a new session
-TMUX_AUTO_ATTACHE_SESSION=yes
+TMUX_AUTO_ATTACH_SESSION=yes
 TMUX_AUTO_NEW_SESSION=yes
 function is_exists() { type "$1" >/dev/null 2>&1; return $?; }
 function is_shell_on_tmux() { [ ! -z "$TMUX" ]; }
@@ -182,7 +182,7 @@ function tmux_automatically_attach_session()
     if ! is_exists 'tmux'; then
         echo 'Error: Tmux command not found' 2>&1
         return 1
-    elif [ ! "$TMUX_AUTO_ATTACHE_SESSION" = yes ]; then
+    elif [ ! "$TMUX_AUTO_ATTACH_SESSION" = yes ]; then
         echo 'TMUX: automatically attach session disabled.';
         return 0
     fi
