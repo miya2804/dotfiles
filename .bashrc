@@ -218,12 +218,13 @@ function tmux_automatically_attach_session()
         fi
     else
         # Shell on tmux
-        echo "   _____ __  __ _   ___  __ "
-        echo "  |_   _|  \/  | | | \ \/ / "
-        echo "    | | | |\/| | | | |\  /  "
-        echo "    | | | |  | | |_| |/  \  "
-        echo "    |_| |_|  |_|\___//_/\_\ "
-        echo ''
+        if [ -e "$HOME/.dotfiles/etc/ascii-art/tmux.txt" ]; then
+            echo "Welcome to the tmux!"
+            echo -n "Session ["
+            echo -n "$(echo $TMUX | awk 'BEGIN {FS=",";OFS="."} {print $3}')"
+            echo "]"
+            cat "$HOME/.dotfiles/etc/ascii-art/tmux.txt"
+        fi
     fi
 }
 
