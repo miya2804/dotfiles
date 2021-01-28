@@ -41,7 +41,7 @@ else
   if git_status=$(cd $3 && git status 2>/dev/null ); then
     git_branch="$(echo $git_status| awk 'NR==1 {print $3}')"
     case $git_status in
-      *Changes\ not\ staged* ) state="#[bg=red,fg=black] ± #[fg=default]" ;;
+      *Changes\ not\ staged* ) state="#[bg=red,fg=black] * #[fg=default]" ;;
       *Changes\ to\ be\ committed* ) state="#[bg=blue,fg=black] + #[default]" ;;
       * ) state="#[bg=green,fg=black] ✔ #[default]" ;;
     esac
