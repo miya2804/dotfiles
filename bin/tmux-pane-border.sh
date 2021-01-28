@@ -57,4 +57,5 @@ else
   directory=" $3 "
 fi
 
-echo "#[bg=colour031,fg=black]$ssh_hostname#[default]#[bg=black,fg=colour014]$directory#[default]$git_info"
+#echo "#[bg=colour037,fg=black]$ssh_hostname#[default]#[bg=black,fg=colour014]$directory#[default]$git_info"
+echo "#[bg=colour249,fg=black]$ssh_hostname#[default]"
