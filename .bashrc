@@ -221,7 +221,7 @@ function tmux_autostart()
             echo 'Welcome to the tmux!'
             echo -n 'Session: '
             tmux display-message -p '#S'
-            cat "$HOME/.dotfiles/etc/ascii-art/tmux.txt"
+            #cat "$HOME/.dotfiles/etc/ascii-art/tmux.txt"
         fi
     fi
 }
