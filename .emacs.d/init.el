@@ -244,7 +244,7 @@ If there are multiple windows, the 'other-window' is called."
 
 ;;;;; my-keybinds
 (bind-key "C-o" 'other-window-or-split)
-(bind-key "C-c o" 'other-window)
+(bind-key "C-c o" 'other-window-or-split)
 (bind-key "C-i" 'indent-for-tab-command)
 (bind-key "<zenkaku-hankaku>" 'toggle-input-method)
 (bind-key "C-c n"
