@@ -969,9 +969,7 @@ If there are multiple windows, the 'other-window' is called."
   :bind (("C-q" . neotree-toggle)
          :map neotree-mode-map
               ("a" . neotree-hidden-file-toggle)
-              ("<left>" . neotree-select-up-node)
               ("C-b" . neotree-select-up-node)
-              ("<right>" . neotree-change-root)
               ("C-f" . neotree-change-root))
   :custom
   (neo-window-width 35)
