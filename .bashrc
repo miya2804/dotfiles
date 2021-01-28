@@ -171,20 +171,19 @@ function precmd() {
 # tmux
 # if not inside a tmux session, and if no session is started,
 # start a new session
-TMUX_AUTO_ATTACH_SESSION=yes
-TMUX_AUTO_NEW_SESSION=yes
 function is_exists() { type "$1" >/dev/null 2>&1; return $?; }
 function is_shell_on_tmux() { [ ! -z "$TMUX" ]; }
 function shell_has_started_interactively() { [ ! -z "$PS1" ]; }
 function is_ssh_running() { [ ! -z "$SSH_CONECTION" ]; }
-function tmux_automatically_attach_session()
+function tmux_autostart()
 {
-    if ! is_exists 'tmux'; then
-        echo 'Error: Tmux command not found' 2>&1
-        return 1
-    elif [ ! "$TMUX_AUTO_ATTACH_SESSION" = yes ]; then
-        echo 'TMUX: automatically attach session disabled.';
+    if [ ! "$TMUX_AUTOSTART" = yes ]; then
+        echo 'TMUX: Automatically attach session disabled.'
+        echo 'TMUX: Please set the environment variable TMUX_AUTOSTART to "yes".'
         return 0
+    elif ! is_exists 'tmux'; then
+        echo 'Error: Tmux command not found.' 2>&1
+        return 1
     fi
 
     if ! is_shell_on_tmux; then
@@ -227,4 +226,4 @@ function tmux_automatically_attach_session()
     fi
 }
 
-tmux_automatically_attach_session
+tmux_autostart
