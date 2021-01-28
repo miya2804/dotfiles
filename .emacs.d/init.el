@@ -664,7 +664,7 @@ If there are multiple windows, the 'other-window' is called."
   (doom-modeline-major-mode-icon t)
   (doom-modeline-major-mode-color-icon t)
   (doom-modeline-buffer-state-icon t)
-  (doom-modeline-buffer-modification-icon t) ; respect doom-modeline-buffer-state-icon
+  (doom-modeline-buffer-modification-icon nil) ; respect doom-modeline-buffer-state-icon
   (doom-modeline-unicode-fallback t)
   ;;(doom-modeline-persp-icon t)
   ;;(doom-modeline-modal-icon t)
@@ -974,6 +974,7 @@ If there are multiple windows, the 'other-window' is called."
               ("<right>" . neotree-change-root)
               ("C-f" . neotree-change-root))
   :custom
+  (neo-window-width 35)
   (neo-theme (if (display-graphic-p) 'nerd2 'arrow))
   (neo-show-hidden-files t)
   (neo-smart-open t))
