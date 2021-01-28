@@ -8,6 +8,87 @@ case $- in
       *) return;;
 esac
 
+# functions
+function is_exists() { type "$1" >/dev/null 2>&1; return $?; }
+function echo_unicode() { echo -e "\U$1"; }
+# tmux
+function precmd() {
+  if [ ! -z $TMUX ]; then
+    tmux refresh-client -S
+  else
+    dir="%F{cyan}%K{black} %~ %k%f"
+    if git_status=$(git status 2>/dev/null ); then
+      git_branch="$(echo $git_status| awk 'NR==1 {print $3}')"
+       case $git_status in
+        *Changes\ not\ staged* ) state=$'%{\e[30;48;5;013m%}%F{black} ± %f%k' ;;
+        *Changes\ to\ be\ committed* ) state="%K{blue}%F{black} + %k%f" ;;
+        * ) state="%K{green}%F{black} ✔ %f%k" ;;
+      esac
+      if [[ $git_branch = "master" ]]; then
+        git_info="%K{black}%F{blue}⭠ ${git_branch}%f%k ${state}"
+      else
+        git_info="%K{black}⭠ ${git_branch}%f ${state}"
+      fi
+    else
+      git_info=""
+    fi
+  fi
+}
+function is_shell_on_tmux() { [ ! -z "$TMUX" ]; }
+function shell_has_started_interactively() { [ ! -z "$PS1" ]; }
+function is_ssh_running() { [ ! -z "$SSH_CONECTION" ]; }
+# if not inside a tmux session, and if no session is started,
+# start a new session
+function tmux_autostart()
+{
+    if [ ! "$TMUX_AUTOSTART" = yes ]; then
+        echo 'TMUX: Automatically attach session disabled.'
+        echo 'TMUX: Please set the environment variable TMUX_AUTOSTART to "yes".'
+        return 0
+    elif ! is_exists 'tmux'; then
+        echo 'Error: Tmux command not found.' 2>&1
+        return 1
+    fi
+
+    if ! is_shell_on_tmux; then
+        if shell_has_started_interactively && ! is_ssh_running; then
+            if tmux has-session >/dev/null 2>&1 && tmux list-sessions | grep -qE '.*]$'; then
+                echo 'TMUX: Detached session exists.'
+                tmux list-sessions
+                echo -n 'TMUX: Attach? (Y/n/num): '
+                read
+                if [[ "$REPLY" =~ ^[Yy][Ee]*[Ss]*$ ]] || [[ "$REPLY" == '' ]]; then
+                    tmux attach-session
+                    if [ $? -eq 0 ]; then
+                        echo "$(tmux -V) attached session."
+                        return 0
+                    fi
+                elif [[ "$REPLY" =~ ^[0-9]+$ ]]; then
+                    tmux attach -t "$REPLY"
+                    if [ $? -eq 0 ]; then
+                        echo "$(tmux -V) attached session."
+                        return 0
+                    fi
+                elif [[ "$REPLY" =~ ^[Nn][Oo]*$ ]]; then
+                    return 0
+                fi
+            elif [ "$TMUX_AUTO_NEW_SESSION" == yes ]; then
+                echo 'TMUX: Created a new session automatically.'
+                tmux new-session
+            else
+                echo 'TMUX: Automatically new session create is disabled.'
+            fi
+        fi
+    else
+        # Shell on tmux
+        if [ -e "$HOME/.dotfiles/etc/ascii-art/tmux.txt" ]; then
+            echo -n 'Welcome to the tmux! Session: '
+            tmux display-message -p '#S'
+            #cat "$HOME/.dotfiles/etc/ascii-art/tmux.txt"
+        fi
+    fi
+}
+
 # don't put duplicate lines or lines starting with space in the history.
 # See bash(1) for more options
 HISTCONTROL=ignoreboth
@@ -56,14 +137,13 @@ if [ -n "$force_color_prompt" ]; then
     fi
 fi
 
-function _echo_unicode() { echo -e "\U$1"; }
 # [01;38;2;<R>;<G>;<B>m\] (Foreground)
 # [01;48;2;<R>;<G>;<B>m\] (Background)
 if [ "$color_prompt" = yes ]; then
     if [ ! -z "$TMUX" ]; then
-        PS1='${debian_chroot:+($debian_chroot)}\[\033[01;34m\]$(_echo_unicode '1F340')\u> \[\033[00m\]'
+        PS1='${debian_chroot:+($debian_chroot)}\[\033[01;34m\]$(echo_unicode '1F340')\u> \[\033[00m\]'
     else
-        PS1='${debian_chroot:+($debian_chroot)}\[\033[01;38;2;135;255;197m\]$(_echo_unicode '1F340')\u@\h\[\033[00m\]:\[\033[01;34m\]\w$(__git_ps1 " (%s)")> \[\033[00m\]'
+        PS1='${debian_chroot:+($debian_chroot)}\[\033[01;38;2;135;255;197m\]$(echo_unicode '1F340')\u@\h\[\033[00m\]:\[\033[01;34m\]\w$(__git_ps1 " (%s)")> \[\033[00m\]'
     fi
 else
     if [ ! -z "$TMUX" ]; then
@@ -143,86 +223,5 @@ GIT_PS1_SHOWDIRTYSTATE=1
 set -o noclobber
 # avoid logout by "C-d"
 set -o ignoreeof
-
-# functions
-function precmd() {
-  if [ ! -z $TMUX ]; then
-    tmux refresh-client -S
-  else
-    dir="%F{cyan}%K{black} %~ %k%f"
-    if git_status=$(git status 2>/dev/null ); then
-      git_branch="$(echo $git_status| awk 'NR==1 {print $3}')"
-       case $git_status in
-        *Changes\ not\ staged* ) state=$'%{\e[30;48;5;013m%}%F{black} ± %f%k' ;;
-        *Changes\ to\ be\ committed* ) state="%K{blue}%F{black} + %k%f" ;;
-        * ) state="%K{green}%F{black} ✔ %f%k" ;;
-      esac
-      if [[ $git_branch = "master" ]]; then
-        git_info="%K{black}%F{blue}⭠ ${git_branch}%f%k ${state}"
-      else
-        git_info="%K{black}⭠ ${git_branch}%f ${state}"
-      fi
-    else
-      git_info=""
-    fi
-  fi
-}
-
-# tmux
-# if not inside a tmux session, and if no session is started,
-# start a new session
-function is_exists() { type "$1" >/dev/null 2>&1; return $?; }
-function is_shell_on_tmux() { [ ! -z "$TMUX" ]; }
-function shell_has_started_interactively() { [ ! -z "$PS1" ]; }
-function is_ssh_running() { [ ! -z "$SSH_CONECTION" ]; }
-function tmux_autostart()
-{
-    if [ ! "$TMUX_AUTOSTART" = yes ]; then
-        echo 'TMUX: Automatically attach session disabled.'
-        echo 'TMUX: Please set the environment variable TMUX_AUTOSTART to "yes".'
-        return 0
-    elif ! is_exists 'tmux'; then
-        echo 'Error: Tmux command not found.' 2>&1
-        return 1
-    fi
-
-    if ! is_shell_on_tmux; then
-        if shell_has_started_interactively && ! is_ssh_running; then
-            if tmux has-session >/dev/null 2>&1 && tmux list-sessions | grep -qE '.*]$'; then
-                echo 'TMUX: Detached session exists.'
-                tmux list-sessions
-                echo -n 'TMUX: Attach? (Y/n/num): '
-                read
-                if [[ "$REPLY" =~ ^[Yy][Ee]*[Ss]*$ ]] || [[ "$REPLY" == '' ]]; then
-                    tmux attach-session
-                    if [ $? -eq 0 ]; then
-                        echo "$(tmux -V) attached session."
-                        return 0
-                    fi
-                elif [[ "$REPLY" =~ ^[0-9]+$ ]]; then
-                    tmux attach -t "$REPLY"
-                    if [ $? -eq 0 ]; then
-                        echo "$(tmux -V) attached session."
-                        return 0
-                    fi
-                elif [[ "$REPLY" =~ ^[Nn][Oo]*$ ]]; then
-                    return 0
-                fi
-            elif [ "$TMUX_AUTO_NEW_SESSION" == yes ]; then
-                echo 'TMUX: Created a new session automatically.'
-                tmux new-session
-            else
-                echo 'TMUX: Automatically new session create is disabled.'
-            fi
-        fi
-    else
-        # Shell on tmux
-        if [ -e "$HOME/.dotfiles/etc/ascii-art/tmux.txt" ]; then
-            echo -n 'Welcome to the tmux! Session: '
-            tmux display-message -p '#S'
-            #cat "$HOME/.dotfiles/etc/ascii-art/tmux.txt"
-        fi
-    fi
-}
 
 tmux_autostart
