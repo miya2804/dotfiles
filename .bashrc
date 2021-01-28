@@ -218,8 +218,7 @@ function tmux_autostart()
     else
         # Shell on tmux
         if [ -e "$HOME/.dotfiles/etc/ascii-art/tmux.txt" ]; then
-            echo 'Welcome to the tmux!'
-            echo -n 'Session: '
+            echo -n 'Welcome to the tmux! Session: '
             tmux display-message -p '#S'
             #cat "$HOME/.dotfiles/etc/ascii-art/tmux.txt"
         fi
