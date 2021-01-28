@@ -191,7 +191,7 @@ function tmux_autostart()
             if tmux has-session >/dev/null 2>&1 && tmux list-sessions | grep -qE '.*]$'; then
                 echo 'TMUX: Detached session exists.'
                 tmux list-sessions
-                echo -n 'TMUX: attach? (Y/n/num): '
+                echo -n 'TMUX: Attach? (Y/n/num): '
                 read
                 if [[ "$REPLY" =~ ^[Yy][Ee]*[Ss]*$ ]] || [[ "$REPLY" == '' ]]; then
                     tmux attach-session
