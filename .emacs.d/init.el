@@ -789,6 +789,10 @@ If there are multiple windows, the 'other-window' is called."
               ("C-s" . helm-next-line))
   :custom (helm-swoop-move-to-line-cycle nil))
 
+(use-package hide-mode-line
+  :ensure t
+  :hook ((neotree-mode) . hide-mode-line-mode))
+
 (use-package highlight-indent-guides
   :ensure t
   :diminish highlight-indent-guides-mode
