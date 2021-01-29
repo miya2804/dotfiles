@@ -247,6 +247,9 @@ If there are multiple windows, the 'other-window' is called."
 ;;(windmove-default-keybindings 'meta)    ; use alt+arrow
 
 ;;;;; my-keybinds
+(bind-key "C-c |" 'split-window-right)
+(bind-key "C-c -" 'split-window-below)
+(bind-key "C-c k" 'delete-window)
 (bind-key "C-o" 'other-window-or-split)
 (bind-key "C-c o" 'other-window-or-split)
 (bind-key "C-i" 'indent-for-tab-command)
