@@ -798,6 +798,7 @@ If there are multiple windows, the 'other-window' is called."
 
 (use-package highlight-indent-guides
   :ensure t
+  :when (display-graphic-p)
   :diminish highlight-indent-guides-mode
   :hook ((prog-mode . highlight-indent-guides-mode)
          (yaml-mode . highlight-indent-guides-mode))
@@ -808,6 +809,13 @@ If there are multiple windows, the 'other-window' is called."
    (if (display-graphic-p) 'bitmap 'character))
   (highlight-indent-guides-suppress-auto-error t))
 
+(use-package indent-guide
+  :ensure t
+  :unless (display-graphic-p)
+  :hook ((prog-mode . indent-guide-global-mode)
+         (yaml-mode . indent-guide-global-mode))
+  :custom (indent-guide-recursive t)
+  :custom-face (indent-guide-face ((t (:foreground "brightwhite")))))
 
 (use-package hydra
   :ensure t :defer nil :no-require t
