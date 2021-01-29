@@ -688,6 +688,9 @@ If there are multiple windows, the 'other-window' is called."
   ;;(elscreen-display-tab nil)
   (elscreen-tab-display-kill-screen nil)
   (elscreen-tab-display-control nil)
+  :custom-face
+  (elscreen-tab-background-face ((t (:background "aquamarine4"))))
+  (elscreen-tab-other-screen-face ((t (:background "aquamarine4"))))
   :config
   (elscreen-start)
   (elscreen-create) ; create scratch tab
