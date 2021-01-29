@@ -205,6 +205,7 @@ If there are multiple windows, the 'other-window' is called."
 ;;;; -----------------------------------
 ;;;; Libraries
 
+(require 'color)
 (use-package diminish :ensure t :demand t)
 (use-package popup :ensure t :defer t)
 
@@ -1029,7 +1030,13 @@ If there are multiple windows, the 'other-window' is called."
 
 (use-package rainbow-delimiters
   :ensure t
-  :hook (prog-mode . rainbow-delimiters-mode))
+  :hook (prog-mode . rainbow-delimiters-mode)
+  :config
+  (cl-loop
+   for index from 1 to rainbow-delimiters-max-face-count
+   do
+   (let ((face (intern (format "rainbow-delimiters-depth-%d-face" index))))
+     (cl-callf color-saturate-name (face-foreground face) 30))))
 
 (use-package recentf-ext :ensure t :defer nil)
 
