@@ -21,7 +21,7 @@
 
 
 ;;;; -----------------------------------
-;;;; Functions and Macros
+;;;; Functions
 
 ;; with-eval-after-load (Emacs 24.4 以上)
 (unless (fboundp 'with-eval-after-load)
@@ -109,22 +109,9 @@ If there are multiple windows, the 'other-window' is called."
 ;;;; -----------------------------------
 ;;;; Environments
 
-;;;;; variable
+;;;;; load-path
 (eval-and-compile
-  (defvar shortcut-file-path "~/Dropbox/document/note/note.md")
-
-  ;; backup and auto-save
-  (defvar backup-and-auto-save-dir-dropbox
-    (expand-file-name "~/Dropbox/backup/emacs/"))
-  (defvar backup-and-auto-save-dir-local
-    (expand-file-name "~/.emacs.d/.backup/"))
-
-  ;; org
-  (defvar my-org-dir "~/Dropbox/document/org")
-  ;; default is "my-org-dir/agenda"
-  ;; if you want to add the agenda file,
-  ;; please add it to the list below.
-  (defvar my-org-agenda-files '()))
+  (setq load-path (cons "~/.emacs.d/elisp" load-path)))
 
 ;;;;; network
 (eval-and-compile
@@ -146,10 +133,6 @@ If there are multiple windows, the 'other-window' is called."
     (package-initialize)
     ;;(package-refresh-contents)
     (setq package-enable-at-startup nil)))
-
-;;;;; load-path
-(eval-and-compile
-  (setq load-path (cons "~/.emacs.d/elisp" load-path)))
 
 ;;;;; use-package
 
@@ -191,12 +174,10 @@ If there are multiple windows, the 'other-window' is called."
 
 (use-package use-package :ensure t :defer t) ; 形式的宣言
 
-;;;;; bind-key
-
+;; bind-key
 ;; bind-key* は、emulation-mode-map-alists を利用することにより、
 ;; minor-mode よりも優先させたいキーのキーマップを定義できる。
 ;; bind-key.el がない場合は普通のbind-key として振る舞う。
-
 (use-package bind-key :ensure t :defer t)
 (eval-and-compile
   (unless (require 'bind-key nil t)
@@ -204,13 +185,11 @@ If there are multiple windows, the 'other-window' is called."
       (define-key (or keymap global-map) (kbd key) cmd))
     (defun bind-key* (key cmd) (global-set-key (kbd key) cmd))))
 
-;;;;; exec-path
 (use-package exec-path-from-shell
   :ensure t :demand t
   :config
   (exec-path-from-shell-initialize))
 
-;;;;; auto-compile
 (use-package auto-async-byte-compile
   :ensure t :defer t
   :hook (emacs-lisp-mode . enable-auto-async-byte-compile-mode)
@@ -224,7 +203,31 @@ If there are multiple windows, the 'other-window' is called."
 
 
 ;;;; -----------------------------------
+;;;; Libraries
+
+(use-package diminish :ensure t :demand t)
+(use-package popup :ensure t :defer t)
+
+
+
+;;;; -----------------------------------
 ;;;; General settings
+
+(eval-and-compile
+  (defvar shortcut-file-path "~/Dropbox/document/note/note.md")
+
+  ;; backup and auto-save
+  (defvar backup-and-auto-save-dir-dropbox
+    (expand-file-name "~/Dropbox/backup/emacs/"))
+  (defvar backup-and-auto-save-dir-local
+    (expand-file-name "~/.emacs.d/.backup/"))
+
+  ;; org
+  (defvar my-org-dir "~/Dropbox/document/org")
+  ;; default is "my-org-dir/agenda"
+  ;; if you want to add the agenda file,
+  ;; please add it to the list below.
+  (defvar my-org-agenda-files '()))
 
 (setq-default tab-width 4 indent-tabs-mode nil)
 
@@ -333,15 +336,6 @@ If there are multiple windows, the 'other-window' is called."
 
 (setq-default show-trailing-whitespace t)
 (add-hook 'dashboard-mode-hook 'disable-show-trailing-whitespace)
-
-
-
-;;;; -----------------------------------
-;;;; Libraries
-
-(use-package diminish :ensure t :demand t)
-(use-package popup :ensure t :defer t)
-;;(use-package use-package-ensure-system-package :ensure t :demand t)
 
 
 
