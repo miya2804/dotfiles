@@ -156,18 +156,19 @@ dotfiles_download() {
             git clone --recursive -b "$DOTFILES_GITHUB_BRANCH" "$DOTFILES_GITHUB" "$DOTDIR_PATH"
         elif is_exists "curl" || is_exists "wget"; then
             # curl or wget
-            local tarball="https://github.com/$GITHUB_USER/dotfiles/archive/master.tar.gz"
+            local tarball="https://github.com/${GITHUB_USER}/dotfiles/archive/${DOTFILES_GITHUB_BRANCH}.tar.gz"
+            local extract_dir="dotfiles-${DOTFILES_GITHUB_BRANCH}"
             if is_exists "curl"; then
                 curl -L "$tarball"
             elif is_exists "wget"; then
                 wget -O - "$tarball"
             fi | tar xvz
 
-            if [ ! -d dotfiles-master ]; then
-                log_fail "dotfiles-master: not found"
+            if [ ! -d "$extract_dir" ]; then
+                log_fail "${extract_dir}: not found"
                 exit 1
             fi
-            command mv -f dotfiles-master "$DOTDIR_PATH"
+            command mv -f "$extract_dir" "$DOTDIR_PATH"
         else
             log_fail "curl or wget required"
             exit 1
