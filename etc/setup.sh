@@ -108,6 +108,16 @@ dotfiles_download() {
     fi
 
     e_newline
+    echo -n "Download Branch: "
+    read dotfiles_github_branch
+
+    dotfiles_github="https://github.com/${github_user}/dotfiles.git"
+
+    # curl of wget
+    tarball="https://github.com/${github_user}/dotfiles/archive/${dotfiles_github_branch}.tar.gz"
+    extract_dir="dotfiles-${dotfiles_github_branch}"
+
+    e_newline
     e_header "Downloading dotfiles..."
 
     if is_debug; then
@@ -250,7 +260,6 @@ else
     fi
 
     github_user="mmugi"
-    dotfiles_github="https://github.com/${github_user}/dotfiles.git"
     dotfiles_logo='
 *********************************************
  ___   ___  _____  ____  _   _     ____  __
@@ -273,13 +282,6 @@ else
 *********************************************
 '
     echo "$dotfiles_logo"
-    echo -n "Install Branch: "
-    read dotfiles_github_branch
-
-    # curl of wget
-    tarball="https://github.com/${github_user}/dotfiles/archive/${dotfiles_github_branch}.tar.gz"
-    extract_dir="dotfiles-${dotfiles_github_branch}"
-
     dotfiles_install "$0"
 
     # Restart shell if specified "bash -c $(curl -L {URL})"
