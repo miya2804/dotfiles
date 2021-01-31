@@ -112,7 +112,7 @@ if [ -z "${DOTDIR_PATH:-}" ]; then
 fi
 
 GITHUB_USER="mmugi"
-DOTFILES_GITHUB="https://github.com/$GITHUB_USER/dotfiles.git"; export DOTFILES_GITHUB
+DOTFILES_GITHUB="https://github.com/${GITHUB_USER}/dotfiles.git"; export DOTFILES_GITHUB
 DOTFILES_GITHUB_BRANCH="master"
 
 dotfiles_logo='
@@ -139,7 +139,7 @@ dotfiles_logo='
 
 dotfiles_download() {
     if [ -d "$DOTDIR_PATH" ]; then
-        log_fail "$DOTDIR_PATH: already exists"
+        log_fail "${DOTDIR_PATH}: already exists"
         exit 1
     fi
 
@@ -190,7 +190,7 @@ dotfiles_deploy() {
     e_header "Deploying dotfiles..."
 
     if [ ! -d $DOTDIR_PATH ]; then
-        log_fail "$DOTDIR_PATH: not found"
+        log_fail "${DOTDIR_PATH}: not found"
         exit 1
     fi
 
