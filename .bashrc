@@ -41,13 +41,22 @@ function is_ssh_running() { [ ! -z "$SSH_CONNECTION" ]; }
 # start a new session
 function tmux_autostart()
 {
-    if [ ! "$TMUX_AUTOSTART" = yes ]; then
-        echo 'TMUX: Automatically attach session disabled.'
-        echo 'TMUX: Please set the environment variable TMUX_AUTOSTART to "yes".'
+    if ! is_exists 'tmux'; then
         return 0
-    elif ! is_exists 'tmux'; then
-        echo 'Error: Tmux command not found.' 2>&1
-        return 1
+    fi
+
+    if [ -z "$TMUX_AUTOSTART" ]; then
+        TMUX_AUTOSTART=no
+    fi
+    export TMUX_AUTOSTART
+
+    if [ -z "$TMUX_AUTO_NEW_SESSION" ]; then
+        TMUX_AUTO_NEW_SESSION=no
+    fi
+    export TMUX_AUTO_NEW_SESSION
+
+    if [ ! "$TMUX_AUTOSTART" = yes ]; then
+        return 0
     fi
 
     if ! is_shell_on_tmux; then
