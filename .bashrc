@@ -36,7 +36,7 @@ function precmd() {
 }
 function is_shell_on_tmux() { [ ! -z "$TMUX" ]; }
 function shell_has_started_interactively() { [ ! -z "$PS1" ]; }
-function is_ssh_running() { [ ! -z "$SSH_CONECTION" ]; }
+function is_ssh_running() { [ ! -z "$SSH_CONNECTION" ]; }
 # if not inside a tmux session, and if no session is started,
 # start a new session
 function tmux_autostart()
