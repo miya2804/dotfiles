@@ -8,9 +8,24 @@ case $- in
       *) return;;
 esac
 
-# functions
+[ -x /usr/bin/clear ] && /usr/bin/clear
+
+# *** functions ***
+
 function is_exists() { type "$1" >/dev/null 2>&1; return $?; }
 function echo_unicode() { echo -e "\U$1"; }
+function new_line { printf '\n'; }
+function eval_prompt_commands() {
+    export EXIT_STATUS="$?"
+    local func
+    for func in ${!PROMPT_COMMAND_*}
+    do
+        eval "${!func}"
+    done
+    unset func
+}
+
+
 # tmux
 function precmd() {
   if [ ! -z $TMUX ]; then
@@ -37,10 +52,11 @@ function precmd() {
 function is_shell_on_tmux() { [ ! -z "$TMUX" ]; }
 function shell_has_started_interactively() { [ ! -z "$PS1" ]; }
 function is_ssh_running() { [ ! -z "$SSH_CONNECTION" ]; }
-# if not inside a tmux session, and if no session is started,
-# start a new session
 function tmux_autostart()
 {
+    # if not inside a tmux session, and if no session is started,
+    # start a new session
+
     if ! is_exists 'tmux'; then
         return 0
     fi
@@ -120,6 +136,8 @@ shopt -s checkwinsize
 # make less more friendly for non-text input files, see lesspipe(1)
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
+# *** prompt ***
+
 # set variable identifying the chroot you work in (used in the prompt below)
 if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
     debian_chroot=$(cat /etc/debian_chroot)
@@ -137,31 +155,68 @@ esac
 
 if [ -n "$force_color_prompt" ]; then
     if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
-	# We have color support; assume it's compliant with Ecma-48
-	# (ISO/IEC-6429). (Lack of such support is extremely rare, and such
-	# a case would tend to support setf rather than setaf.)
-	color_prompt=yes
+	    # We have color support; assume it's compliant with Ecma-48
+	    # (ISO/IEC-6429). (Lack of such support is extremely rare, and such
+	    # a case would tend to support setf rather than setaf.)
+	    color_prompt=yes
     else
-	color_prompt=
+	    color_prompt=
     fi
 fi
 
+func_name='eval_prompt_commands'
+if [[ ! "$PROMPT_COMMAND" =~ .*${func_name}.* ]]; then
+    PROMPT_COMMAND_DEFAULT="$PROMPT_COMMAND"
+fi
+export PROMPT_COMMAND_DEFAULT
+export PROMPT_COMMAND_ADDITIONAL='new_line;'
+export PROMPT_COMMAND="${func_name}"
+unset func_name
+
 # [01;38;2;<R>;<G>;<B>m\] (Foreground)
 # [01;48;2;<R>;<G>;<B>m\] (Background)
-if [ "$color_prompt" = yes ]; then
-    if is_shell_on_tmux; then
-        PS1='${debian_chroot:+($debian_chroot)}$(echo_unicode '1F340') \[\033[01;34m\]\u:\w \[\033[01;36m\]$(__git_ps1 "(%s)")\n\[\033[01;34m\]> \[\033[00m\]'
-    else
-        PS1='${debian_chroot:+($debian_chroot)}$(echo_unicode '1F340') \[\033[01;34m\]\u@\h:\w \[\033[01;36m\]$(__git_ps1 "(%s)")\n\[\033[01;34m\]> \[\033[00m\]'
-    fi
+black=$'\e[30m'
+red=$'\e[31m'
+green=$'\e[32m'
+yellow=$'\e[33m'
+blue=$'\e[34m'
+purple=$'\e[35m'
+cyan=$'\e[36m'
+white=$'\e[37m'
+gray=$'\e[90m'
+reset=$'\e[m'
+
+if [ ${EUID:-${UID}} = 0 ]; then
+    symbol_prompt='# '
 else
-    if is_shell_on_tmux; then
-        PS1='${debian_chroot:+($debian_chroot)}\u:\w $(__git_ps1 "(%s)")\n> '
-    else
-        PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w $(__git_ps1 "(%s)")\n> '
-    fi
+    symbol_prompt='> '
 fi
-unset color_prompt force_color_prompt
+
+if [ -x ~/bin/git-prompt.sh ]; then
+    source ~/bin/git-prompt.sh
+    GIT_PS1_SHOWUPSTREAM=1
+    GIT_PS1_SHOWUNTRACKEDFILES=1
+    GIT_PS1_SHOWSTASHSTATE=1
+    GIT_PS1_SHOWDIRTYSTATE=1
+    git_prompt='$(__git_ps1 "(%s)")'
+else
+    git_prompt=''
+fi
+
+if is_shell_on_tmux; then
+    host_prompt=''
+else
+    host_prompt='@\h'
+fi
+
+prefix_prompt='${debian_chroot:+($debian_chroot)}'
+
+#color_prompt=no
+if [ "$color_prompt" = yes ]; then
+    PS1="${prefix_prompt}"'$(echo_unicode '1F340')'" \u${host_prompt} \[$blue\]\w \[$cyan\]${git_prompt}\[$reset\]\n${symbol_prompt}\[$reset\]"
+else
+    PS1="${prefix_prompt}[ \u${host_prompt} \w ${git_prompt}\n${symbol_prompt}"
+fi
 
 # If this is an xterm set the title to user@host:dir
 case "$TERM" in
@@ -171,6 +226,10 @@ xterm*|rxvt*)
 *)
     ;;
 esac
+
+unset color_prompt force_color_prompt
+unset symbol_prompt git_prompt host_prompt prefix_prompt
+unset black red green yellow blue purple cyan white gray reset
 
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
@@ -218,13 +277,6 @@ if ! shopt -oq posix; then
     . /etc/bash_completion
   fi
 fi
-
-# git-prompt.sh setting.
-source ~/bin/git-prompt.sh
-GIT_PS1_SHOWUPSTREAM=1
-GIT_PS1_SHOWUNTRACKEDFILES=1
-GIT_PS1_SHOWSTASHSTATE=1
-GIT_PS1_SHOWDIRTYSTATE=1
 
 # Settings.
 # disable overwrite (redirect >)
