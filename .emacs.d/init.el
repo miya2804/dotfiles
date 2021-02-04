@@ -76,13 +76,19 @@
                (message "Quit")
                (throw 'end-flag t)))))))
 
+(defvar other-window-or-split-hook nil)
 (defun other-window-or-split ()
-  "If there is only one window, the 'split-window-horizontally' is called.
-If there are multiple windows, the 'other-window' is called."
+  "Call `other-window' or window split command.
+If there is only one window open, `split-window-right' or
+`split-window-below' will be called, depending on the size of frame.
+If there are multiple windows, 'other-window' is called."
   (interactive)
-  (when (one-window-p)
-    (split-window-horizontally))
-  (other-window 1))
+  (if (one-window-p)
+      (if (>= (* (frame-height) 2) (frame-width))
+          (split-window-below)
+        (split-window-right))
+    (other-window 1))
+  (run-hooks 'other-window-or-split-hook))
 
 ;; trailing-whitespace
 (defun enable-show-trailing-whitespace  ()
@@ -1145,7 +1151,18 @@ If there are multiple windows, the 'other-window' is called."
 
 (use-package zoom
   :ensure t
-  :config (custom-set-variables '(zoom-mode t)))
+  :config
+  (defun auto-toggle-zoom ()
+    (defvar bound-width 120)
+    (if (>= (frame-width) bound-width)
+        (when (eq zoom-mode nil)
+          (custom-set-variables '(zoom-mode t))
+          (message "zoom-mode enabled."))
+      (when (eq zoom-mode t)
+        (custom-set-variables '(zoom-mode nil))
+        (message "zoom-mode disabled."))))
+  (add-hook 'other-window-or-split-hook 'auto-toggle-zoom)
+  (custom-set-variables '(zoom-mode t)))
 
 
 
