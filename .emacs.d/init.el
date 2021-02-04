@@ -819,9 +819,10 @@ If there are multiple windows, the 'other-window' is called."
 (use-package hydra
   :ensure t :defer nil :no-require t
   :functions (winner-redo winner-undo
-                          git-gutter:previous-hunk git-gutter:next-hunk
-                          git-gutter:stage-hunk git-gutter:revert-hunk
-                          git-gutter:popup-hunk)
+              git-gutter:previous-hunk git-gutter:next-hunk
+              git-gutter:stage-hunk git-gutter:revert-hunk
+              git-gutter:popup-hunk
+              zoom-mode)
   :config
   (defhydra hydra-git-gutter (:hint nil)
     "
@@ -846,6 +847,7 @@ If there are multiple windows, the 'other-window' is called."
            manage   | [_0_]: delete [_1_]: delete-other [_h_]: redo [_l_]: undo
     buffer          | [_b_]: menu [_k_]: kill
     window & buffer | [_4_]: kill
+    other           | [_z_]: zoom-mode
     "
     ;; frame
     ("n" make-frame)
@@ -863,7 +865,9 @@ If there are multiple windows, the 'other-window' is called."
     ("b" buffer-menu)
     ("k" kill-buffer)
     ;; window & buffer
-    ("4" kill-buffer-and-window))
+    ("4" kill-buffer-and-window)
+    ;; other
+    ("z" zoom-mode))
 
   (bind-key "C-c g" 'hydra-git-gutter/body)
   (bind-key "C-c x" 'hydra-window-and-buffer-manager/body))
