@@ -111,8 +111,7 @@ dotfiles_download() {
         exit 1
     fi
 
-    e_newline
-    echo -n "Download Branch: "
+    echo -n "Download branch: "
     read dotfiles_github_branch
 
     dotfiles_github="https://github.com/${github_user}/dotfiles.git"
@@ -213,7 +212,6 @@ dotfiles_initialize() {
 }
 
 dotfiles_install() {
-    printf " \r\033[37;1m*** dotfiles install ***\033[m\n"
     # 1. Download the repository
     # ==> downloading
     #
