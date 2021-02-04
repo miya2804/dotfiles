@@ -252,6 +252,7 @@ If there are multiple windows, the 'other-window' is called."
 (bind-key "C-c k" 'delete-window)
 (bind-key "C-o" 'other-window-or-split)
 (bind-key "C-c o" 'other-window-or-split)
+(bind-key "<f9>" 'other-window-or-split)
 (bind-key "C-i" 'indent-for-tab-command)
 (bind-key "<zenkaku-hankaku>" 'toggle-input-method)
 (bind-key "C-c n"
