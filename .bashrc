@@ -182,13 +182,16 @@ if [ -n "$force_color_prompt" ]; then
 fi
 
 func_name='eval_prompt_commands'
+prompt_cmd_additional='
+new_line_prompt;
+'
+PROMPT_COMMAND="$func_name"
 if [[ ! "$PROMPT_COMMAND" =~ .*${func_name}.* ]]; then
     PROMPT_COMMAND_DEFAULT="$PROMPT_COMMAND"
 fi
 export PROMPT_COMMAND_DEFAULT
-export PROMPT_COMMAND_ADDITIONAL='new_line_prompt;'
-export PROMPT_COMMAND="${func_name}"
-unset func_name
+export PROMPT_COMMAND_ADDITIONAL="$prompt_cmd_additional"
+unset func_name prompt_cmd_additional
 
 # [01;38;2;<R>;<G>;<B>m\] (Foreground)
 # [01;48;2;<R>;<G>;<B>m\] (Background)
