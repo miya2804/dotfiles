@@ -298,4 +298,4 @@ else
     fi
 fi
 
-# setup script ends here
+# vital script ends here
