@@ -10,6 +10,18 @@ esac
 
 [ -x /usr/bin/clear ] && /usr/bin/clear
 
+if [ -z "$DOTDIR_PATH" ]; then
+    echo '$DOTDIR_PATH not set.' 1>&2
+    return 1
+fi
+
+# load vital utilities.
+source "$DOTDIR_PATH"/etc/vital.sh 2>/dev/null
+if ! vitalize 2>/dev/null; then
+    echo 'Cannot vitalize.' 1>&2
+    return 1
+fi
+
 # *** functions ***
 
 function is_exists() { type "$1" >/dev/null 2>&1; return $?; }
@@ -24,7 +36,6 @@ function eval_prompt_commands() {
     done
     unset func
 }
-
 
 # tmux
 function precmd() {
