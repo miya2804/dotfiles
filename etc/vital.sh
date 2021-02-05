@@ -105,6 +105,8 @@ log_pass() { logging SUCCESS "$1"; }
 log_info() { logging INFO "$1"; }
 log_echo() { logging TITLE "$1"; }
 
+# *** dotfiles ***
+
 dotfiles_download() {
     if [ -d "$DOTDIR_PATH" ]; then
         log_fail "${DOTDIR_PATH}: already exists"
@@ -226,8 +228,6 @@ dotfiles_install() {
     # ==> initializing
     dotfiles_initialize "$@"
 }
-
-# *** body ***
 
 if echo "$-" | grep -q "i"; then
     # -> source a.sh
