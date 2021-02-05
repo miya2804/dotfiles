@@ -22,6 +22,8 @@ if ! vitalize 2>/dev/null; then
     return 1
 fi
 
+export FIRST_PROMPT=yes
+
 # *** functions ***
 
 function is_exists() { type "$1" >/dev/null 2>&1; return $?; }
