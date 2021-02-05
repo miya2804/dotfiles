@@ -69,8 +69,8 @@ function precmd() {
 function is_shell_on_tmux() { [ ! -z "$TMUX" ]; }
 function shell_has_started_interactively() { [ ! -z "$PS1" ]; }
 function is_ssh_running() { [ ! -z "$SSH_CONNECTION" ]; }
-function tmux_autostart()
-{
+function tmux_autostart() {
+
     # if not inside a tmux session, and if no session is started,
     # start a new session
 
@@ -233,7 +233,7 @@ prefix_prompt='${debian_chroot:+($debian_chroot)}'
 
 #color_prompt=no
 if [ "$color_prompt" = yes ]; then
-    PS1="${prefix_prompt}"'$(echo_unicode '1F340')'" \u${host_prompt} \[$blue\]\w \[$cyan\]${git_prompt}\[$reset\]\n${symbol_prompt}\[$reset\]"
+    PS1="${prefix_prompt}"'$(echo_unicode '1F340')'" \u${host_prompt} \[${blue}\]\w \[${cyan}\]${git_prompt}\[${reset}\]\n${symbol_prompt}\[${reset}\]"
 else
     PS1="${prefix_prompt}[ \u${host_prompt} \w ${git_prompt}\n${symbol_prompt}"
 fi
@@ -297,9 +297,9 @@ fi
 # sources /etc/bash.bashrc).
 if ! shopt -oq posix; then
   if [ -f /usr/share/bash-completion/bash_completion ]; then
-    . /usr/share/bash-completion/bash_completion
+    source /usr/share/bash-completion/bash_completion
   elif [ -f /etc/bash_completion ]; then
-    . /etc/bash_completion
+    source /etc/bash_completion
   fi
 fi
 
