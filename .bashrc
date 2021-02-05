@@ -26,7 +26,13 @@ fi
 
 function is_exists() { type "$1" >/dev/null 2>&1; return $?; }
 function echo_unicode() { echo -e "\U$1"; }
-function new_line { printf '\n'; }
+function new_line_prompt {
+    if [ -z "$FIRST_PROMPT" ] || [ "$FIRST_PROMPT" = yes ]; then
+        FIRST_PROMPT=no
+    else
+        printf '\n';
+    fi
+}
 function eval_prompt_commands() {
     export EXIT_STATUS="$?"
     local func
@@ -180,7 +186,7 @@ if [[ ! "$PROMPT_COMMAND" =~ .*${func_name}.* ]]; then
     PROMPT_COMMAND_DEFAULT="$PROMPT_COMMAND"
 fi
 export PROMPT_COMMAND_DEFAULT
-export PROMPT_COMMAND_ADDITIONAL='new_line;'
+export PROMPT_COMMAND_ADDITIONAL='new_line_prompt;'
 export PROMPT_COMMAND="${func_name}"
 unset func_name
 
