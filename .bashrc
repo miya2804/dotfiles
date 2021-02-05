@@ -96,19 +96,20 @@ function tmux_autostart() {
         if shell_has_started_interactively && ! is_ssh_running; then
             if tmux has-session >/dev/null 2>&1 && tmux list-sessions | grep -qE '.*]$'; then
                 echo 'TMUX: Detached session exists.'
+                echo
                 tmux list-sessions
-                echo -n 'TMUX: Attach? (Y/n/num): '
-                read
+                echo
+                echo -n 'Attach? (Y/n/num): '; read
                 if [[ "$REPLY" =~ ^[Yy][Ee]*[Ss]*$ ]] || [[ "$REPLY" == '' ]]; then
+                    echo 'tmux attaching session...'
                     tmux attach-session
                     if [ $? -eq 0 ]; then
-                        echo "$(tmux -V) attached session."
                         return 0
                     fi
                 elif [[ "$REPLY" =~ ^[0-9]+$ ]]; then
+                    echo 'tmux attaching session...'
                     tmux attach -t "$REPLY"
                     if [ $? -eq 0 ]; then
-                        echo "$(tmux -V) attached session."
                         return 0
                     fi
                 elif [[ "$REPLY" =~ ^[Nn][Oo]*$ ]]; then
@@ -123,10 +124,10 @@ function tmux_autostart() {
         fi
     else
         # Shell on tmux
+        echo -n "Welcome to TMUX $(tmux -V | awk '{print $2}') - Session: "
+        tmux display-message -p '#S'
         if [ -e "$HOME/.dotfiles/etc/ascii-art/tmux.txt" ]; then
-            echo -n 'Welcome to the tmux! Session: '
-            tmux display-message -p '#S'
-            #cat "$HOME/.dotfiles/etc/ascii-art/tmux.txt"
+            : #cat "$HOME/.dotfiles/etc/ascii-art/tmux.txt"
         fi
     fi
 }
