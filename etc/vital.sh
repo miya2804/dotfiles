@@ -230,40 +230,12 @@ dotfiles_install() {
     dotfiles_initialize "$@"
 }
 
-if echo "$-" | grep -q "i"; then
-    # -> source a.sh
-    VITALIZED=1
-    export VITALIZED
+if [ -z "$DOTDIR_PATH" ]; then
+    DOTDIR_PATH=~/.dotfiles; export DOTDIR_PATH
+fi
 
-    : return
-else
-    # three patterns
-    # -> cat a.sh | bash
-    # -> bash -c "$(cat a.sh)"
-    # -> bash a.sh
-
-    # -> bash a.sh
-    if [ "$0" = "${BASH_SOURCE:-}" ]; then
-        exit
-    fi
-
-    # -> cat a.sh | bash
-    # -> bash -c "$(cat a.sh)"
-    if [ -n "${BASH_EXECUTION_STRING:-}" ] || [ -p /dev/stdin ]; then
-        # if already vitalized, skip to run dotfiles_install
-        if [ "${VITALIZED:=0}" = 1 ]; then
-            exit
-        fi
-    fi
-
-    trap "e_error 'terminated'; exit 1" INT ERR
-
-    if [ -z "$DOTDIR_PATH" ]; then
-        DOTDIR_PATH=~/.dotfiles; export DOTDIR_PATH
-    fi
-
-    github_user="mmugi"
-    dotfiles_logo='
+github_user="mmugi"
+dotfiles_logo='
 *********************************************
  ___   ___  _____  ____  _   _     ____  __
 | | \ / / \  | |  | |_  | | | |   | |_  ( (`
@@ -284,18 +256,47 @@ else
 
 *********************************************
 '
-    echo "$dotfiles_logo"
-    dotfiles_install "$0"
 
-    # Restart shell if specified "bash -c $(curl -L {URL})"
-    # not restart:
-    #   curl -L {URL} | bash
-    if [ -p /dev/stdin ]; then
-        e_warning "Now continue with Rebooting your shell"
-    else
-        e_newline
-        e_arrow "Restarting your shell..."
-        exec "${SHELL:-/bin/bash}"
+if echo "$-" | grep -q "i"; then
+    # -> source a.sh
+    VITALIZED=1
+    export VITALIZED
+
+    : return
+else
+    # three patterns
+    # -> bash a.sh
+    # -> cat a.sh | bash
+    # -> bash -c "$(cat a.sh)"
+
+    # -> bash a.sh
+    if [ "$0" = "${BASH_SOURCE:-}" ]; then
+        exit
+    fi
+
+    # -> cat a.sh | bash
+    # -> bash -c "$(cat a.sh)"
+    if [ -n "${BASH_EXECUTION_STRING:-}" ] || [ -p /dev/stdin ]; then
+        # if already vitalized, skip to run dotfiles_install
+        if [ "${VITALIZED:=0}" = 1 ]; then
+            exit
+        fi
+
+        trap "e_error 'terminated'; exit 1" INT ERR
+
+        echo "$dotfiles_logo"
+        dotfiles_install "$0"
+
+        # Restart shell if specified "bash -c $(curl -L {URL})"
+        # not restart:
+        #   curl -L {URL} | bash
+        if [ -p /dev/stdin ]; then
+            e_warning "Now continue with Rebooting your shell"
+        else
+            e_newline
+            e_arrow "Restarting your shell..."
+            exec "${SHELL:-/bin/bash}"
+        fi
     fi
 fi
 
