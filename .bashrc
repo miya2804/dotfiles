@@ -26,8 +26,6 @@ export FIRST_PROMPT=yes
 
 # *** functions ***
 
-function is_exists() { type "$1" >/dev/null 2>&1; return $?; }
-function echo_unicode() { echo -e "\U$1"; }
 function new_line_prompt {
     if [ -z "$FIRST_PROMPT" ] || [ "$FIRST_PROMPT" = yes ]; then
         FIRST_PROMPT=no
@@ -221,7 +219,7 @@ function _prompt_setup() {
 
     #color_prompt=no
     if [ "$color_prompt" = yes ]; then
-        PS1="${prefix_prompt}"'$(echo_unicode '1F340')'" \u${host_prompt} \[${blue}\]\w \[${cyan}\]${git_prompt}\[${reset}\]\n${symbol_prompt}\[${reset}\]"
+        PS1="${prefix_prompt}"'$(e_unicode 1F340)'" \u${host_prompt} \[${blue}\]\w \[${cyan}\]${git_prompt}\[${reset}\]\n${symbol_prompt}\[${reset}\]"
     else
         PS1="${prefix_prompt}[ \u${host_prompt} \w ${git_prompt}\n${symbol_prompt}"
     fi

@@ -20,6 +20,7 @@ is_debug() {
 }
 
 e_newline() { printf "\n"; }
+e_unicode() { printf "\U$1"; }
 e_warning() { printf " \033[31m%s\033[m\n" "$*"; }
 e_arrow()   { printf " \033[37;1m%s\033[m\n" "➜ $*"; }
 e_header()  { printf " \r\033[37;1m%s\033[m\n" "$*"; }
