@@ -26,6 +26,14 @@ is_interactive_shell() {
     esac
 }
 
+is_tmux_running() {
+    [ ! -z "$TMUX" ]
+}
+
+is_ssh_running() {
+    [ ! -z "$SSH_CONNECTION" ]
+}
+
 e_newline() { printf "\n"; }
 e_unicode() { printf "\U$1"; }
 e_warning() { printf " \033[31m%s\033[m\n" "$*"; }

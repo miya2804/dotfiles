@@ -44,8 +44,6 @@ function eval_prompt_commands() {
 }
 
 # tmux
-function is_tmux_running() { [ ! -z "$TMUX" ]; }
-function is_ssh_running() { [ ! -z "$SSH_CONNECTION" ]; }
 function tmux_autostart() {
 
     # if not inside a tmux session, and if no session is started,
