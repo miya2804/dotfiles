@@ -22,13 +22,13 @@ if ! vitalize 2>/dev/null; then
     return 1
 fi
 
-export FIRST_PROMPT=yes
+export FIRST_PROMPT=1
 
 # *** functions ***
 
 function new_line_prompt {
-    if [ -z "$FIRST_PROMPT" ] || [ "$FIRST_PROMPT" = yes ]; then
-        FIRST_PROMPT=no
+    if [ -z "$FIRST_PROMPT" ] || [ "${FIRST_PROMPT}" = 1 ]; then
+        FIRST_PROMPT=0
     else
         printf '\n';
     fi
