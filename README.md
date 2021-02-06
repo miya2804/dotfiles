@@ -1,7 +1,7 @@
 # installation
 
 ``` bash
-bash -c "$(curl https://raw.githubusercontent.com/mmugi/dotfiles/master/etc/vital.sh)"
+bash -c "$(curl -L https://raw.githubusercontent.com/mmugi/dotfiles/master/etc/vital.sh)"
 ```
 
 or
