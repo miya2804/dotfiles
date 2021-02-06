@@ -19,6 +19,13 @@ is_debug() {
     fi
 }
 
+is_interactive_shell() {
+    case $- in
+    *i*) return 0;;
+      *) return 1;;
+    esac
+}
+
 e_newline() { printf "\n"; }
 e_unicode() { printf "\U$1"; }
 e_warning() { printf " \033[31m%s\033[m\n" "$*"; }

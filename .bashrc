@@ -45,7 +45,6 @@ function eval_prompt_commands() {
 
 # tmux
 function is_shell_on_tmux() { [ ! -z "$TMUX" ]; }
-function shell_has_started_interactively() { [ ! -z "$PS1" ]; }
 function is_ssh_running() { [ ! -z "$SSH_CONNECTION" ]; }
 function tmux_autostart() {
 
@@ -71,7 +70,7 @@ function tmux_autostart() {
     fi
 
     if ! is_shell_on_tmux; then
-        if shell_has_started_interactively && ! is_ssh_running; then
+        if is_interactive_shell && ! is_ssh_running; then
             if tmux has-session >/dev/null 2>&1 && tmux list-sessions | grep -qE '.*]$'; then
                 echo 'TMUX: Detached session exists.'
                 echo
