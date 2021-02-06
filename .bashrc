@@ -44,7 +44,7 @@ function eval_prompt_commands() {
 }
 
 # tmux
-function is_shell_on_tmux() { [ ! -z "$TMUX" ]; }
+function is_tmux_running() { [ ! -z "$TMUX" ]; }
 function is_ssh_running() { [ ! -z "$SSH_CONNECTION" ]; }
 function tmux_autostart() {
 
@@ -69,7 +69,7 @@ function tmux_autostart() {
         return 0
     fi
 
-    if ! is_shell_on_tmux; then
+    if ! is_tmux_running; then
         if is_interactive_shell && ! is_ssh_running; then
             if tmux has-session >/dev/null 2>&1 && tmux list-sessions | grep -qE '.*]$'; then
                 echo 'TMUX: Detached session exists.'
@@ -190,7 +190,7 @@ function _prompt_setup() {
         git_prompt='$(__git_ps1 "(%s)")'
     fi
 
-    if ! is_shell_on_tmux; then
+    if ! is_tmux_running; then
         host_prompt='@\h'
     fi
 
