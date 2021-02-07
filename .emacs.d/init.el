@@ -518,7 +518,10 @@ If there are multiple windows, 'other-window' is called."
   :ensure t
   :diminish ace-isearch-mode
   :hook (after-init . global-ace-isearch-mode)
-  :config (setq ace-isearch-jump-delay 0.7))
+  :custom
+  (ace-isearch-jump-based-on-one-char nil)
+  ;;(ace-isearch-jump-delay 0.7)
+  )
 
 (use-package ace-jump-mode
   :ensure t :defer t
