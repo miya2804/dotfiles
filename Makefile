@@ -22,7 +22,15 @@ deploy: ## Create symlink to home directory
 		fi;)
 
 init: ## Run initialization scripts (.dotfiles/etc/init/*.sh)
-	@$(foreach val, $(wildcard ./etc/init/*.sh), bash $(val);)
+	@read -p "Run initialize scripts? (y/n): " reply; \
+	if [ "$$reply" = 'y' ]; then \
+		echo 'Initializing...'"\n"; \
+		$(foreach val, $(wildcard ./etc/init/*.sh), \
+			echo "--- script: $(shell basename $(val)) ---"; \
+			bash $(val);) \
+	else \
+		echo "terminated."; \
+	fi
 
 unlink: ## Remove symlink to home directory
 	@echo 'Remove dotfile symlinks in your home directory...'
@@ -33,9 +41,15 @@ unlink: ## Remove symlink to home directory
 		fi;)
 
 clean: unlink ## Remove the dot files and this repository
-	@echo 'Remove dotfiles repository...'
-# 	check whether dotfiles-dir name is ".dotfiles" and remove.
-	@-if [ "$(shell basename $(DOTDIR_PATH))" = "$(DOTDIR_NAME)" ]; then rm -rf $(DOTDIR_PATH); fi
+	@-read -p "Remove dotfiles repository? (y/n): " reply; \
+	if [ "$$reply" = 'y' ]; then \
+		echo 'Remove dotfiles repository...'; \
+		if [ "$(shell basename $(DOTDIR_PATH))" = "$(DOTDIR_NAME)" ]; then \
+			rm -rf $(DOTDIR_PATH); \
+		fi \
+	else \
+		echo "terminated."; \
+	fi
 
 help: ## Self-documented Makefile
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
