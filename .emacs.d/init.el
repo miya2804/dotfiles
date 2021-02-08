@@ -1093,6 +1093,8 @@ If there are multiple windows, 'other-window' is called."
                         (YaTeX-define-key
                          "e" 'synctex-for-evince-yatex-forward-search))))
 
+(use-package typescript-mode :ensure t :defer t)
+
 (use-package volatile-highlights
   :ensure t
   :diminish volatile-highlights-mode
