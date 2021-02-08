@@ -2,16 +2,16 @@
 
 # *** functions ***
 
-vitalize() {
+function vitalize() {
     return 0
 }
 
-is_exists() {
+function is_exists() {
     which "$1" >/dev/null 2>&1
     return $?
 }
 
-is_debug() {
+function is_debug() {
     if [ "$DEBUG" = 1 ]; then
         return 0
     else
@@ -19,31 +19,31 @@ is_debug() {
     fi
 }
 
-is_interactive_shell() {
+function is_interactive_shell() {
     case $- in
     *i*) return 0;;
       *) return 1;;
     esac
 }
 
-is_tmux_running() {
+function is_tmux_running() {
     [ ! -z "$TMUX" ]
 }
 
-is_ssh_running() {
+function is_ssh_running() {
     [ ! -z "$SSH_CONNECTION" ]
 }
 
-e_newline() { printf "\n"; }
-e_unicode() { printf "\U$1"; }
-e_warning() { printf " \033[31m%s\033[m\n" "$*"; }
-e_arrow()   { printf " \033[37;1m%s\033[m\n" "➜ $*"; }
-e_header()  { printf " \r\033[37;1m%s\033[m\n" "$*"; }
-e_error()   { printf " \033[31m%s\033[m\n" "✖ $*" 1>&2; }
-e_done()    { printf " \033[37;1m%s\033[m...\033[32mOK\033[m\n" "✔ $*"; }
-e_fail()    { printf " \033[37;1m%s\033[m...\033[31mFAILD\033[m\n" "✔ $*"; }
+function e_newline() { printf "\n"; }
+function e_unicode() { printf "\U$1"; }
+function e_warning() { printf " \033[31m%s\033[m\n" "$*"; }
+function e_arrow()   { printf " \033[37;1m%s\033[m\n" "➜ $*"; }
+function e_header()  { printf " \r\033[37;1m%s\033[m\n" "$*"; }
+function e_error()   { printf " \033[31m%s\033[m\n" "✖ $*" 1>&2; }
+function e_done()    { printf " \033[37;1m%s\033[m...\033[32mOK\033[m\n" "✔ $*"; }
+function e_fail()    { printf " \033[37;1m%s\033[m...\033[31mFAILD\033[m\n" "✔ $*"; }
 
-ink() {
+function ink() {
     if [ "$#" -eq 0 -o "$#" -gt 2 ]; then
         echo "Usage: ink <color> <text>"
         echo "Colors:"
@@ -78,7 +78,7 @@ ink() {
     printf "${open}${color}${text}${close}"
 }
 
-logging() {
+function logging() {
     if [ "$#" -eq 0 -o "$#" -gt 2 ]; then
         echo "Usage: ink <fmt> <msg>"
         echo "Formatting Options:"
@@ -115,15 +115,15 @@ logging() {
     timestamp; ink "$color" "$text"; echo
 }
 
-log_fail() { logging WARN "$1"; }
-log_fail() { logging ERROR "$1" 1>&2; }
-log_pass() { logging SUCCESS "$1"; }
-log_info() { logging INFO "$1"; }
-log_echo() { logging TITLE "$1"; }
+function log_fail() { logging WARN "$1"; }
+function log_fail() { logging ERROR "$1" 1>&2; }
+function log_pass() { logging SUCCESS "$1"; }
+function log_info() { logging INFO "$1"; }
+function log_echo() { logging TITLE "$1"; }
 
 # *** dotfiles ***
 
-dotfiles_download() {
+function dotfiles_download() {
     if [ -d "$DOTDIR_PATH" ]; then
         log_fail "${DOTDIR_PATH}: already exists"
         exit 1
@@ -178,7 +178,7 @@ dotfiles_download() {
 	fi
 }
 
-dotfiles_deploy() {
+function dotfiles_deploy() {
     e_newline
     e_header "Deploying dotfiles..."
 
@@ -206,7 +206,7 @@ dotfiles_deploy() {
         e_newline && e_done "Deploy"
 }
 
-dotfiles_initialize() {
+function dotfiles_initialize() {
     if [ "$1" = "init" ]; then
         e_newline
         e_header "Initializing dotfiles..."
@@ -229,7 +229,7 @@ dotfiles_initialize() {
     fi
 }
 
-dotfiles_install() {
+function dotfiles_install() {
     # 1. Download the repository
     # ==> downloading
     #
