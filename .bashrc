@@ -8,7 +8,7 @@ case $- in
       *) return;;
 esac
 
-[ -x /usr/bin/clear ] && /usr/bin/clear
+#[ -x /usr/bin/clear ] && /usr/bin/clear
 
 if [ -z "$DOTDIR_PATH" ]; then
     echo '$DOTDIR_PATH not set.' 1>&2
