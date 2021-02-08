@@ -6,7 +6,7 @@ DOTFILES    := $(filter-out $(EXCLUSIONS), $(CANDIDATES))
 
 .DEFAULT_GOAL := help
 
-.PHONY: list deploy clean help
+.PHONY: list deploy init unlink clean help
 
 list: ## Show dotfiles link target to your home of this repo
 	@$(foreach val, $(DOTFILES), /bin/ls -dF $(val);)
