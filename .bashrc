@@ -33,6 +33,7 @@ function new_line_prompt {
         printf '\n';
     fi
 }
+
 function eval_prompt_commands() {
     export EXIT_STATUS="$?"
     local func
