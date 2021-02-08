@@ -4,7 +4,7 @@
 bash -c "$(curl -L https://raw.githubusercontent.com/mmugi/dotfiles/master/etc/vital.sh)"
 ```
 
-If you want to run the initial script,
+If you want to run the initialization script,
 run it with the initial option.
 
 ``` bash
