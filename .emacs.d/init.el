@@ -11,7 +11,9 @@
 
 (defconst emacs-start-time (current-time))
 (message (format "[Startup time: %s]" (format-time-string "%Y/%m/%d %H:%M:%S")))
-(eval-when-compile (require 'cl))
+(eval-when-compile
+  (require 'cl)
+  (require 'cl-lib))
 (when init-file-debug
   (setq debug-on-error t)
   (setq force-load-messages t))
@@ -19,7 +21,7 @@
 
 
 ;;;; -----------------------------------
-;;;; Functions and Macros
+;;;; Functions
 
 ;; with-eval-after-load (Emacs 24.4 以上)
 (unless (fboundp 'with-eval-after-load)
@@ -74,13 +76,19 @@
                (message "Quit")
                (throw 'end-flag t)))))))
 
+(defvar other-window-or-split-hook nil)
 (defun other-window-or-split ()
-  "If there is only one window, the 'split-window-horizontally' is called.
-If there are multiple windows, the 'other-window' is called."
+  "Call `other-window' or window split command.
+If there is only one window open, `split-window-right' or
+`split-window-below' will be called, depending on the size of frame.
+If there are multiple windows, 'other-window' is called."
   (interactive)
-  (when (one-window-p)
-    (split-window-horizontally))
-  (other-window 1))
+  (if (one-window-p)
+      (if (>= (* (frame-height) 2) (frame-width))
+          (split-window-below)
+        (split-window-right))
+    (other-window 1))
+  (run-hooks 'other-window-or-split-hook))
 
 ;; trailing-whitespace
 (defun enable-show-trailing-whitespace  ()
@@ -107,6 +115,10 @@ If there are multiple windows, the 'other-window' is called."
 ;;;; -----------------------------------
 ;;;; Environments
 
+;;;;; load-path
+(eval-and-compile
+  (setq load-path (cons "~/.emacs.d/elisp" load-path)))
+
 ;;;;; network
 (eval-and-compile
   (defvar gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
@@ -127,10 +139,6 @@ If there are multiple windows, the 'other-window' is called."
     (package-initialize)
     ;;(package-refresh-contents)
     (setq package-enable-at-startup nil)))
-
-;;;;; load-path
-(eval-and-compile
-  (setq load-path (cons "~/.emacs.d/elisp" load-path)))
 
 ;;;;; use-package
 
@@ -172,12 +180,10 @@ If there are multiple windows, the 'other-window' is called."
 
 (use-package use-package :ensure t :defer t) ; 形式的宣言
 
-;;;;; bind-key
-
+;; bind-key
 ;; bind-key* は、emulation-mode-map-alists を利用することにより、
 ;; minor-mode よりも優先させたいキーのキーマップを定義できる。
 ;; bind-key.el がない場合は普通のbind-key として振る舞う。
-
 (use-package bind-key :ensure t :defer t)
 (eval-and-compile
   (unless (require 'bind-key nil t)
@@ -185,14 +191,12 @@ If there are multiple windows, the 'other-window' is called."
       (define-key (or keymap global-map) (kbd key) cmd))
     (defun bind-key* (key cmd) (global-set-key (kbd key) cmd))))
 
-;;;;; exec-path
 (use-package exec-path-from-shell
   :unless (eq system-type 'windows-nt)
   :ensure t :demand t
   :config
   (exec-path-from-shell-initialize))
 
-;;;;; auto-compile
 (use-package auto-async-byte-compile
   :ensure t :defer t
   :hook (emacs-lisp-mode . enable-auto-async-byte-compile-mode)
@@ -206,14 +210,39 @@ If there are multiple windows, the 'other-window' is called."
 
 
 ;;;; -----------------------------------
+;;;; Libraries
+
+(require 'color)
+(use-package diminish :ensure t :demand t)
+(use-package popup :ensure t :defer t)
+
+
+
+;;;; -----------------------------------
 ;;;; General settings
+
+(eval-and-compile
+  (defvar shortcut-file-path "~/Dropbox/document/note/note.md")
+
+  ;; backup and auto-save
+  (defvar backup-and-auto-save-dir-dropbox
+    (expand-file-name "~/Dropbox/backup/emacs/"))
+  (defvar backup-and-auto-save-dir-local
+    (expand-file-name "~/.emacs.d/.backup/"))
+
+  ;; org
+  (defvar my-org-dir "~/Dropbox/document/org")
+  ;; default is "my-org-dir/agenda"
+  ;; if you want to add the agenda file,
+  ;; please add it to the list below.
+  (defvar my-org-agenda-files '()))
 
 (setq-default tab-width 4 indent-tabs-mode nil)
 
 (setq scroll-conservatively 30)
 (setq scroll-margin 5)
 (setq custom-file (locate-user-emacs-file "elisp/custom.el"))
-(setq default-directory "~/")
+(setq select-enable-clipboard t)
 
 ;; terminal起動時のマウス設定
 (unless (display-graphic-p) (xterm-mouse-mode t))
@@ -225,13 +254,18 @@ If there are multiple windows, the 'other-window' is called."
 ;;(windmove-default-keybindings 'meta)    ; use alt+arrow
 
 ;;;;; my-keybinds
+(bind-key "C-c |" 'split-window-right)
+(bind-key "C-c -" 'split-window-below)
+(bind-key "C-c k" 'delete-window)
 (bind-key "C-o" 'other-window-or-split)
+(bind-key "C-c o" 'other-window-or-split)
+(bind-key "<f9>" 'other-window-or-split)
 (bind-key "C-i" 'indent-for-tab-command)
 (bind-key "<zenkaku-hankaku>" 'toggle-input-method)
 (bind-key "C-c n"
           '(lambda ()
              (interactive)
-             (shortcut-file "~/Dropbox/document/notes/note.md")))
+             (shortcut-file shortcut-file-path)))
 
 ;; "C-x C-c" -> exit
 (global-unset-key (kbd "C-x C-c"))
@@ -243,11 +277,6 @@ If there are multiple windows, the 'other-window' is called."
 
 ;;;;; backup, auto-save, lock
 (eval-and-compile
-  (defvar backup-and-auto-save-dir-dropbox
-    (expand-file-name "~/Dropbox/backup/emacs/"))
-  (defvar backup-and-auto-save-dir-local
-    (expand-file-name "~/.emacs.d/.backup/"))
-
   ;; backup (xxx~)
 
   ;; 保存するたびにバックアップを作る設定
@@ -312,7 +341,6 @@ If there are multiple windows, the 'other-window' is called."
 
 
 
-
 ;;;; -----------------------------------
 ;;;; Appearance settings
 
@@ -336,14 +364,6 @@ If there are multiple windows, the 'other-window' is called."
 
 (setq-default show-trailing-whitespace t)
 (add-hook 'dashboard-mode-hook 'disable-show-trailing-whitespace)
-
-
-
-;;;; -----------------------------------
-;;;; Libraries
-
-(use-package diminish :ensure t :demand t)
-;;(use-package use-package-ensure-system-package :ensure t :demand t)
 
 
 
@@ -432,6 +452,7 @@ If there are multiple windows, the 'other-window' is called."
 
 ;;;;; org
 (defvar org-directory)
+(defvar org-agenda-files)
 (declare-function org-buffer-list "org")
 
 ;; cf. https://www.emacswiki.org/emacs/OrgMode#toc21
@@ -446,15 +467,16 @@ If there are multiple windows, the 'other-window' is called."
 
 (push '("\\.org\\'" . org-mode) auto-mode-alist)
 
-(if (file-directory-p "~/Dropbox/document/org")
+(if (file-directory-p my-org-dir)
     (progn
-      (setq org-directory "~/Dropbox/document/org")
-      (defvar org-agenda-files
-                    '("~/Dropbox/document/org/agenda")))
+      (setq org-directory my-org-dir)
+      (setq org-agenda-files
+                    (list (concat my-org-dir "/agenda"))))
   (progn
     (setq org-directory "~/.emacs.d/.org")
     (setq org-agenda-files
                   '("~/.emacs.d/.org"))))
+(setq org-agenda-files (append org-agenda-files my-org-agenda-files))
 
 (defvar org-default-notes-file
               (concat org-directory "/notes.org"))
@@ -484,10 +506,10 @@ If there are multiple windows, the 'other-window' is called."
 
 ;;;;; outline
 (bind-key "<backtab>" 'outline-toggle-children)
-(add-hook 'emacs-lisp-mode-hook
-          '(lambda ()
-             (outline-minor-mode t)
-             (outline-hide-body)))
+;; (add-hook 'emacs-lisp-mode-hook
+;;           '(lambda ()
+;;              (outline-minor-mode t)
+;;              (outline-hide-body)))
 
 ;;;;; paren
 (defvar show-paren-style 'mixed)
@@ -513,7 +535,10 @@ If there are multiple windows, the 'other-window' is called."
   :ensure t
   :diminish ace-isearch-mode
   :hook (after-init . global-ace-isearch-mode)
-  :config (setq ace-isearch-jump-delay 0.7))
+  :custom
+  (ace-isearch-jump-based-on-one-char nil)
+  ;;(ace-isearch-jump-delay 0.7)
+  )
 
 (use-package ace-jump-mode
   :ensure t :defer t
@@ -605,7 +630,7 @@ If there are multiple windows, the 'other-window' is called."
 
   ;; dashboard items
   (dashboard-items '((recents  . 15)
-                     ;;(bookmarks . 5)
+                     (bookmarks . 5)
                      (agenda . 5)))
 
   ;; icon
@@ -664,7 +689,7 @@ If there are multiple windows, the 'other-window' is called."
   (doom-modeline-major-mode-icon t)
   (doom-modeline-major-mode-color-icon t)
   (doom-modeline-buffer-state-icon t)
-  (doom-modeline-buffer-modification-icon t) ; respect doom-modeline-buffer-state-icon
+  (doom-modeline-buffer-modification-icon nil) ; respect doom-modeline-buffer-state-icon
   (doom-modeline-unicode-fallback t)
   ;;(doom-modeline-persp-icon t)
   ;;(doom-modeline-modal-icon t)
@@ -688,6 +713,9 @@ If there are multiple windows, the 'other-window' is called."
   ;;(elscreen-display-tab nil)
   (elscreen-tab-display-kill-screen nil)
   (elscreen-tab-display-control nil)
+  :custom-face
+  (elscreen-tab-background-face ((t (:background "aquamarine4"))))
+  (elscreen-tab-other-screen-face ((t (:background "aquamarine4"))))
   :config
   (elscreen-start)
   (elscreen-create) ; create scratch tab
@@ -776,6 +804,7 @@ If there are multiple windows, the 'other-window' is called."
 
 (use-package helm-flycheck
   :ensure t
+  :after helm
   :bind (:map flycheck-mode-map
               ("C-c e" . 'helm-flycheck)))
 
@@ -788,8 +817,13 @@ If there are multiple windows, the 'other-window' is called."
               ("C-s" . helm-next-line))
   :custom (helm-swoop-move-to-line-cycle nil))
 
+(use-package hide-mode-line
+  :ensure t
+  :hook ((neotree-mode) . hide-mode-line-mode))
+
 (use-package highlight-indent-guides
   :ensure t
+  :when (display-graphic-p)
   :diminish highlight-indent-guides-mode
   :hook ((prog-mode . highlight-indent-guides-mode)
          (yaml-mode . highlight-indent-guides-mode))
@@ -800,13 +834,21 @@ If there are multiple windows, the 'other-window' is called."
    (if (display-graphic-p) 'bitmap 'character))
   (highlight-indent-guides-suppress-auto-error t))
 
+(use-package indent-guide
+  :ensure t
+  :unless (display-graphic-p)
+  :hook ((prog-mode . indent-guide-global-mode)
+         (yaml-mode . indent-guide-global-mode))
+  :custom (indent-guide-recursive t)
+  :custom-face (indent-guide-face ((t (:foreground "brightwhite")))))
 
 (use-package hydra
   :ensure t :defer nil :no-require t
   :functions (winner-redo winner-undo
-                          git-gutter:previous-hunk git-gutter:next-hunk
-                          git-gutter:stage-hunk git-gutter:revert-hunk
-                          git-gutter:popup-hunk)
+              git-gutter:previous-hunk git-gutter:next-hunk
+              git-gutter:stage-hunk git-gutter:revert-hunk
+              git-gutter:popup-hunk
+              zoom-mode)
   :config
   (defhydra hydra-git-gutter (:hint nil)
     "
@@ -831,6 +873,7 @@ If there are multiple windows, the 'other-window' is called."
            manage   | [_0_]: delete [_1_]: delete-other [_h_]: redo [_l_]: undo
     buffer          | [_b_]: menu [_k_]: kill
     window & buffer | [_4_]: kill
+    other           | [_z_]: zoom-mode
     "
     ;; frame
     ("n" make-frame)
@@ -848,7 +891,9 @@ If there are multiple windows, the 'other-window' is called."
     ("b" buffer-menu)
     ("k" kill-buffer)
     ;; window & buffer
-    ("4" kill-buffer-and-window))
+    ("4" kill-buffer-and-window)
+    ;; other
+    ("z" zoom-mode))
 
   (bind-key "C-c g" 'hydra-git-gutter/body)
   (bind-key "C-c x" 'hydra-window-and-buffer-manager/body))
@@ -936,22 +981,42 @@ If there are multiple windows, the 'other-window' is called."
 
 ;; require external package -> "emacs-mozc-bin"
 (use-package mozc
-  :preface
-  (defvar mozc-emacs-helper (executable-find "mozc_emacs_helper"))
-  (unless mozc-emacs-helper
-    (message "mozc: `mozc_emacs_helmper' is unavailable! Please install it via `sudo apt install emacs-mozc-bin' if possible."))
-  :if mozc-emacs-helper
+  :if (executable-find "mozc_emacs_helper")
   :ensure t :defer t
-  :custom (default-input-method "japanese-mozc"))
+  :custom
+  (default-input-method "japanese-mozc")
+  (mozc-leim-title "かな")
+  :config
+  (with-eval-after-load 'helm
+    (bind-key "M-x" 'helm-M-x mozc-mode-map)
+    ;;helm でミニバッファの入力時に IME の状態を継承しない
+    (setq helm-inherit-input-method nil)
+    ;; helm の検索パターンを mozc を使って入力した場合にエラーが発生することがあるのを改善する
+    (advice-add 'mozc-helper-process-recv-response
+                :around (lambda (orig-fun &rest args)
+                          (cl-loop for return-value = (apply orig-fun args)
+                                   if return-value return it)))
+    ;; helm で候補のアクションを表示する際に IME を OFF にする
+    (advice-add 'helm-select-action
+                :before (lambda ()
+                          (deactivate-input-method)))))
+
+(use-package mozc-popup
+  :ensure t
+  :after mozc
+  :custom (mozc-candidate-style 'popup))
 
 (use-package neotree
+  ;; memo
+  ;; neotree-find (カレントバッファのファイルをneotree上で表示)
   :ensure t
   :bind (("C-q" . neotree-toggle)
          :map neotree-mode-map
               ("a" . neotree-hidden-file-toggle)
-              ("<left>" . neotree-select-up-node)
-              ("<right>" . neotree-change-root))
+              ("C-b" . neotree-select-up-node)
+              ("C-f" . neotree-change-root))
   :custom
+  (neo-window-width 35)
   (neo-theme (if (display-graphic-p) 'nerd2 'arrow))
   (neo-show-hidden-files t)
   (neo-smart-open t))
@@ -999,7 +1064,13 @@ If there are multiple windows, the 'other-window' is called."
 
 (use-package rainbow-delimiters
   :ensure t
-  :hook (prog-mode . rainbow-delimiters-mode))
+  :hook (prog-mode . rainbow-delimiters-mode)
+  :config
+  (cl-loop
+   for index from 1 to rainbow-delimiters-max-face-count
+   do
+   (let ((face (intern (format "rainbow-delimiters-depth-%d-face" index))))
+     (cl-callf color-saturate-name (face-foreground face) 30))))
 
 (use-package recentf-ext :ensure t :defer nil)
 
@@ -1022,9 +1093,8 @@ If there are multiple windows, the 'other-window' is called."
 (use-package swap-buffers
   :ensure t
   :bind (("C-M-o" . swap-buffers-keep-focus)
-         ("C-c o" . swap-buffers-keep-focus)
-         ("C-M-O" . swap-buffers)
-         ("C-c O" . swap-buffers))
+         ("C-M-O" . swap-buffers))
+
   :config
   (defun swap-buffers-keep-focus ()
     (interactive)
@@ -1039,6 +1109,8 @@ If there are multiple windows, the 'other-window' is called."
   :hook (yatex-mode . (lambda ()        ; C-c C-e ; forward-search
                         (YaTeX-define-key
                          "e" 'synctex-for-evince-yatex-forward-search))))
+
+(use-package typescript-mode :ensure t :defer t)
 
 (use-package volatile-highlights
   :ensure t
@@ -1101,7 +1173,18 @@ If there are multiple windows, the 'other-window' is called."
 
 (use-package zoom
   :ensure t
-  :config (custom-set-variables '(zoom-mode t)))
+  :config
+  (defun auto-toggle-zoom ()
+    (defvar bound-width 120)
+    (if (>= (frame-width) bound-width)
+        (when (eq zoom-mode nil)
+          (custom-set-variables '(zoom-mode t))
+          (message "zoom-mode enabled."))
+      (when (eq zoom-mode t)
+        (custom-set-variables '(zoom-mode nil))
+        (message "zoom-mode disabled."))))
+  (add-hook 'other-window-or-split-hook 'auto-toggle-zoom)
+  (custom-set-variables '(zoom-mode t)))
 
 
 
