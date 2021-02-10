@@ -239,8 +239,11 @@ If there are multiple windows, 'other-window' is called."
 
 (setq-default tab-width 4 indent-tabs-mode nil)
 (setq default-directory "~/")
-(setq scroll-conservatively 30)
+(setq scroll-conservatively 1)
 (setq scroll-margin 5)
+(setq mouse-wheel-scroll-amount
+      '(1
+        ((shift) . 5)))
 (setq custom-file (locate-user-emacs-file "elisp/custom.el"))
 (setq select-enable-clipboard t)
 
