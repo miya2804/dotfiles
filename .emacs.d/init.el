@@ -238,7 +238,7 @@ If there are multiple windows, 'other-window' is called."
   (defvar my-org-agenda-files '()))
 
 (setq-default tab-width 4 indent-tabs-mode nil)
-
+(setq default-directory "~/")
 (setq scroll-conservatively 30)
 (setq scroll-margin 5)
 (setq custom-file (locate-user-emacs-file "elisp/custom.el"))
