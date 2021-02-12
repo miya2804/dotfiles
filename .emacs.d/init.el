@@ -1206,4 +1206,8 @@ If there are multiple windows, 'other-window' is called."
 
 ;; (provide 'init)
 
+;; Local Variables:
+;; byte-compile-warnings: (not cl-functions obsolete)
+;; End:
+
 ;;; init.el ends here
