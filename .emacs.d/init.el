@@ -11,9 +11,7 @@
 
 (defconst emacs-start-time (current-time))
 (message (format "[Startup time: %s]" (format-time-string "%Y/%m/%d %H:%M:%S")))
-(eval-when-compile
-  (require 'cl)
-  (require 'cl-lib))
+(eval-when-compile (require 'cl-lib))
 (when init-file-debug
   (setq debug-on-error t)
   (setq force-load-messages t))
@@ -99,7 +97,7 @@ If there are multiple windows, 'other-window' is called."
   (interactive) (setq show-trailing-whitespace nil))
 (defun toggle-show-trailing-whitespace ()
   "Toggle display of trailing whitespace."
-  (interactive) (callf null show-trailing-whitespace))
+  (interactive) (cl-callf null show-trailing-whitespace))
 
 (defun shortcut-file (file)
   "Show a file FILE on the current buffer shortcut function."
