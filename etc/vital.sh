@@ -2,7 +2,7 @@
 
 # *** functions ***
 
-function vitalize() {
+function is_vitalize() {
     return 0
 }
 

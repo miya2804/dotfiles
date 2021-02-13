@@ -17,7 +17,7 @@ fi
 
 # load vital utilities.
 source "$DOTDIR_PATH"/etc/vital.sh 2>/dev/null
-if ! vitalize 2>/dev/null; then
+if ! is_vitalize 2>/dev/null; then
     echo 'Cannot vitalize.' 1>&2
     return 1
 fi
