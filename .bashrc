@@ -48,7 +48,11 @@ function eval_prompt_commands() {
 function tmux_autostart() {
 
     # if not inside a tmux session, and if no session is started,
-    # start a new session
+    # start a new session.
+    #
+    # Please set env
+    #   $TMUX_AUTOSTART
+    #   $TMUX_AUTO_NEW_SESSION
 
     if ! is_exists 'tmux'; then
         return 0
@@ -95,7 +99,7 @@ function tmux_autostart() {
                 echo 'TMUX: Created a new session automatically.'
                 tmux new-session
             else
-                echo 'TMUX: Automatically new session create is disabled.'
+                echo 'TMUX is available.'
             fi
         fi
     else
@@ -266,12 +270,11 @@ function bashrc_startup() {
     _alias_setup
     _shopt_setup
 
-    tmux_autostart
-
-    echo
     echo "BASH ${BASH_VERSION%.*} - DISPLAY on $DISPLAY"
     echo "$(date '+%Y-%m-%d %H:%M:%S') $HOSTNAME:$$"
     echo
+
+    tmux_autostart
 }
 
 # *** settings ***
