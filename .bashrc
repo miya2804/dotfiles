@@ -59,16 +59,6 @@ function tmux_autostart() {
     fi
 
     if [ -z "$TMUX_AUTOSTART" ]; then
-        TMUX_AUTOSTART=no
-    fi
-    export TMUX_AUTOSTART
-
-    if [ -z "$TMUX_AUTO_NEW_SESSION" ]; then
-        TMUX_AUTO_NEW_SESSION=no
-    fi
-    export TMUX_AUTO_NEW_SESSION
-
-    if [ ! "$TMUX_AUTOSTART" = yes ]; then
         return 0
     fi
 
@@ -95,7 +85,7 @@ function tmux_autostart() {
                 elif [[ "$REPLY" =~ ^[Nn][Oo]*$ ]]; then
                     return 0
                 fi
-            elif [ "$TMUX_AUTO_NEW_SESSION" == yes ]; then
+            elif [ -n "$TMUX_AUTO_NEW_SESSION" ]; then
                 echo 'TMUX: Created a new session automatically.'
                 tmux new-session
             else
