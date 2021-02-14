@@ -137,12 +137,12 @@ function _prompt_setup() {
 
     local prompt_command_name='eval_prompt_commands'
 
-    PROMPT_COMMAND="$prompt_command_name"
     if [[ ! "$PROMPT_COMMAND" =~ .*${prompt_command_name}.* ]]; then
         PROMPT_COMMAND_DEFAULT="$PROMPT_COMMAND"
     fi
     export PROMPT_COMMAND_DEFAULT
     export PROMPT_COMMAND_ADDITIONAL='new_line_prompt;'
+    PROMPT_COMMAND="$prompt_command_name"
 
     # --- colors ---
 
