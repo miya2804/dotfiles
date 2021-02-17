@@ -27,7 +27,7 @@ export FIRST_PROMPT=1
 # *** functions ***
 
 function new_line_prompt {
-    if [ -z "$FIRST_PROMPT" ] || [ "${FIRST_PROMPT}" = 1 ]; then
+    if [ -z "$FIRST_PROMPT" ] || [ "$FIRST_PROMPT" = 1 ]; then
         FIRST_PROMPT=0
     else
         printf '\n';
