@@ -50,34 +50,39 @@ function tmux_autostart() {
     # if not inside a tmux session, and if no session is started,
     # start a new session.
     #
-    # Please set env
-    #   $TMUX_AUTOSTART
-    #   $TMUX_AUTO_NEW_SESSION
+    # Environment variables
+    #   $TMUX_AUTOSTART=1
+    #
+    # set below variable if you don't want to create a new session
+    # disable automatically create new session automatically
+    #   $TMUX_DISABLE_AUTO_NEW_SESSION=1
 
     if ! is_exists 'tmux'; then
-        return 0
+        echo 'tmux_autostart: tmux is not exists' 1>&2
+        return 1
     fi
 
-    if [ -z "$TMUX_AUTOSTART" ]; then
+    if [ ! "$TMUX_AUTOSTART" = 1 ]; then
+        echo 'tmux_autostart: not enabled (please set $TMUX_AUTOSTART)'
         return 0
     fi
 
     if ! is_tmux_running; then
         if is_interactive_shell && ! is_ssh_running; then
             if tmux has-session >/dev/null 2>&1 && tmux list-sessions | grep -qE '.*]$'; then
-                echo 'TMUX: Detached session exists.'
+                echo 'tmux_autostart: detached session exists'
                 echo
                 tmux list-sessions
                 echo
                 echo -n 'Attach? (Y/n/num): '; read
                 if [[ "$REPLY" =~ ^[Yy][Ee]*[Ss]*$ ]] || [[ "$REPLY" == '' ]]; then
-                    echo 'tmux attaching session...'
+                    echo 'tmux_autostart: tmux attaching session...'
                     tmux attach-session
                     if [ $? -eq 0 ]; then
                         return 0
                     fi
                 elif [[ "$REPLY" =~ ^[0-9]+$ ]]; then
-                    echo 'tmux attaching session...'
+                    echo 'tmux_autostart: tmux attaching session...'
                     tmux attach -t "$REPLY"
                     if [ $? -eq 0 ]; then
                         return 0
@@ -85,16 +90,14 @@ function tmux_autostart() {
                 elif [[ "$REPLY" =~ ^[Nn][Oo]*$ ]]; then
                     return 0
                 fi
-            elif [ -n "$TMUX_AUTO_NEW_SESSION" ]; then
-                echo 'TMUX: Created a new session automatically.'
+            elif [ ! "$TMUX_DISABLE_AUTO_NEW_SESSION" = 1 ]; then
+                echo 'tmux_autostart: created a new session automatically'
                 tmux new-session
-            else
-                echo 'TMUX is available.'
             fi
         fi
     else
         # Shell on tmux
-        echo -n "Welcome to TMUX $(tmux -V | awk '{print $2}') - Session: "
+        echo -n "TMUX $(tmux -V | awk '{print $2}') - Session: "
         tmux display-message -p '#S'
         if [ -e "$HOME/.dotfiles/etc/ascii-art/tmux.txt" ]; then
             : #cat "$HOME/.dotfiles/etc/ascii-art/tmux.txt"
@@ -260,11 +263,12 @@ function bashrc_startup() {
     _alias_setup
     _shopt_setup
 
+    echo "ENTERED >> $(date '+%Y-%m-%d %H:%M:%S') $HOSTNAME:$$"
     echo "BASH ${BASH_VERSION%.*} - DISPLAY on $DISPLAY"
-    echo "$(date '+%Y-%m-%d %H:%M:%S') $HOSTNAME:$$"
+    if is_exists 'tmux'; then
+        tmux_autostart
+    fi
     echo
-
-    tmux_autostart
 }
 
 # *** settings ***
