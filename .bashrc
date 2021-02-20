@@ -17,7 +17,7 @@ fi
 
 # load vital utilities.
 source "$DOTDIR_PATH"/etc/vital.sh 2>/dev/null
-if ! vitalize 2>/dev/null; then
+if ! is_vitalize 2>/dev/null; then
     echo 'Cannot vitalize.' 1>&2
     return 1
 fi
@@ -27,7 +27,7 @@ export FIRST_PROMPT=1
 # *** functions ***
 
 function new_line_prompt {
-    if [ -z "$FIRST_PROMPT" ] || [ "${FIRST_PROMPT}" = 1 ]; then
+    if [ -z "$FIRST_PROMPT" ] || [ "$FIRST_PROMPT" = 1 ]; then
         FIRST_PROMPT=0
     else
         printf '\n';
@@ -48,42 +48,41 @@ function eval_prompt_commands() {
 function tmux_autostart() {
 
     # if not inside a tmux session, and if no session is started,
-    # start a new session
+    # start a new session.
+    #
+    # Environment variables
+    #   $TMUX_AUTOSTART=1
+    #
+    # set below variable if you don't want to create a new session
+    # disable automatically create new session automatically
+    #   $TMUX_DISABLE_AUTO_NEW_SESSION=1
 
     if ! is_exists 'tmux'; then
-        return 0
+        echo 'tmux_autostart: tmux is not exists' 1>&2
+        return 1
     fi
 
-    if [ -z "$TMUX_AUTOSTART" ]; then
-        TMUX_AUTOSTART=no
-    fi
-    export TMUX_AUTOSTART
-
-    if [ -z "$TMUX_AUTO_NEW_SESSION" ]; then
-        TMUX_AUTO_NEW_SESSION=no
-    fi
-    export TMUX_AUTO_NEW_SESSION
-
-    if [ ! "$TMUX_AUTOSTART" = yes ]; then
+    if [ ! "$TMUX_AUTOSTART" = 1 ]; then
+        echo 'tmux_autostart: not enabled (please set $TMUX_AUTOSTART)'
         return 0
     fi
 
     if ! is_tmux_running; then
         if is_interactive_shell && ! is_ssh_running; then
             if tmux has-session >/dev/null 2>&1 && tmux list-sessions | grep -qE '.*]$'; then
-                echo 'TMUX: Detached session exists.'
+                echo 'tmux_autostart: detached session exists'
                 echo
                 tmux list-sessions
                 echo
                 echo -n 'Attach? (Y/n/num): '; read
                 if [[ "$REPLY" =~ ^[Yy][Ee]*[Ss]*$ ]] || [[ "$REPLY" == '' ]]; then
-                    echo 'tmux attaching session...'
+                    echo 'tmux_autostart: tmux attaching session...'
                     tmux attach-session
                     if [ $? -eq 0 ]; then
                         return 0
                     fi
                 elif [[ "$REPLY" =~ ^[0-9]+$ ]]; then
-                    echo 'tmux attaching session...'
+                    echo 'tmux_autostart: tmux attaching session...'
                     tmux attach -t "$REPLY"
                     if [ $? -eq 0 ]; then
                         return 0
@@ -91,16 +90,14 @@ function tmux_autostart() {
                 elif [[ "$REPLY" =~ ^[Nn][Oo]*$ ]]; then
                     return 0
                 fi
-            elif [ "$TMUX_AUTO_NEW_SESSION" == yes ]; then
-                echo 'TMUX: Created a new session automatically.'
+            elif [ ! "$TMUX_DISABLE_AUTO_NEW_SESSION" = 1 ]; then
+                echo 'tmux_autostart: created a new session automatically'
                 tmux new-session
-            else
-                echo 'TMUX: Automatically new session create is disabled.'
             fi
         fi
     else
         # Shell on tmux
-        echo -n "Welcome to TMUX $(tmux -V | awk '{print $2}') - Session: "
+        echo -n "TMUX $(tmux -V | awk '{print $2}') - Session: "
         tmux display-message -p '#S'
         if [ -e "$HOME/.dotfiles/etc/ascii-art/tmux.txt" ]; then
             : #cat "$HOME/.dotfiles/etc/ascii-art/tmux.txt"
@@ -143,12 +140,12 @@ function _prompt_setup() {
 
     local prompt_command_name='eval_prompt_commands'
 
-    PROMPT_COMMAND="$prompt_command_name"
     if [[ ! "$PROMPT_COMMAND" =~ .*${prompt_command_name}.* ]]; then
         PROMPT_COMMAND_DEFAULT="$PROMPT_COMMAND"
     fi
     export PROMPT_COMMAND_DEFAULT
     export PROMPT_COMMAND_ADDITIONAL='new_line_prompt;'
+    PROMPT_COMMAND="$prompt_command_name"
 
     # --- colors ---
 
@@ -172,6 +169,7 @@ function _prompt_setup() {
     local symbol_prompt
     local git_prompt
     local host_prompt
+    local decoration_prompt
     local prefix_prompt='${debian_chroot:+($debian_chroot)}'
 
     if [ ${EUID:-${UID}} = 0 ]; then
@@ -195,7 +193,7 @@ function _prompt_setup() {
 
     #color_prompt=no
     if [ "$color_prompt" = yes ]; then
-        PS1="${prefix_prompt}"'$(e_unicode 1F340)'" \u${host_prompt} \[${blue}\]\w \[${cyan}\]${git_prompt}\[${reset}\]\n${symbol_prompt}\[${reset}\]"
+        PS1="${prefix_prompt}${decoration_prompt}\u${host_prompt} \[${blue}\]\w \[${cyan}\]${git_prompt}\[${reset}\]\n${symbol_prompt}\[${reset}\]"
     else
         PS1="${prefix_prompt}[ \u${host_prompt} \w ${git_prompt}\n${symbol_prompt}"
     fi
@@ -234,6 +232,8 @@ function _alias_setup() {
     alias mv='mv -i'
     alias cp='cp -i'
     alias open='xdg-open'
+    alias df='df -h'
+    alias du='du -h'
     # Add an "alert" alias for long running commands.  Use like so:
     #   sleep 10; alert
     #alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
@@ -266,11 +266,11 @@ function bashrc_startup() {
     _alias_setup
     _shopt_setup
 
-    tmux_autostart
-
-    echo
+    echo "ENTERED >> $(date '+%Y-%m-%d %H:%M:%S') $HOSTNAME:$$"
     echo "BASH ${BASH_VERSION%.*} - DISPLAY on $DISPLAY"
-    echo "$(date '+%Y-%m-%d %H:%M:%S') $HOSTNAME:$$"
+    if is_exists 'tmux'; then
+        tmux_autostart
+    fi
     echo
 }
 

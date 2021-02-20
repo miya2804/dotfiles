@@ -2,7 +2,7 @@
 
 # *** functions ***
 
-function vitalize() {
+function is_vitalize() {
     return 0
 }
 
@@ -293,7 +293,7 @@ else
     # -> bash -c "$(cat a.sh)"
     if [ -n "${BASH_EXECUTION_STRING:-}" ] || [ -p /dev/stdin ]; then
         # if already vitalized, skip to run dotfiles_install
-        if [ "${VITALIZED:=0}" = 1 ]; then
+        if [ -n "$VITALIZED" ]; then
             exit
         fi
 
