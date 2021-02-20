@@ -169,6 +169,7 @@ function _prompt_setup() {
     local symbol_prompt
     local git_prompt
     local host_prompt
+    local decoration_prompt='$(e_unicode 1F340) '
     local prefix_prompt='${debian_chroot:+($debian_chroot)}'
 
     if [ ${EUID:-${UID}} = 0 ]; then
@@ -192,7 +193,7 @@ function _prompt_setup() {
 
     #color_prompt=no
     if [ "$color_prompt" = yes ]; then
-        PS1="${prefix_prompt}"'$(e_unicode 1F340)'" \u${host_prompt} \[${blue}\]\w \[${cyan}\]${git_prompt}\[${reset}\]\n${symbol_prompt}\[${reset}\]"
+        PS1="${prefix_prompt}${decoration_prompt}\u${host_prompt} \[${blue}\]\w \[${cyan}\]${git_prompt}\[${reset}\]\n${symbol_prompt}\[${reset}\]"
     else
         PS1="${prefix_prompt}[ \u${host_prompt} \w ${git_prompt}\n${symbol_prompt}"
     fi
