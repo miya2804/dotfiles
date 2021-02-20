@@ -169,7 +169,7 @@ function _prompt_setup() {
     local symbol_prompt
     local git_prompt
     local host_prompt
-    local decoration_prompt='$(e_unicode 1F340) '
+    local decoration_prompt
     local prefix_prompt='${debian_chroot:+($debian_chroot)}'
 
     if [ ${EUID:-${UID}} = 0 ]; then
