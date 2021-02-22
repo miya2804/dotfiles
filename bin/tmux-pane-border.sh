@@ -34,7 +34,7 @@ if [[ $1 = "ssh" ]]; then
       fi
     done
   fi
-  ssh_hostname=" ssh:$user@$host "
+  ssh_hostname="ssh:$user@$host"
   git_info=""
   directory=""
 else
@@ -58,4 +58,4 @@ else
 fi
 
 #echo "#[bg=colour037,fg=black]$ssh_hostname#[default]#[bg=black,fg=colour014]$directory#[default]$git_info"
-echo "#[bg=colour249,fg=black]$ssh_hostname#[default]"
+echo "$ssh_hostname"
