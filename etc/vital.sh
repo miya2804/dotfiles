@@ -127,6 +127,9 @@ function platform_detect() {
         *GNU/Linux*)
             PLATFORM='linux'
             ;;
+        *Msys*)
+            PLATFORM='msys'
+            ;;
         *)
             PLATFORM='unknown'
             ;;
