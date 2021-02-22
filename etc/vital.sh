@@ -121,6 +121,19 @@ function log_pass() { logging SUCCESS "$1"; }
 function log_info() { logging INFO "$1"; }
 function log_echo() { logging TITLE "$1"; }
 
+function platform_detect() {
+    unamestr="$(uname -o)"
+    case "$unamestr" in
+        *GNU/Linux*)
+            PLATFORM='linux'
+            ;;
+        *)
+            PLATFORM='unknown'
+            ;;
+    esac
+    export PLATFORM
+}
+
 # *** dotfiles ***
 
 function dotfiles_download() {
