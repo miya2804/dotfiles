@@ -108,6 +108,13 @@ If there are multiple windows, 'other-window' is called."
         (message "%s" file))
     (find-file file)))
 
+(defun kill-ring-save-buffer-file-path()
+  "View and copy the file path of the current buffer."
+  (interactive)
+  (let ((path (buffer-file-name)))
+    (message "save path to kill-ring...%s" path)
+    (kill-new path)))
+
 
 
 ;;;; -----------------------------------
