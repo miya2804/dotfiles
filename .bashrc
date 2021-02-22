@@ -269,6 +269,7 @@ function bashrc_startup() {
     _shopt_setup
 
     echo "ENTERED >> $(date '+%Y-%m-%d %H:%M:%S') $HOSTNAME:$$"
+    echo "SYSTEM - $(uname -smo)"
     echo "BASH ${BASH_VERSION%.*} - DISPLAY on $DISPLAY"
     if is_exists 'tmux'; then
         tmux_autostart
