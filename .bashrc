@@ -22,8 +22,6 @@ if ! is_vitalize 2>/dev/null; then
     return 1
 fi
 
-export FIRST_PROMPT=1
-
 # *** functions ***
 
 function new_line_prompt {
@@ -279,6 +277,10 @@ function bashrc_startup() {
 }
 
 # *** settings ***
+
+platform_detect
+
+export FIRST_PROMPT=1
 
 # don't put duplicate lines or lines starting with space in the history.
 # See bash(1) for more options
