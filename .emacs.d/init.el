@@ -270,6 +270,7 @@ If there are multiple windows, 'other-window' is called."
           '(lambda ()
              (interactive)
              (shortcut-file shortcut-file-path)))
+(bind-key "C-c y c" 'kill-ring-save-buffer-file-path)
 
 ;; "C-x C-c" -> exit
 (global-unset-key (kbd "C-x C-c"))
