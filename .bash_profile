@@ -17,7 +17,7 @@ if [ -d "${HOME}/bin" ]; then
 fi
 
 if [ -d "${HOME}/.local/bin" ]; then
-	PATH="${HOME}/bin:${PATH}"
+	PATH="${HOME}/.local/bin:${PATH}"
 fi
 export PATH
 
