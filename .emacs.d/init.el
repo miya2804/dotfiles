@@ -27,10 +27,10 @@
     `(eval-after-load ,file
        `(funcall (function ,(lambda () ,@body))))))
 
-(defun set-alpha (value)
-  "Set frame parameter 'alpha by VALUE."
-  (interactive "nAlpha: ")
-  (set-frame-parameter nil 'alpha (cons value '(90))))
+(defun set-alpha (alpha)
+  "Set ALPHA value of frame parameter."
+  (interactive "Alpha value: ")
+  (set-frame-parameter nil 'alpha alpha))
 
 (defun set-my-default-faces ()
   "Can be used to set a default faces if the themes isn't installed."
