@@ -269,9 +269,7 @@ function bashrc_startup() {
     echo "SYSTEM - $(uname -smo)"
     echo "BASH ${BASH_VERSION%.*} - DISPLAY on $DISPLAY"
     if is_exists 'tmux'; then
-        if [ ! "$PLATFORM" = 'msys' ]; then
-            tmux_autostart
-        fi
+        tmux_autostart
     fi
     echo
 }
