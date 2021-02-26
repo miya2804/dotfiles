@@ -230,8 +230,9 @@ If there are multiple windows, 'other-window' is called."
 ;;;; -----------------------------------
 ;;;; General settings
 
+;; variables
 (eval-and-compile
-  (defvar shortcut-file-path "~/Dropbox/document/note/note.md")
+  (defvar shortcut-file-path "~/Dropbox/document/note/note.txt")
 
   ;; backup and auto-save
   (defvar backup-and-auto-save-dir-dropbox
