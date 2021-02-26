@@ -115,6 +115,11 @@ If there are multiple windows, 'other-window' is called."
     (message "save path to kill-ring...%s" path)
     (kill-new path)))
 
+(defun today()
+  "Enter today's date."
+  (interactive)
+  (insert (format-time-string "%Y%m%d" (current-time))))
+
 
 
 ;;;; -----------------------------------
