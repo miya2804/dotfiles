@@ -323,7 +323,7 @@ else
         else
             e_newline
             e_arrow "Restarting your shell..."
-            exec "${SHELL:-/bin/bash}"
+            exec ${SHELL:-/bin/bash} -l
         fi
     fi
 fi
