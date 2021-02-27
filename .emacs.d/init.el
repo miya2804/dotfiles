@@ -366,7 +366,7 @@ If there are multiple windows, 'other-window' is called."
 (when (fboundp 'set-scroll-bar-mode)
   (set-scroll-bar-mode nil))
 ;;(transient-mark-mode t)
-(if (display-graphic-p) (transparency 99))
+(if (display-graphic-p) (set-alpha 99))
 
 ;;(setq display-time-day-and-date nil)
 ;;(setq display-time-24hr-format t)
