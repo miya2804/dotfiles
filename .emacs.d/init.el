@@ -29,7 +29,7 @@
 
 (defun set-alpha (alpha)
   "Set ALPHA value of frame parameter."
-  (interactive "Alpha value 0 - 100: ")
+  (interactive "^NAlpha value 0 - 100: ")
   (set-frame-parameter nil 'alpha alpha))
 
 (defun set-my-default-faces ()
@@ -366,7 +366,7 @@ If there are multiple windows, 'other-window' is called."
 (when (fboundp 'set-scroll-bar-mode)
   (set-scroll-bar-mode nil))
 ;;(transient-mark-mode t)
-(if (display-graphic-p) (set-alpha 99))
+(if (display-graphic-p) (set-alpha 98))
 
 ;;(setq display-time-day-and-date nil)
 ;;(setq display-time-24hr-format t)
