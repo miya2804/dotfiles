@@ -230,10 +230,15 @@ function _alias_setup() {
     alias rm='rm -i'
     alias mv='mv -i'
     alias cp='cp -i'
-    alias open='xdg-open'
     alias df='df -h'
     alias du='du -h'
     alias less='less -XF'
+
+    if [ "$PLATFORM" = 'msys' ]; then
+        alias open='start'
+    else
+        alias open='xdg-open'
+    fi
 
     # Add an "alert" alias for long running commands.  Use like so:
     #   sleep 10; alert
