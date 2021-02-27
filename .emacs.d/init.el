@@ -29,7 +29,7 @@
 
 (defun set-alpha (alpha)
   "Set ALPHA value of frame parameter."
-  (interactive "Alpha value: ")
+  (interactive "^NAlpha value: ")
   (set-frame-parameter nil 'alpha alpha))
 
 (defun set-my-default-faces ()
