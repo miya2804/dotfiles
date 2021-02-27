@@ -27,10 +27,10 @@
     `(eval-after-load ,file
        `(funcall (function ,(lambda () ,@body))))))
 
-(defun transparency (value)
-  "Set the transparency of the frame windows, VALUE 0=tranceparent/100=opaque."
-  (interactive "nTransparency Value 0 - 100: ")
-  (set-frame-parameter nil 'alpha value))
+(defun set-alpha (alpha)
+  "Set ALPHA value of frame parameter."
+  (interactive "Alpha value 0 - 100: ")
+  (set-frame-parameter nil 'alpha alpha))
 
 (defun set-my-default-faces ()
   "Can be used to set a default faces if the themes isn't installed."
@@ -114,6 +114,11 @@ If there are multiple windows, 'other-window' is called."
   (let ((path (buffer-file-name)))
     (message "save path to kill-ring...%s" path)
     (kill-new path)))
+
+(defun today()
+  "Enter today's date."
+  (interactive)
+  (insert (format-time-string "%Y%m%d" (current-time))))
 
 
 
@@ -226,8 +231,9 @@ If there are multiple windows, 'other-window' is called."
 ;;;; -----------------------------------
 ;;;; General settings
 
+;; variables
 (eval-and-compile
-  (defvar shortcut-file-path "~/Dropbox/document/note/note.md")
+  (defvar shortcut-file-path "~/Dropbox/document/note/note.txt")
 
   ;; backup and auto-save
   (defvar backup-and-auto-save-dir-dropbox
