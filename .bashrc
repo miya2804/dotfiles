@@ -264,9 +264,9 @@ function bashrc_startup() {
     _alias_setup
     _shopt_setup
 
-    echo "ENTERED >> $(date '+%Y-%m-%d %H:%M:%S') $HOSTNAME:$$"
+    echo "ENTERED >> $(date '+%Y-%m-%d %H:%M:%S') ${HOSTNAME:-$$}"
     echo "SYSTEM - $(uname -smo)"
-    echo "BASH ${BASH_VERSION%.*} - DISPLAY on $DISPLAY"
+    echo "BASH ${BASH_VERSION%.*} - DISPLAY on ${DISPLAY}"
     if is_exists 'tmux'; then
         tmux_autostart
     fi
