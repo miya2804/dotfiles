@@ -61,7 +61,7 @@ function tmux_autostart() {
     fi
 
     if [ ! "$TMUX_AUTOSTART" = 1 ]; then
-        echo 'tmux_autostart: not enabled (please set $TMUX_AUTOSTART)'
+        echo "TMUX $(tmux -V | awk '{print $2}') - Autostart is disabeled"
         return 0
     fi
 
@@ -270,9 +270,9 @@ function bashrc_startup() {
     _alias_setup
     _shopt_setup
 
-    echo "ENTERED >> $(date '+%Y-%m-%d %H:%M:%S') $HOSTNAME:$$"
+    echo "ENTERED >> $(date '+%Y-%m-%d %H:%M:%S') ${HOSTNAME:-$$}"
     echo "SYSTEM - $(uname -smo)"
-    echo "BASH ${BASH_VERSION%.*} - DISPLAY on $DISPLAY"
+    echo "BASH ${BASH_VERSION%.*} - DISPLAY on ${DISPLAY}"
     if is_exists 'tmux'; then
         tmux_autostart
     fi
