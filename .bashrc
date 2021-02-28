@@ -61,7 +61,7 @@ function tmux_autostart() {
     fi
 
     if [ ! "$TMUX_AUTOSTART" = 1 ]; then
-        echo 'tmux_autostart: not enabled (please set $TMUX_AUTOSTART)'
+        echo "TMUX $(tmux -V | awk '{print $2}') - Autostart is disabeled"
         return 0
     fi
 
