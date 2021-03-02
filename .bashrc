@@ -55,8 +55,10 @@ function tmux_autostart() {
     # disable automatically create new session automatically
     #   $TMUX_DISABLE_AUTO_NEW_SESSION=1
 
+    local header='tmux_autostart:'
+
     if ! is_exists 'tmux'; then
-        echo 'tmux_autostart: tmux is not exists' 1>&2
+        echo "${header} tmux is not exists" 1>&2
         return 1
     fi
 
@@ -68,19 +70,18 @@ function tmux_autostart() {
     if ! is_tmux_running; then
         if is_interactive_shell && ! is_ssh_running; then
             if tmux has-session >/dev/null 2>&1 && tmux list-sessions | grep -qE '.*]$'; then
-                echo 'tmux_autostart: detached session exists'
                 echo
+                echo "${header} detached session exists"
                 tmux list-sessions
-                echo
                 echo -n 'Attach? (Y/n/num): '; read
                 if [[ "$REPLY" =~ ^[Yy][Ee]*[Ss]*$ ]] || [[ "$REPLY" == '' ]]; then
-                    echo 'tmux_autostart: tmux attaching session...'
+                    echo "${header} tmux attaching session..."
                     tmux attach-session
                     if [ $? -eq 0 ]; then
                         return 0
                     fi
                 elif [[ "$REPLY" =~ ^[0-9]+$ ]]; then
-                    echo 'tmux_autostart: tmux attaching session...'
+                    echo "${header} tmux attaching session..."
                     tmux attach -t "$REPLY"
                     if [ $? -eq 0 ]; then
                         return 0
@@ -89,7 +90,8 @@ function tmux_autostart() {
                     return 0
                 fi
             elif [ ! "$TMUX_DISABLE_AUTO_NEW_SESSION" = 1 ]; then
-                echo 'tmux_autostart: created a new session automatically'
+                echo
+                echo "${header} created a new session automatically"
                 tmux new-session
             fi
         fi
