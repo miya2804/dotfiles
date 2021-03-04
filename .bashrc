@@ -97,7 +97,7 @@ function tmux_autostart() {
         fi
     else
         # Shell on tmux
-        echo -n "MULTIPLEXER - tmux $(tmux -V | awk '{print $2}') / session "
+        echo -n "TERM MUX - tmux $(tmux -V | awk '{print $2}') / session "
         tmux display-message -p '#S'
         if [ -e "$HOME/.dotfiles/etc/ascii-art/tmux.txt" ]; then
             : #cat "$HOME/.dotfiles/etc/ascii-art/tmux.txt"
