@@ -43,6 +43,16 @@ function eval_prompt_commands() {
 }
 
 # tmux
+function tmux_autostart_info() {
+    local header='tmux_autostart:'
+    printf "%s %s\n" "$header" "$*"
+}
+
+function tmux_autostart_error() {
+    local header='tmux_autostart:'
+    printf "%s %s\n" "$header" "$*" 1>&2
+}
+
 function tmux_autostart() {
 
     # if not inside a tmux session, and if no session is started,
@@ -55,10 +65,8 @@ function tmux_autostart() {
     # disable automatically create new session automatically
     #   $TMUX_DISABLE_AUTO_NEW_SESSION=1
 
-    local header='tmux_autostart:'
-
     if ! is_exists 'tmux'; then
-        echo "${header} tmux is not exists" 1>&2
+        tmux_autostart_error 'tmux is not exists'
         return 1
     fi
 
@@ -70,18 +78,18 @@ function tmux_autostart() {
     if ! is_tmux_running; then
         if is_interactive_shell && ! is_ssh_running; then
             if tmux has-session >/dev/null 2>&1 && tmux list-sessions | grep -qE '.*]$'; then
-                echo
-                echo "${header} detached session exists"
+                e_newline
+                tmux_autostart_info 'detached session exists'
                 tmux list-sessions
                 echo -n 'Attach? (Y/n/num): '; read
                 if [[ "$REPLY" =~ ^[Yy][Ee]*[Ss]*$ ]] || [[ "$REPLY" == '' ]]; then
-                    echo "${header} tmux attaching session..."
+                    tmux_autostart_info 'tmux attaching session...'
                     tmux attach-session
                     if [ $? -eq 0 ]; then
                         return 0
                     fi
                 elif [[ "$REPLY" =~ ^[0-9]+$ ]]; then
-                    echo "${header} tmux attaching session..."
+                    tmux_autostart_info 'tmux attaching session...'
                     tmux attach -t "$REPLY"
                     if [ $? -eq 0 ]; then
                         return 0
@@ -90,8 +98,8 @@ function tmux_autostart() {
                     return 0
                 fi
             elif [ ! "$TMUX_DISABLE_AUTO_NEW_SESSION" = 1 ]; then
-                echo
-                echo "${header} created a new session automatically"
+                e_newline
+                tmux_autostart_info 'create a new session automatically'
                 tmux new-session
             fi
         fi
