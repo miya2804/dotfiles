@@ -63,7 +63,7 @@ function tmux_autostart() {
     fi
 
     if [ ! "$TMUX_AUTOSTART" = 1 ]; then
-        echo "MULTIPLEXER - tmux $(tmux -V | awk '{print $2}') / autostart is disabeled"
+        e_bashrc_message 'TERM MUX' "tmux $(tmux -V | awk '{print $2}') / autostart is disabeled"
         return 0
     fi
 
@@ -97,8 +97,7 @@ function tmux_autostart() {
         fi
     else
         # Shell on tmux
-        echo -n "TERM MUX - tmux $(tmux -V | awk '{print $2}') / session "
-        tmux display-message -p '#S'
+        e_bashrc_message 'TERM MUX' "tmux $(tmux -V | awk '{print $2}') / session >> $(tmux display-message -p '#S')"
         if [ -e "$HOME/.dotfiles/etc/ascii-art/tmux.txt" ]; then
             : #cat "$HOME/.dotfiles/etc/ascii-art/tmux.txt"
         fi
@@ -266,21 +265,15 @@ function bashrc_startup() {
     _alias_setup
     _shopt_setup
 
-    echo "Hello:)"
-    echo
-    #echo "DATETIME - $(date '+%Y-%m-%d %H:%M:%S')"
-    echo "SYSTEM - ${HOSTNAME} / $(uname -smo)"
-    echo "SHELL - bash ${BASH_VERSION%.*} / pid $$"
-    if [ -z "$DISPLAY" ]; then
-        echo "DISPLAY - not set"
-    else
-        echo "DISPLAY - ${DISPLAY}"
-    fi
+    e_bashrc_message 'Hello:)'
+    e_newline
+    #e_bashrc_message 'DATETIME' "$(date '+%Y-%m-%d %H:%M:%S')"
+    e_bashrc_message 'SYSTEM' "${HOSTNAME} / $(uname -smo)"
+    e_bashrc_message 'SHELL' "bash ${BASH_VERSION%.*} / pid $$"
+    e_bashrc_message 'DISPLAY' "${DISPLAY:-not set}"
 
-    if is_exists 'tmux'; then
-        tmux_autostart
-    fi
-    echo
+    if is_exists 'tmux'; then tmux_autostart; fi
+    e_newline
 }
 
 # *** settings ***

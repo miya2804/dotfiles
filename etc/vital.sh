@@ -42,6 +42,13 @@ function e_header()  { printf " \r\033[37;1m%s\033[m\n" "$*"; }
 function e_error()   { printf " \033[31m%s\033[m\n" "✖ $*" 1>&2; }
 function e_done()    { printf " \033[37;1m%s\033[m...\033[32mOK\033[m\n" "✔ $*"; }
 function e_fail()    { printf " \033[37;1m%s\033[m...\033[31mFAILD\033[m\n" "✔ $*"; }
+function e_bashrc_message {
+    if [ $# = 1 ]; then
+        printf "%s\n" "$1"
+    elif [ $# = 2 ]; then
+        printf "%s - %s\n" "$1" "$2"
+    fi
+}
 
 function ink() {
     if [ "$#" -eq 0 -o "$#" -gt 2 ]; then
