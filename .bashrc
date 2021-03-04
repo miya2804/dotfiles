@@ -3,7 +3,7 @@
 # for examples
 
 # If not running interactively, don't do anything
-case $- in
+case "$-" in
     *i*) ;;
       *) return;;
 esac
@@ -16,7 +16,7 @@ if [ -z "$DOTDIR_PATH" ]; then
 fi
 
 # load vital utilities.
-source "$DOTDIR_PATH"/etc/vital.sh 2>/dev/null
+source "${DOTDIR_PATH}/etc/vital.sh" 2>/dev/null
 if ! is_vitalize 2>/dev/null; then
     echo 'Cannot vitalize.' 1>&2
     return 1
@@ -106,8 +106,8 @@ function tmux_autostart() {
     else
         # Shell on tmux
         e_bashrc_message 'TERM MUX' "tmux $(tmux -V | awk '{print $2}') / session >> $(tmux display-message -p '#S')"
-        if [ -e "$HOME/.dotfiles/etc/ascii-art/tmux.txt" ]; then
-            : #cat "$HOME/.dotfiles/etc/ascii-art/tmux.txt"
+        if [ -e "${HOME}/.dotfiles/etc/ascii-art/tmux.txt" ]; then
+            : cat "${HOME}/.dotfiles/etc/ascii-art/tmux.txt"
         fi
     fi
 }
