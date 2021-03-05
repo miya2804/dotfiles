@@ -20,7 +20,7 @@ function is_debug() {
 }
 
 function is_interactive_shell() {
-    case $- in
+    case "$-" in
     *i*) return 0;;
       *) return 1;;
     esac
@@ -35,13 +35,32 @@ function is_ssh_running() {
 }
 
 function e_newline() { printf "\n"; }
+
 function e_unicode() { printf "\U$1"; }
+
 function e_warning() { printf " \033[31m%s\033[m\n" "$*"; }
-function e_arrow()   { printf " \033[37;1m%s\033[m\n" "➜ $*"; }
-function e_header()  { printf " \r\033[37;1m%s\033[m\n" "$*"; }
-function e_error()   { printf " \033[31m%s\033[m\n" "✖ $*" 1>&2; }
-function e_done()    { printf " \033[37;1m%s\033[m...\033[32mOK\033[m\n" "✔ $*"; }
-function e_fail()    { printf " \033[37;1m%s\033[m...\033[31mFAILD\033[m\n" "✔ $*"; }
+
+function e_arrow() { printf " \033[37;1m%s\033[m\n" "➜ $*"; }
+
+function e_header() { printf " \r\033[37;1m%s\033[m\n" "$*"; }
+
+function e_error() { printf " \033[31m%s\033[m\n" "✖ $*" 1>&2; }
+
+function e_done() {
+    printf " \033[37;1m%s\033[m...\033[32mOK\033[m\n" "✔ $*"
+}
+
+function e_fail() {
+    printf " \033[37;1m%s\033[m...\033[31mFAILD\033[m\n" "✔ $*"
+}
+
+function e_bashrc_message {
+    if [ "$#" = 1 ]; then
+        printf "%s\n" "$1"
+    elif [ "$#" = 2 ]; then
+        printf "%s - %s\n" "$1" "$2"
+    fi
+}
 
 function ink() {
     if [ "$#" -eq 0 -o "$#" -gt 2 ]; then
@@ -116,9 +135,13 @@ function logging() {
 }
 
 function log_fail() { logging WARN "$1"; }
+
 function log_fail() { logging ERROR "$1" 1>&2; }
+
 function log_pass() { logging SUCCESS "$1"; }
+
 function log_info() { logging INFO "$1"; }
+
 function log_echo() { logging TITLE "$1"; }
 
 function platform_detect() {
@@ -326,7 +349,7 @@ else
         else
             e_newline
             e_arrow "Restarting your shell..."
-            exec ${SHELL:-/bin/bash} -l
+            exec "${SHELL:-/bin/bash}" -l
         fi
     fi
 fi

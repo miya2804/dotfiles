@@ -3,7 +3,7 @@
 # for examples
 
 # If not running interactively, don't do anything
-case $- in
+case "$-" in
     *i*) ;;
       *) return;;
 esac
@@ -16,7 +16,7 @@ if [ -z "$DOTDIR_PATH" ]; then
 fi
 
 # load vital utilities.
-source "$DOTDIR_PATH"/etc/vital.sh 2>/dev/null
+source "${DOTDIR_PATH}/etc/vital.sh" 2>/dev/null
 if ! is_vitalize 2>/dev/null; then
     echo 'Cannot vitalize.' 1>&2
     return 1
@@ -43,6 +43,16 @@ function eval_prompt_commands() {
 }
 
 # tmux
+function tmux_autostart_info() {
+    local header='tmux_autostart:'
+    printf "%s %s\n" "$header" "$*"
+}
+
+function tmux_autostart_error() {
+    local header='tmux_autostart:'
+    printf "%s %s\n" "$header" "$*" 1>&2
+}
+
 function tmux_autostart() {
 
     # if not inside a tmux session, and if no session is started,
@@ -56,31 +66,30 @@ function tmux_autostart() {
     #   $TMUX_DISABLE_AUTO_NEW_SESSION=1
 
     if ! is_exists 'tmux'; then
-        echo 'tmux_autostart: tmux is not exists' 1>&2
+        tmux_autostart_error 'tmux is not exists'
         return 1
     fi
 
     if [ ! "$TMUX_AUTOSTART" = 1 ]; then
-        echo "TMUX $(tmux -V | awk '{print $2}') - Autostart is disabeled"
+        e_bashrc_message 'TERM MUX' "tmux $(tmux -V | awk '{print $2}') / autostart is disabeled"
         return 0
     fi
 
     if ! is_tmux_running; then
         if is_interactive_shell && ! is_ssh_running; then
             if tmux has-session >/dev/null 2>&1 && tmux list-sessions | grep -qE '.*]$'; then
-                echo 'tmux_autostart: detached session exists'
-                echo
+                e_newline
+                tmux_autostart_info 'detached session exists'
                 tmux list-sessions
-                echo
                 echo -n 'Attach? (Y/n/num): '; read
                 if [[ "$REPLY" =~ ^[Yy][Ee]*[Ss]*$ ]] || [[ "$REPLY" == '' ]]; then
-                    echo 'tmux_autostart: tmux attaching session...'
+                    tmux_autostart_info 'tmux attaching session...'
                     tmux attach-session
                     if [ $? -eq 0 ]; then
                         return 0
                     fi
                 elif [[ "$REPLY" =~ ^[0-9]+$ ]]; then
-                    echo 'tmux_autostart: tmux attaching session...'
+                    tmux_autostart_info 'tmux attaching session...'
                     tmux attach -t "$REPLY"
                     if [ $? -eq 0 ]; then
                         return 0
@@ -89,16 +98,16 @@ function tmux_autostart() {
                     return 0
                 fi
             elif [ ! "$TMUX_DISABLE_AUTO_NEW_SESSION" = 1 ]; then
-                echo 'tmux_autostart: created a new session automatically'
+                e_newline
+                tmux_autostart_info 'create a new session automatically'
                 tmux new-session
             fi
         fi
     else
         # Shell on tmux
-        echo -n "TMUX $(tmux -V | awk '{print $2}') - Session: "
-        tmux display-message -p '#S'
-        if [ -e "$HOME/.dotfiles/etc/ascii-art/tmux.txt" ]; then
-            : #cat "$HOME/.dotfiles/etc/ascii-art/tmux.txt"
+        e_bashrc_message 'TERM MUX' "tmux $(tmux -V | awk '{print $2}') / session >> $(tmux display-message -p '#S')"
+        if [ -e "${HOME}/.dotfiles/etc/ascii-art/tmux.txt" ]; then
+            : cat "${HOME}/.dotfiles/etc/ascii-art/tmux.txt"
         fi
     fi
 }
@@ -270,13 +279,15 @@ function bashrc_startup() {
     _alias_setup
     _shopt_setup
 
-    echo "ENTERED >> $(date '+%Y-%m-%d %H:%M:%S') ${HOSTNAME:-$$}"
-    echo "SYSTEM - $(uname -smo)"
-    echo "BASH ${BASH_VERSION%.*} - DISPLAY on ${DISPLAY}"
-    if is_exists 'tmux'; then
-        tmux_autostart
-    fi
-    echo
+    e_bashrc_message 'Hello:)'
+    e_newline
+    #e_bashrc_message 'DATETIME' "$(date '+%Y-%m-%d %H:%M:%S')"
+    e_bashrc_message 'SYSTEM' "${HOSTNAME} / $(uname -smo)"
+    e_bashrc_message 'SHELL' "bash ${BASH_VERSION%.*} / pid $$"
+    e_bashrc_message 'DISPLAY' "${DISPLAY:-not set}"
+
+    if is_exists 'tmux'; then tmux_autostart; fi
+    e_newline
 }
 
 # *** settings ***

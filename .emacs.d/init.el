@@ -182,7 +182,7 @@ If there are multiple windows, 'other-window' is called."
     (progn
       ;; when use-package is not available
       (when (null (require 'use-package nil t))
-        (warn "`use-package' is unavailable!  Please install it via `M-x package-list-packages' if possible.")
+        (message "`use-package' is unavailable!  Please install it via `M-x package-list-packages' if possible.")
         (defmacro use-package (&rest _args))))))
 
 ;; 後の startup.el におけるオプション認識エラーを防止
