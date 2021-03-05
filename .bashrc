@@ -178,6 +178,7 @@ function _prompt_setup() {
     local host_prompt
     local decoration_prompt
     local prefix_prompt='${debian_chroot:+($debian_chroot)}'
+    local new_line=$'\n'
 
     if [ ${EUID:-${UID}} = 0 ]; then
         symbol_prompt='# '
@@ -185,7 +186,7 @@ function _prompt_setup() {
         symbol_prompt='> '
     fi
 
-    if [ -x ~/bin/git-prompt.sh ]; then
+    if [ -f ~/bin/git-prompt.sh ]; then
         source ~/bin/git-prompt.sh
         GIT_PS1_SHOWUPSTREAM=1
         GIT_PS1_SHOWUNTRACKEDFILES=1
@@ -200,9 +201,9 @@ function _prompt_setup() {
 
     #color_prompt=no
     if [ "$color_prompt" = yes ]; then
-        PS1="${prefix_prompt}${decoration_prompt}\u${host_prompt} \[${blue}\]\w \[${cyan}\]${git_prompt}\[${reset}\]\n${symbol_prompt}\[${reset}\]"
+        PS1="${prefix_prompt}${decoration_prompt}\u${host_prompt} \[${blue}\]\w \[${cyan}\]${git_prompt}\[${reset}\]${new_line}${symbol_prompt}\[${reset}\]"
     else
-        PS1="${prefix_prompt}[ \u${host_prompt} \w ${git_prompt}\n${symbol_prompt}"
+        PS1="${prefix_prompt}[\u${host_prompt} \w ${git_prompt}${new_line}${symbol_prompt}"
     fi
 
     # If this is an xterm set the title to user@host:dir
@@ -238,10 +239,15 @@ function _alias_setup() {
     alias rm='rm -i'
     alias mv='mv -i'
     alias cp='cp -i'
-    alias open='xdg-open'
     alias df='df -h'
     alias du='du -h'
     alias less='less -XF'
+
+    if [ "$PLATFORM" = 'msys' ]; then
+        alias open='start'
+    else
+        alias open='xdg-open'
+    fi
 
     # Add an "alert" alias for long running commands.  Use like so:
     #   sleep 10; alert

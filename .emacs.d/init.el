@@ -29,7 +29,7 @@
 
 (defun set-alpha (alpha)
   "Set ALPHA value of frame parameter."
-  (interactive "^NAlpha value: ")
+  (interactive "^NAlpha value 0 - 100: ")
   (set-frame-parameter nil 'alpha alpha))
 
 (defun set-my-default-faces ()
@@ -202,6 +202,7 @@ If there are multiple windows, 'other-window' is called."
     (defun bind-key* (key cmd) (global-set-key (kbd key) cmd))))
 
 (use-package exec-path-from-shell
+  :unless (eq system-type 'windows-nt)
   :ensure t :demand t
   :config
   (exec-path-from-shell-initialize))
@@ -248,9 +249,12 @@ If there are multiple windows, 'other-window' is called."
   (defvar my-org-agenda-files '()))
 
 (setq-default tab-width 4 indent-tabs-mode nil)
-
-(setq scroll-conservatively 30)
+(setq default-directory "~/")
+(setq scroll-conservatively 1)
 (setq scroll-margin 5)
+(setq mouse-wheel-scroll-amount
+      '(1
+        ((shift) . 5)))
 (setq custom-file (locate-user-emacs-file "elisp/custom.el"))
 (setq select-enable-clipboard t)
 
@@ -326,6 +330,22 @@ If there are multiple windows, 'other-window' is called."
   (setq create-lockfiles nil))
 
 ;;;;; language
+
+;; 文字・改行コード変更
+;; C-x RET-f
+
+;; character code
+;; shift_jis
+;; cp932
+;; euc-jp
+;; utf-8
+;; utf-8-with-signature ; BOM付きutf-8
+
+;; newline code
+;; -dos  ; CR+LF
+;; -mac  ; CR
+;; -unix ; LF
+
 (set-language-environment "Japanese")
 (set-default 'buffer-file-cording-system 'utf-8-unix)
 (prefer-coding-system 'utf-8-unix)
@@ -1097,7 +1117,7 @@ If there are multiple windows, 'other-window' is called."
 
 (use-package synctex-for-evince-yatex
   :pin manual
-  :if (not android-flag)
+  :if (executable-find "evince")
   :commands synctex-for-evince-dbus-initialize
   :functions YaTeX-define-key
   :init (synctex-for-evince-dbus-initialize)
@@ -1199,5 +1219,9 @@ If there are multiple windows, 'other-window' is called."
                         ,load-file-name elapsed))) t)
 
 ;; (provide 'init)
+
+;; Local Variables:
+;; byte-compile-warnings: (not cl-functions obsolete)
+;; End:
 
 ;;; init.el ends here

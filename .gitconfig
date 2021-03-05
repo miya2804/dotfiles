@@ -3,6 +3,7 @@
 	email = 32477854+mmugi@users.noreply.github.com
 [core]
 	excludesfile = ~/.gitignore
+	autocrlf = input
 [merge]
 	ff = false
 [pull]
