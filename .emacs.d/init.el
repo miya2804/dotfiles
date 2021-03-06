@@ -551,9 +551,20 @@ If there are multiple windows, 'other-window' is called."
   :diminish ace-isearch-mode
   :hook (after-init . global-ace-isearch-mode)
   :custom
-  (ace-isearch-jump-based-on-one-char nil)
-  ;;(ace-isearch-jump-delay 0.7)
-  )
+  (ace-isearch-use-jump nil)
+  ;;(ace-isearch-jump-delay 1.0)
+  ;;(ace-isearch-function 'ace-jump-word-mode)
+
+  ;; if ace-isearch-jump-based-on-one-char is nil,
+  ;; call ace-isearch-2-function (default:avy-goto-char-2)
+  ;;(ace-isearch-jump-based-on-one-char t)
+
+  ;; call ace-isearch-function-from-isearch,
+  ;; when input >= ace-isearch-input-length
+  (ace-isearch-input-length 6)
+  (ace-isearch-function-from-isearch t)
+  (ace-isearch-function-from-isearch 'helm-swoop-from-isearch)
+  (ace-isearch-func-delay 0.0))
 
 (use-package ace-jump-mode
   :ensure t :defer t
