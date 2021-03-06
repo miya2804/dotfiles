@@ -570,8 +570,6 @@ If there are multiple windows, 'other-window' is called."
   :ensure t
   :bind ("C-c a" . ace-jump-char-mode)
   :custom
-  (ace-jump-mode-move-keys
-   (append "asdfghjkl;:]qwertyuiop@zxcvbnm,." nil))
   ;; ace-jump-word-modeのとき文字を尋ねないようにする
   (ace-jump-word-mode-use-query-char nil))
 
