@@ -567,7 +567,8 @@ If there are multiple windows, 'other-window' is called."
   (ace-isearch-func-delay 0.0))
 
 (use-package ace-jump-mode
-  :ensure t :defer t
+  :ensure t
+  :bind ("C-c a" . ace-jump-char-mode)
   :custom
   (ace-jump-mode-move-keys
    (append "asdfghjkl;:]qwertyuiop@zxcvbnm,." nil))
