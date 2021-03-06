@@ -592,6 +592,10 @@ If there are multiple windows, 'other-window' is called."
   (with-eval-after-load 'migemo
     (setq anzu-use-migemo t)))
 
+(use-package avy
+  :ensure t :defer t
+  :bind ("M-g M-g" . avy-goto-line))
+
 (use-package beacon
   :ensure t
   :diminish beacon-mode
