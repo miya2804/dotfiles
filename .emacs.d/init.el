@@ -140,6 +140,7 @@ If there are multiple windows, 'other-window' is called."
 (eval-and-compile
   ;; package.el
   (when (require 'package nil t)
+    (setq package-user-dir "~/.local/emacs/elpa")
     (setq package-archives
      '(("melpa" . "https://melpa.org/packages/")
        ;;("melpa-stable" . "https://stable.melpa.org/packages/")
@@ -536,10 +537,16 @@ If there are multiple windows, 'other-window' is called."
    ))
 (show-paren-mode t)                ; illuminate corresponding brackets
 
-;;;;; recentf
-(defvar recentf-max-saved-items 500)
-(defvar recentf-auto-cleanup 'never)
-(defvar recentf-exclude '("/recentf\\'" "/bookmarks\\'"))
+(use-package recentf
+  :custom
+  (recentf-save-file "~/.local/emacs/recentf")
+  (recentf-max-saved-items 500)
+  (recentf-auto-cleanup 'never)
+  (recentf-exclude '("/recentf\\'" "/bookmarks\\'")))
+
+(use-package bookmark
+  :custom
+  (bookmark-file "~/.local/emacs/bookmark"))
 
 
 
