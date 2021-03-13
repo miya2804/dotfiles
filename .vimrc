@@ -9,6 +9,11 @@ hi comment ctermfg=3
 hi SpecialKey ctermbg=3 ctermfg=3
 syntax on
 
+" input
+set tabstop=4
+set expandtab
+set shiftwidth=4
+
 " swp un ~
 "set noswapfile
 set nobackup
