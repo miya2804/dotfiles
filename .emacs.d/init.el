@@ -546,7 +546,7 @@ If there are multiple windows, 'other-window' is called."
 
 (use-package bookmark
   :custom
-  (bookmark-file "~/.local/emacs/bookmark"))
+  (bookmark-file "~/.local/emacs/bookmarks"))
 
 
 
