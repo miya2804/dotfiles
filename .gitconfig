@@ -1,3 +1,5 @@
+[include]
+	path = ~/.local/git/config
 [user]
 	name = mmugi
 	email = 32477854+mmugi@users.noreply.github.com
