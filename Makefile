@@ -14,11 +14,11 @@ list: ## Show dotfiles link target to your home of this repo
 deploy: ## Create symlink to home directory
 	@echo '==> Start to deploy dotfiles to home directory.'
 	@$(foreach val, $(DOTFILES), \
-		if [ -d $(HOME)/$(val) ]; then \
-			mv $(HOME)/$(val) $(HOME)/$(val).bak; \
-			ln -nsv --backup=numbered $(abspath $(val)) $(HOME)/$(val); \
+		if [ -d $(abspath $(HOME))/$(val) ]; then \
+			mv $(abspath $(HOME))/$(val) $(abspath $(HOME))/$(val).bak; \
+			ln -nsv --backup=numbered $(abspath $(val)) $(abspath $(HOME))/$(val); \
 		else \
-			ln -nsv --backup=numbered $(abspath $(val)) $(HOME)/$(val); \
+			ln -nsv --backup=numbered $(abspath $(val)) $(abspath $(HOME))/$(val); \
 		fi;)
 
 init: ## Run initialization scripts (.dotfiles/etc/init/*.sh)
@@ -36,8 +36,8 @@ unlink: ## Remove symlink to home directory
 	@echo 'Remove dotfile symlinks in your home directory...'
 # 	check whether link and remove.
 	@-$(foreach val, $(DOTFILES), \
-		if [ -L $(HOME)/$(val) ]; then \
-			rm -vrf $(HOME)/$(val); \
+		if [ -L $(abspath $(HOME))/$(val) ]; then \
+			rm -vrf $(abspath $(HOME))/$(val); \
 		fi;)
 
 clean: unlink ## Remove the dot files and this repository
