@@ -12,3 +12,5 @@
 	ff = only
 [push]
 	default = simple
+[fetch]
+	prune = true
