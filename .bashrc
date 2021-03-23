@@ -329,4 +329,8 @@ set -o noclobber
 # avoid logout by "C-d"
 set -o ignoreeof
 
+if is_exists 'fzf'; then
+    export FZF_DEFAULT_OPTS="-m --reverse --ansi --border --height 60%"
+fi
+
 bashrc_startup
