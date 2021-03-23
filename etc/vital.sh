@@ -21,8 +21,8 @@ function is_debug() {
 
 function is_interactive_shell() {
     case "$-" in
-    *i*) return 0;;
-      *) return 1;;
+        *i*) return 0;;
+          *) return 1;;
     esac
 }
 
