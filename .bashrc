@@ -333,7 +333,7 @@ set -o noclobber
 set -o ignoreeof
 
 if is_exists 'fzf'; then
-    export FZF_DEFAULT_OPTS="-m --reverse --ansi --border --height 60%"
+    export FZF_DEFAULT_OPTS="--multi --cycle --height=60% --layout=reverse --border=rounded --info=inline --ansi --exit-0"
 fi
 
 bashrc_startup
