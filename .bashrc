@@ -24,7 +24,8 @@ fi
 
 
 
-# *functions
+# functions
+# ---------
 
 function new_line_prompt {
     if [ -z "$FIRST_PROMPT" ] || [ "$FIRST_PROMPT" = 1 ]; then
@@ -44,7 +45,8 @@ function eval_prompt_commands() {
     unset func
 }
 
-# tmux
+# --- tmux ---
+
 function tmux_autostart_info() {
     local header='tmux_autostart:'
     printf "%s %s\n" "$header" "$*"
@@ -294,7 +296,8 @@ function bashrc_startup() {
 
 
 
-# *settings
+# settings
+# --------
 
 platform_detect
 
