@@ -47,12 +47,12 @@ function eval_prompt_commands() {
 
 # --- tmux ---
 
-function tmux_autostart_info() {
+function _tmux_autostart_info() {
     local header='tmux_autostart:'
     printf "%s %s\n" "$header" "$*"
 }
 
-function tmux_autostart_error() {
+function _tmux_autostart_error() {
     local header='tmux_autostart:'
     printf "%s %s\n" "$header" "$*" 1>&2
 }
@@ -70,7 +70,7 @@ function tmux_autostart() {
     #   $TMUX_DISABLE_AUTO_NEW_SESSION=1
 
     if ! is_exists 'tmux'; then
-        tmux_autostart_error 'tmux is not exists'
+        _tmux_autostart_error 'tmux is not exists'
         return 1
     fi
 
@@ -83,17 +83,17 @@ function tmux_autostart() {
         if is_interactive_shell && ! is_ssh_running; then
             if tmux has-session >/dev/null 2>&1 && tmux list-sessions | grep -qE '.*]$'; then
                 e_newline
-                tmux_autostart_info 'detached session exists'
+                _tmux_autostart_info 'detached session exists'
                 tmux list-sessions
                 echo -n 'Attach? (Y/n/num): '; read
                 if [[ "$REPLY" =~ ^[Yy][Ee]*[Ss]*$ ]] || [[ "$REPLY" == '' ]]; then
-                    tmux_autostart_info 'tmux attaching session...'
+                    _tmux_autostart_info 'tmux attaching session...'
                     tmux attach-session
                     if [ $? -eq 0 ]; then
                         return 0
                     fi
                 elif [[ "$REPLY" =~ ^[0-9]+$ ]]; then
-                    tmux_autostart_info 'tmux attaching session...'
+                    _tmux_autostart_info 'tmux attaching session...'
                     tmux attach -t "$REPLY"
                     if [ $? -eq 0 ]; then
                         return 0
@@ -103,7 +103,7 @@ function tmux_autostart() {
                 fi
             elif [ ! "$TMUX_DISABLE_AUTO_NEW_SESSION" = 1 ]; then
                 e_newline
-                tmux_autostart_info 'create a new session automatically'
+                _tmux_autostart_info 'create a new session automatically'
                 tmux new-session
             fi
         fi
