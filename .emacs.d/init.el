@@ -743,7 +743,9 @@ If there are multiple windows, 'other-window' is called."
 (use-package elscreen
   :ensure t :defer nil :no-require t
   :functions (elscreen-create)
-  :bind ("<f5>" . elscreen-next)
+  :bind
+  ("M-[" . elscreen-previous)
+  ("M-]" . elscreen-next)
   :custom
   (elscreen-prefix-key (kbd "C-z"))
   ;;(elscreen-display-tab nil)
