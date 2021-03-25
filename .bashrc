@@ -121,6 +121,18 @@ function tmux_autostart() {
     fi
 }
 
+# --- fzf ---
+
+function fzghq() {
+
+    # list and move local github repository dir with fzf.
+
+    local repository=$(ghq list | fzf --preview "ls -al --full-time --color $(ghq root)/{} | awk '{if (NR==1) print \$0; else print \$6 \" \" \$9}'")
+    local repo_full_path="$(ghq root | sed "s#\\\\#/#g")/${repository}"
+    if [ -d "$repo_full_path" ]; then cd "$repo_full_path"; fi
+    #if [ -d "$repo_full_path" ]; then echo "$repo_full_path"; fi
+}
+
 # --- setup functions ---
 
 function _prompt_setup() {
