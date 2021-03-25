@@ -27,6 +27,8 @@ fi
 # functions
 # ---------
 
+# --- prompt ---
+
 function new_line_prompt {
     if [ -z "$FIRST_PROMPT" ] || [ "$FIRST_PROMPT" = 1 ]; then
         FIRST_PROMPT=0
@@ -36,6 +38,9 @@ function new_line_prompt {
 }
 
 function eval_prompt_commands() {
+
+    # execute commands according to PROMPT_COMMAND_*
+
     export EXIT_STATUS="$?"
     local func
     for func in ${!PROMPT_COMMAND_*}
@@ -116,6 +121,8 @@ function tmux_autostart() {
     fi
 }
 
+# --- setup functions ---
+
 function _prompt_setup() {
     local color_prompt
     local force_color_prompt
@@ -154,8 +161,8 @@ function _prompt_setup() {
     if [[ ! "$PROMPT_COMMAND" =~ .*${prompt_command_name}.* ]]; then
         PROMPT_COMMAND_DEFAULT="$PROMPT_COMMAND"
     fi
+    export FIRST_PROMPT=1
     export PROMPT_COMMAND_DEFAULT
-    export PROMPT_COMMAND_ADDITIONAL='new_line_prompt;'
     PROMPT_COMMAND="$prompt_command_name"
 
     # --- colors ---
@@ -301,8 +308,6 @@ function bashrc_startup() {
 
 platform_detect
 
-export FIRST_PROMPT=1
-
 # don't put duplicate lines or lines starting with space in the history.
 # See bash(1) for more options
 HISTCONTROL=ignoreboth
@@ -331,6 +336,7 @@ set -o noclobber
 
 # avoid logout by "C-d"
 set -o ignoreeof
+export PROMPT_COMMAND_ADDITIONAL='new_line_prompt;'
 
 if is_exists 'fzf'; then
     export FZF_DEFAULT_OPTS="--multi --cycle --height=60% --layout=reverse --border=rounded --info=inline --ansi --exit-0"
