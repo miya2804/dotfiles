@@ -283,12 +283,20 @@ function _shopt_setup() {
     # If set, the pattern "**" used in a pathname expansion context will
     # match all files and zero or more directories and subdirectories.
     #shopt -s globstar
+
+    # disable overwrite (redirect >)
+    # if want to overwrite then use >|.
+    # set -o noclobber
+    shopt -so noclobber
+
+    # avoid logout by "C-d"
+    # set -o ignoreeof
+    shopt -so ignoreeof
 }
 
 function bashrc_startup() {
     _prompt_setup
     _alias_setup
-    _shopt_setup
 
     e_bashrc_message 'Hello:)'
     e_newline
@@ -330,16 +338,12 @@ if ! shopt -oq posix; then
     fi
 fi
 
-# disable overwrite (redirect >)
-# if want to overwrite then use >|.
-set -o noclobber
-
-# avoid logout by "C-d"
-set -o ignoreeof
 export PROMPT_COMMAND_ADDITIONAL='new_line_prompt;'
 
 if is_exists 'fzf'; then
     export FZF_DEFAULT_OPTS="--multi --cycle --height=60% --layout=reverse --border=rounded --info=inline --ansi --exit-0"
 fi
 
-bashrc_startup
+if bashrc_startup; then
+    _shopt_setup
+fi
