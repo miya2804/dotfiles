@@ -281,6 +281,9 @@ function _alias_setup() {
     alias du='du -h'
     alias less='less -XF'
 
+    alias gls='fzf_gls'
+    alias repos='fzf_ghq'
+
     if [ "$PLATFORM" = 'msys' ]; then
         alias open='start'
     else
