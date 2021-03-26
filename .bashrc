@@ -132,6 +132,22 @@ function fzf_ghq() {
     if [ -d "$repo_full_path" ]; then cd "$repo_full_path"; fi
 }
 
+function fzf_gls () {
+
+    # list the repository commit log using fzf,
+    # and preview it with git show.
+
+    git log --graph --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" | \
+        fzf --ansi --no-sort --no-multi --no-cycle --reverse --tiebreak=index \
+            --preview 'f() { set -- $(echo -- "$@" | grep -o "[a-f0-9]\{7\}"); [ $# -eq 0 ] || git show --color=always $1 ; }; f {}' \
+            --bind "alt-j:preview-down,alt-k:preview-up,ctrl-v:preview-page-down,alt-v:preview-page-up,enter:execute:
+                       (grep -o '[a-f0-9]\{7\}' | head -1 |
+                        xargs -I % sh -c 'git show --color=always % | less -R') << 'FZF-EOF'
+                        {}
+FZF-EOF" \
+            --preview-window=down:50% --height=100%
+}
+
 # --- setup functions ---
 
 function _prompt_setup() {
@@ -351,8 +367,12 @@ fi
 
 export PROMPT_COMMAND_ADDITIONAL='new_line_prompt;'
 
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+
 if is_exists 'fzf'; then
-    export FZF_DEFAULT_OPTS="--multi --cycle --height=60% --layout=reverse --border=rounded --info=inline --ansi --exit-0"
+    export FZF_DEFAULT_OPTS="--multi --cycle --height=60% --layout=reverse \
+                             --border=rounded --info=inline --ansi --exit-0 \
+                             --bind alt-p:toggle-preview,ctrl-k:kill-line,ctrl-x:delete-char,ctrl-d:delete-char"
 fi
 
 if bashrc_startup; then
