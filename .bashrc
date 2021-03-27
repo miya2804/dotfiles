@@ -148,7 +148,7 @@ function fzf_gls () {
     git log --graph --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" | \
         fzf --ansi --no-sort --no-multi --no-cycle --reverse --tiebreak=index \
             --preview 'f() { set -- $(echo -- "$@" | grep -o "[a-f0-9]\{7\}"); [ $# -eq 0 ] || git show --color=always $1 ; }; f {}' \
-            --bind "$(_fzf_preview_binds),enter:execute:
+            --bind "$(_fzf_preview_binds),ctrl-y:execute(echo {} | grep -o '[a-f0-9]\{7\}')+abort,enter:execute:
                        (grep -o '[a-f0-9]\{7\}' | head -1 |
                         xargs -I % sh -c 'git show --color=always % | less -R') << 'FZF-EOF'
                         {}
