@@ -123,13 +123,18 @@ function tmux_autostart() {
 
 # --- fzf ---
 
+function _fzf_preview_binds() {
+    local binds="alt-j:preview-down,alt-k:preview-up,alt-d:preview-half-page-down,alt-u:preview-half-page-up"
+    echo "$binds"
+}
+
 function fzf_ghq() {
 
     # list and move local github repository dir with fzf.
 
     local repository=$(ghq list | \
                            fzf --preview "ls -al --full-time --color $(ghq root)/{} | awk '{if (NR==1) print \$0; else print \$6 \" \" \$9}'" \
-                               --bind "alt-j:preview-down,alt-k:preview-up")
+                               --bind "$(_fzf_preview_binds)")
     local repo_full_path="$(ghq root | sed "s#\\\\#/#g")/${repository}"
 
     [ ! -z "$repository" ] && [ -d "$repo_full_path" ] && cd "$repo_full_path"
@@ -143,7 +148,7 @@ function fzf_gls () {
     git log --graph --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" | \
         fzf --ansi --no-sort --no-multi --no-cycle --reverse --tiebreak=index \
             --preview 'f() { set -- $(echo -- "$@" | grep -o "[a-f0-9]\{7\}"); [ $# -eq 0 ] || git show --color=always $1 ; }; f {}' \
-            --bind "alt-j:preview-down,alt-k:preview-up,ctrl-v:preview-page-down,alt-v:preview-page-up,enter:execute:
+            --bind "$(_fzf_preview_binds),enter:execute:
                        (grep -o '[a-f0-9]\{7\}' | head -1 |
                         xargs -I % sh -c 'git show --color=always % | less -R') << 'FZF-EOF'
                         {}
@@ -378,7 +383,7 @@ export PROMPT_COMMAND_ADDITIONAL='new_line_prompt;'
 if is_exists 'fzf'; then
     export FZF_DEFAULT_OPTS="--multi --cycle --height=60% --layout=reverse \
                              --border=rounded --info=inline --ansi --exit-0 \
-                             --bind alt-p:toggle-preview,ctrl-k:kill-line,ctrl-x:delete-char,ctrl-d:delete-char"
+                             --bind ctrl-v:half-page-down,alt-v:half-page-up,alt-p:toggle-preview,ctrl-k:kill-line,ctrl-d:delete-char,ctrl-x:delete-char"
 fi
 
 if bashrc_startup; then
