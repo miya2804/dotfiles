@@ -938,8 +938,8 @@ If there are multiple windows, 'other-window' is called."
 ;; https://github.com/jrosdahl/iflipb
 (use-package iflipb
   :ensure t
-  :bind (("M-o" . iflipb-next-buffer)
-         ("M-O" . iflipb-previous-buffer))
+  :bind (("M-q" . iflipb-next-buffer)
+         ("M-Q" . iflipb-previous-buffer))
   :custom
   (iflipb-ignore-buffers (list "^[*]" "^magit-process:"))
   (iflipb-wrap-around t))
