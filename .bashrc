@@ -132,6 +132,16 @@ function fzf_ghq() {
 
     # list and move local github repository dir with fzf.
 
+    if ! is_exists 'fzf'; then
+        e_error 'fzf command not found'
+        return 1
+    fi
+
+    if ! is_exists 'ghq'; then
+        e_error 'ghq command not found'
+        return 1
+    fi
+
     local repository=$(ghq list | \
                            fzf --preview "ls -al --full-time --color $(ghq root)/{} | awk '{if (NR==1) print \$0; else print \$6 \" \" \$9}'" \
                                --bind "$(_fzf_preview_binds)")
@@ -144,6 +154,11 @@ function fzf_gls () {
 
     # list the repository commit log using fzf,
     # and preview it with git show.
+
+    if ! is_exists 'fzf'; then
+        e_error 'fzf command not found'
+        return 1
+    fi
 
     git log --graph --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" | \
         fzf --ansi --no-sort --no-multi --no-cycle --reverse --tiebreak=index \
