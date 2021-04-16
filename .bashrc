@@ -24,7 +24,10 @@ fi
 
 
 
-# *functions
+# functions
+# ---------
+
+# --- prompt ---
 
 function new_line_prompt {
     if [ -z "$FIRST_PROMPT" ] || [ "$FIRST_PROMPT" = 1 ]; then
@@ -35,6 +38,9 @@ function new_line_prompt {
 }
 
 function eval_prompt_commands() {
+
+    # execute commands according to PROMPT_COMMAND_*
+
     export EXIT_STATUS="$?"
     local func
     for func in ${!PROMPT_COMMAND_*}
@@ -44,13 +50,14 @@ function eval_prompt_commands() {
     unset func
 }
 
-# tmux
-function tmux_autostart_info() {
+# --- tmux ---
+
+function _tmux_autostart_info() {
     local header='tmux_autostart:'
     printf "%s %s\n" "$header" "$*"
 }
 
-function tmux_autostart_error() {
+function _tmux_autostart_error() {
     local header='tmux_autostart:'
     printf "%s %s\n" "$header" "$*" 1>&2
 }
@@ -68,7 +75,7 @@ function tmux_autostart() {
     #   $TMUX_DISABLE_AUTO_NEW_SESSION=1
 
     if ! is_exists 'tmux'; then
-        tmux_autostart_error 'tmux is not exists'
+        _tmux_autostart_error 'tmux is not exists'
         return 1
     fi
 
@@ -81,17 +88,17 @@ function tmux_autostart() {
         if is_interactive_shell && ! is_ssh_running; then
             if tmux has-session >/dev/null 2>&1 && tmux list-sessions | grep -qE '.*]$'; then
                 e_newline
-                tmux_autostart_info 'detached session exists'
+                _tmux_autostart_info 'detached session exists'
                 tmux list-sessions
                 echo -n 'Attach? (Y/n/num): '; read
                 if [[ "$REPLY" =~ ^[Yy][Ee]*[Ss]*$ ]] || [[ "$REPLY" == '' ]]; then
-                    tmux_autostart_info 'tmux attaching session...'
+                    _tmux_autostart_info 'tmux attaching session...'
                     tmux attach-session
                     if [ $? -eq 0 ]; then
                         return 0
                     fi
                 elif [[ "$REPLY" =~ ^[0-9]+$ ]]; then
-                    tmux_autostart_info 'tmux attaching session...'
+                    _tmux_autostart_info 'tmux attaching session...'
                     tmux attach -t "$REPLY"
                     if [ $? -eq 0 ]; then
                         return 0
@@ -101,7 +108,7 @@ function tmux_autostart() {
                 fi
             elif [ ! "$TMUX_DISABLE_AUTO_NEW_SESSION" = 1 ]; then
                 e_newline
-                tmux_autostart_info 'create a new session automatically'
+                _tmux_autostart_info 'create a new session automatically'
                 tmux new-session
             fi
         fi
@@ -113,6 +120,58 @@ function tmux_autostart() {
         fi
     fi
 }
+
+# --- fzf ---
+
+function _fzf_preview_binds() {
+    local binds="alt-j:preview-down,alt-k:preview-up,alt-d:preview-half-page-down,alt-u:preview-half-page-up"
+    echo "$binds"
+}
+
+function fzf_ghq() {
+
+    # list and move local github repository dir with fzf.
+
+    if ! is_exists 'fzf'; then
+        e_error 'fzf command not found'
+        return 1
+    fi
+
+    if ! is_exists 'ghq'; then
+        e_error 'ghq command not found'
+        return 1
+    fi
+
+    local repository=$(ghq list | \
+                           fzf --preview "ls -al --full-time --color $(ghq root)/{} | awk '{if (NR==1) print \$0; else print \$6 \" \" \$9}'" \
+                               --bind "$(_fzf_preview_binds)")
+    local repo_full_path="$(ghq root | sed "s#\\\\#/#g")/${repository}"
+
+    [ ! -z "$repository" ] && [ -d "$repo_full_path" ] && cd "$repo_full_path"
+}
+
+function fzf_gls () {
+
+    # list the repository commit log using fzf,
+    # and preview it with git show.
+
+    if ! is_exists 'fzf'; then
+        e_error 'fzf command not found'
+        return 1
+    fi
+
+    git log --graph --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" | \
+        fzf --ansi --no-sort --no-multi --no-cycle --reverse --tiebreak=index \
+            --preview 'f() { set -- $(echo -- "$@" | grep -o "[a-f0-9]\{7\}"); [ $# -eq 0 ] || git show --color=always $1 ; }; f {}' \
+            --bind "$(_fzf_preview_binds),ctrl-y:execute(echo {} | grep -o '[a-f0-9]\{7\}')+abort,enter:execute:
+                       (grep -o '[a-f0-9]\{7\}' | head -1 |
+                        xargs -I % sh -c 'git show --color=always % | less -R') << 'FZF-EOF'
+                        {}
+FZF-EOF" \
+            --preview-window=down:50% --height=100%
+}
+
+# --- setup functions ---
 
 function _prompt_setup() {
     local color_prompt
@@ -152,8 +211,8 @@ function _prompt_setup() {
     if [[ ! "$PROMPT_COMMAND" =~ .*${prompt_command_name}.* ]]; then
         PROMPT_COMMAND_DEFAULT="$PROMPT_COMMAND"
     fi
+    export FIRST_PROMPT=1
     export PROMPT_COMMAND_DEFAULT
-    export PROMPT_COMMAND_ADDITIONAL='new_line_prompt;'
     PROMPT_COMMAND="$prompt_command_name"
 
     # --- colors ---
@@ -245,6 +304,9 @@ function _alias_setup() {
     alias du='du -h'
     alias less='less -XF'
 
+    alias gls='fzf_gls'
+    alias repos='fzf_ghq'
+
     if [ "$PLATFORM" = 'msys' ]; then
         alias open='start'
     else
@@ -274,12 +336,20 @@ function _shopt_setup() {
     # If set, the pattern "**" used in a pathname expansion context will
     # match all files and zero or more directories and subdirectories.
     #shopt -s globstar
+
+    # disable overwrite (redirect >)
+    # if want to overwrite then use >|.
+    # set -o noclobber
+    shopt -so noclobber
+
+    # avoid logout by "C-d"
+    # set -o ignoreeof
+    shopt -so ignoreeof
 }
 
 function bashrc_startup() {
     _prompt_setup
     _alias_setup
-    _shopt_setup
 
     e_bashrc_message 'Hello:)'
     e_newline
@@ -294,11 +364,10 @@ function bashrc_startup() {
 
 
 
-# *settings
+# settings
+# --------
 
 platform_detect
-
-export FIRST_PROMPT=1
 
 # don't put duplicate lines or lines starting with space in the history.
 # See bash(1) for more options
@@ -322,11 +391,16 @@ if ! shopt -oq posix; then
     fi
 fi
 
-# disable overwrite (redirect >)
-# if want to overwrite then use >|.
-set -o noclobber
+export PROMPT_COMMAND_ADDITIONAL='new_line_prompt;'
 
-# avoid logout by "C-d"
-set -o ignoreeof
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
-bashrc_startup
+if is_exists 'fzf'; then
+    export FZF_DEFAULT_OPTS="--multi --cycle --height=60% --layout=reverse \
+                             --border=rounded --info=inline --ansi --exit-0 \
+                             --bind ctrl-v:half-page-down,alt-v:half-page-up,alt-p:toggle-preview,ctrl-k:kill-line,ctrl-d:delete-char,ctrl-x:delete-char"
+fi
+
+if bashrc_startup; then
+    _shopt_setup
+fi

@@ -21,3 +21,6 @@ if [ -d "${HOME}/.local/bin" ]; then
 fi
 export PATH
 
+if [ "$PLATFORM" = 'msys' ]; then
+    export MSYS=winsymlinks:nativestrict
+fi

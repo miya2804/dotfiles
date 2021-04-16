@@ -269,12 +269,13 @@ If there are multiple windows, 'other-window' is called."
 ;;(windmove-default-keybindings 'meta)    ; use alt+arrow
 
 ;;;;; my-keybinds
+(bind-key "C-h" 'undo)
+(bind-key "C-l" 'redo)
 (bind-key "C-c |" 'split-window-right)
 (bind-key "C-c -" 'split-window-below)
 (bind-key "C-c k" 'delete-window)
-(bind-key "C-o" 'other-window-or-split)
+(bind-key "M-o" 'other-window)
 (bind-key "C-c o" 'other-window-or-split)
-(bind-key "<f9>" 'other-window-or-split)
 (bind-key "C-i" 'indent-for-tab-command)
 (bind-key "<zenkaku-hankaku>" 'toggle-input-method)
 (bind-key "C-c n"
@@ -937,8 +938,8 @@ If there are multiple windows, 'other-window' is called."
 ;; https://github.com/jrosdahl/iflipb
 (use-package iflipb
   :ensure t
-  :bind (("M-o" . iflipb-next-buffer)
-         ("M-O" . iflipb-previous-buffer))
+  :bind (("M-q" . iflipb-next-buffer)
+         ("M-Q" . iflipb-previous-buffer))
   :custom
   (iflipb-ignore-buffers (list "^[*]" "^magit-process:"))
   (iflipb-wrap-around t))
