@@ -269,6 +269,8 @@ If there are multiple windows, 'other-window' is called."
 ;;(windmove-default-keybindings 'meta)    ; use alt+arrow
 
 ;;;;; my-keybinds
+(bind-key "C-h" 'undo)
+(bind-key "C-l" 'redo)
 (bind-key "C-c |" 'split-window-right)
 (bind-key "C-c -" 'split-window-below)
 (bind-key "C-c k" 'delete-window)
