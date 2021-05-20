@@ -401,6 +401,10 @@ if is_exists 'fzf'; then
                              --bind ctrl-v:half-page-down,alt-v:half-page-up,alt-p:toggle-preview,ctrl-k:kill-line,ctrl-d:delete-char,ctrl-x:delete-char"
 fi
 
+if [ "$PLATFORM" = 'msys' ]; then
+    export MSYS=winsymlinks:nativestrict
+fi
+
 if bashrc_startup; then
     _shopt_setup
 fi

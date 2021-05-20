@@ -1,17 +1,9 @@
-# include .profile if it exists
-if [ -f "${HOME}/.profile" ]; then
-    . "${HOME}/.profile"
+# local settings
+if [ -f "${HOME}/.local_profile" ]; then
+   source "${HOME}/.local_profile"
 fi
 
-# if running bash
-if [ -n "$BASH_VERSION" ]; then
-    # include .bashrc if it exists
-    if [ -f "${HOME}/.bashrc" ]; then
-	. "${HOME}/.bashrc"
-    fi
-fi
-
-# set PATH so it includes private bin if it exists
+# path settings
 if [ -d "${HOME}/bin" ]; then
 	PATH="${HOME}/bin:${PATH}"
 fi
@@ -21,6 +13,10 @@ if [ -d "${HOME}/.local/bin" ]; then
 fi
 export PATH
 
-if [ "$PLATFORM" = 'msys' ]; then
-    export MSYS=winsymlinks:nativestrict
+# load bashrc
+if [ -n "$BASH_VERSION" ]; then
+    # include .bashrc if it exists
+    if [ -f "${HOME}/.bashrc" ]; then
+	    source "${HOME}/.bashrc"
+    fi
 fi
