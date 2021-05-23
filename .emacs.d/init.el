@@ -744,7 +744,9 @@ If there are multiple windows, 'other-window' is called."
 (use-package elscreen
   :ensure t :defer nil :no-require t
   :functions (elscreen-create)
-  :bind ("<f5>" . elscreen-next)
+  :bind
+  ("M-q" . elscreen-next)
+  ("C-M-q" . elscreen-previous)
   :custom
   (elscreen-prefix-key (kbd "C-z"))
   ;;(elscreen-display-tab nil)
@@ -938,8 +940,9 @@ If there are multiple windows, 'other-window' is called."
 ;; https://github.com/jrosdahl/iflipb
 (use-package iflipb
   :ensure t
-  :bind (("M-q" . iflipb-next-buffer)
-         ("M-Q" . iflipb-previous-buffer))
+  :bind
+  ("<f5>" . iflipb-next-buffer)
+  ("<S-f5>" . iflipb-previous-buffer)
   :custom
   (iflipb-ignore-buffers (list "^[*]" "^magit-process:"))
   (iflipb-wrap-around t))
