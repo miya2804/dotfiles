@@ -1,25 +1,40 @@
-" general
+" Display line number
 set number
+
+" Highlight matching paren
 set showmatch
+
+" In windows, change '\' in the file path to '/'
 set shellslash
-set list
-set listchars=tab:^\ ,trail:-
-set backspace=indent,eol,start
-hi comment ctermfg=3
-hi SpecialKey ctermbg=3 ctermfg=3
+
+" Syntax highlight
 syntax on
 
-" input
-set tabstop=4
-set expandtab
-set shiftwidth=4
+" Tabs and indentation
+set expandtab " Expand tabs to spaces
+set tabstop=4 " The width of the space recognized as tab
+set shiftwidth=4 " Auto indent width
+set softtabstop=2 " Number of spaces to enter when pressing the tab key
 
-" swp un ~
-"set noswapfile
-set nobackup
-set noundofile
+" swp, un~, ~ file
+"set noswapfile " Don't create swap file
+set nobackup " Don't create backup file
+set noundofile " Don't create undo file
 
 " search
-set hlsearch
-set ignorecase
+set hlsearch " Highlight search result
+set ignorecase " Case insensitive
 set wrapscan
+
+" Display invisible chars
+set list
+set listchars=tab:^\ ,trail:-
+autocmd VimEnter,WinEnter * match IdeographicSpace /　/ " Highlight zenkaku space
+
+" Enable backspace in insert mode
+set backspace=indent,eol,start
+
+" Color settings
+autocmd Colorscheme * hi SpecialKey ctermbg=darkblue ctermfg=lightgray
+autocmd Colorscheme * hi IdeographicSpace term=underline ctermbg=darkgray
+colorscheme default
