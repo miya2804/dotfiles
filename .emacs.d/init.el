@@ -377,7 +377,25 @@ If there are multiple windows, 'other-window' is called."
 (setq-default indicate-empty-lines nil)
 (setq-default indicate-buffer-boundaries 'left)
 
-;;(global-whitespace-mode 1)
+;;;;; Whitespace-mode
+(require 'whitespace)
+(setq whitespace-style '(face
+                         spaces
+                         tabs
+                         ;;space-mark
+                         ;;tab-mark
+                         ))
+(setq whitespace-space-regexp "\\(\u3000+\\)") ; 全角スペースのみ表示
+
+;; face of spaces
+(set-face-foreground 'whitespace-space nil)
+(set-face-background 'whitespace-space "brightblack")
+
+;; face of tabs
+(set-face-foreground 'whitespace-tab nil)
+(set-face-background 'whitespace-tab "brightblue")
+
+(global-whitespace-mode 1)
 
 (setq-default show-trailing-whitespace t)
 (add-hook 'dashboard-mode-hook 'disable-show-trailing-whitespace)
