@@ -8,7 +8,7 @@ set fish_color_git_dirty red
 set fish_color_git_commit_hash yellow
 set fish_color_git_action brred
 # info
-set fish_color_git_upstream white
+set fish_color_git_upstream normal 
 set fish_color_git_ahead brmagenta
 set fish_color_git_behind brmagenta
 set fish_color_git_stashed yellow
