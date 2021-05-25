@@ -153,6 +153,7 @@ function my_fish_git_prompt --description 'Write out the git prompt'
         set -a git_info (set_color $fish_color_git_ahead)$fish_prompt_git_status_ahead
     end
 
+    set_color -o
     if test -n "$git_info"
         echo -n ' '
         for i in $git_info
