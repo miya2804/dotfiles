@@ -8,7 +8,9 @@ function gl --description 'git log' --wraps='git log'
         if functions -q __fzf_git_log; and command -sq fzf
             __fzf_git_log
         else
-            command git log --oneline --graph --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr"
+            command git log --oneline --graph --color=always \
+              --date=format-local:'%Y-%m-%d %H:%M:%S' \
+              --format="%C(auto)%h%d %s %C(black)%C(bold)%cd"
         end
     else
         command git log $argv

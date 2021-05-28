@@ -6,7 +6,8 @@ function __fzf_git_log_all
 
     if functions -q __fzf_preview_git_show
         command git log --oneline --graph --all --color=always \
-          --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" | \
+          --date=format-local:'%Y-%m-%d %H:%M:%S' \
+          --format="%C(auto)%h%d %s %C(black)%C(bold)%cd" | \
           fzf --color=dark --no-sort --no-multi --no-cycle --reverse --tiebreak=index \
           --height=100% --prompt 'GIT LOG GRAPH ALLREFS > ' \
           --preview-window=right:wrap:hidden \
