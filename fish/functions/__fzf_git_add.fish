@@ -8,6 +8,7 @@ function __fzf_git_add --description 'Use fzf to interactively add modified cont
         git status --short | awk '{if (substr($0,2,1) !~ / /) print $0}' | \
           fzf --height 90% --prompt 'GIT ADD > ' --exit-0 \
           --preview "__fzf_preview_git_diff {}" \
+          --preview-window=right:60%:wrap \
           --bind "$fzf_preview_bind" | awk '{print $2}' | \
           while read staged_file
               echo 'Staged: '$staged_file
