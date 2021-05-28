@@ -1,6 +1,6 @@
-function gc --description 'git commit' --wraps='git commit'
+function gcm --description 'git commit' --wraps='git commit'
     if not command -sq git
-        __echo_error 'gc: git command not found.'
+        __echo_error 'gcm: git command not found.'
         return 1
     end
 
