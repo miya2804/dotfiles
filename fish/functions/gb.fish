@@ -3,11 +3,5 @@ function gb --description 'git branch' --wraps='git branch'
         __echo_error 'gb: git command not found.'
         return 1
     end
-
-    if functions -q __fzf_git_checkout; and test -z "$argv"
-        __fzf_git_checkout
-        return
-    else
-        command git branch $argv
-    end
+    command git branch $argv
 end
