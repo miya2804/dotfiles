@@ -1,5 +1,5 @@
 function fssh --description "Fuzzy-find ssh host via ag and ssh into it"
-    if command -q ag
+    if not command -sq ag
         __echo_error 'fssh: ag command not found.'
         return 1
     end
