@@ -5,5 +5,5 @@ function __fzf_preview_git_show
     end
 
     set -l commit_id (echo -- $argv | grep -o "[a-f0-9]\{7\}")
-    and git show --color=always $commit_id
+    and command git show --color=always $commit_id
 end

@@ -12,6 +12,6 @@ function __fzf_preview_git_diff
         echo '----'
         cat $file
     else
-        git diff --color=always $file
+        command git diff --color=always $file
     end
 end

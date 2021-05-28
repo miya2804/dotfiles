@@ -10,8 +10,8 @@ function __fzf_git_add --description 'Use fzf to interactively add modified cont
           --preview "__fzf_preview_git_diff {}" \
           --bind "$fzf_preview_bind" | awk '{print $2}' | \
           while read staged_file
-              echo $staged_file
-              git add $staged_file
+              echo 'Staged: '$staged_file
+              command git add $staged_file
           end
     else
         __echo_error '__fzf_git_add: __fzf_preview_git_diff command not found.'

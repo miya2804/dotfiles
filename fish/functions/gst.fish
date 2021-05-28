@@ -4,5 +4,5 @@ function gst --description 'git status'
         return 1
     end
 
-    command git status
+    command git status $argv
 end
