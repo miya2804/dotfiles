@@ -8,9 +8,12 @@ function __fzf_preview_git_diff --description 'Show changes between commits for 
     set -l file (echo $argv | awk '{print $2}')
 
     if test "$git_status_short_format" = "??"
-        echo (set_color red)'Untracked file.'(set_color normal)
+        echo (set_color red)'Untracked: '(set_color -o)$file(set_color normal)
         echo '----'
-        cat $file
+        echo
+        command -sq bat
+        and bat --plain --color=always $file
+        or cat $file
     else
         command git diff --color=always $file
     end
