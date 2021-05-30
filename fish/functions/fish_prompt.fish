@@ -9,7 +9,6 @@ function fish_prompt --description 'Write out the prompt'
 
     test $cwd = '~'
     and set cwd 'HOME'
-    #and set cwd 'HOME🏠'
 
     set_color brblack
     echo -n '[ '
@@ -25,7 +24,7 @@ function fish_prompt --description 'Write out the prompt'
     echo -n ' ]'
     set_color normal
 
-    set -l pipestatus_string (__fish_print_pipestatus " err-" " " "|" (set_color --bold $fish_color_status) (set_color --bold $fish_color_status) $last_pipestatus)
+    set -l pipestatus_string (__fish_print_pipestatus " [" "]" "|" (set_color --bold $fish_color_status) (set_color --bold $fish_color_status) $last_pipestatus)
     echo $pipestatus_string
 
     echo -n "$USER> "
