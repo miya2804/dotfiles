@@ -7,15 +7,19 @@ function my_fish_git_prompt --description 'Write out the git prompt'
 
     # Get the directory for later use.
     # Return if not inside a Git repository work tree.
-    if not set -l git_dir (command git rev-parse --git-dir 2>/dev/null)
+    if not set -l repo_info (command git rev-parse \
+      --git-dir --is-inside-git-dir --is-bare-repository 2>/dev/null)
         return
     end
+    set -l git_dir $repo_info[1]
+    set -l inside_gitdir $repo_info[2] # true of false
+    set -l bare_repo $repo_info[3] # true of false
 
     # Get the current action ("merge", "rebase", etc.)
     # and if there's one get the current commit hash too.
     set -l commit ''
     if set -l action (fish_print_git_action "$git_dir")
-        set commit (command git rev-parse HEAD 2> /dev/null | string sub -l 7)
+        set commit (command git rev-parse HEAD 2>/dev/null | string sub -l 7)
     end
 
     # Get either the branch name of a branch descriptor.
@@ -47,7 +51,7 @@ function my_fish_git_prompt --description 'Write out the git prompt'
         end
     end
 
-    set -l porcelain_status (command git status --porcelain | string sub -l2)
+    set -l porcelain_status (command git status --porcelain 2>/dev/null | string sub -l2)
 
     set -l status_clean 0
     if test -z "$porcelain_status"
@@ -87,18 +91,35 @@ function my_fish_git_prompt --description 'Write out the git prompt'
     end
 
     # Print branch name
+    set -l bare ''
+    set -l gitdir_char 'GIT_DIR!'
     if test -n "$branch"
-        if test $branch_detached -ne 0
-            set_color $fish_color_git_branch_detached
+        if test true = "$inside_gitdir"
+            if test true = "$bare_repo"
+                set bare (set_color normal)'BARE:'
+            else
+                set branch $gitdir_char
+            end
+        end
+
+        if test "$branch" = "$gitdir_char"
+            set branch (set_color normal)$branch
+        else if test $branch_detached -ne 0
+            set branch (set_color $fish_color_git_branch_detached)$branch
         else if test $status_clean -ne 0
-            set_color $fish_color_git_clean
+            set branch (set_color $fish_color_git_clean)$branch
         else if test $staged -ne 0
-            set_color $fish_color_git_staged
+            set branch (set_color $fish_color_git_staged)$branch
         else
-            set_color $fish_color_git_dirty
+            set branch (set_color $fish_color_git_dirty)$branch
         end
     end
-    echo -n " $branch"
+
+    set -l space ' '
+    test false = "$space_branch_prefix"
+    and set space ''
+    echo -n "$space$bare$branch"
+    set_color normal
 
     # Print current action and current commit hash
     set -l git_action_status ''
@@ -143,7 +164,7 @@ function my_fish_git_prompt --description 'Write out the git prompt'
     end
     test $status_behind -ne 0
     or test $status_ahead -ne 0
-    or if test $status_upstream -ne 0
+    or if test $status_upstream -ne 0; and test false = "$inside_gitdir"
         set -a git_info (set_color $fish_color_git_upstream)$fish_prompt_git_status_upstream
     end
     if test $status_behind -ne 0
