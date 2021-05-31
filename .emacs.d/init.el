@@ -527,7 +527,7 @@ If there are multiple windows, 'other-window' is called."
 
 ;; templates
 (defvar org-capture-templates
-              '(("a" "Memoｃ⌒っﾟωﾟ)っφ　ﾒﾓﾒﾓ..."
+              '(("a" "Memoｃ⌒っﾟωﾟ)っφ ﾒﾓﾒﾓ..."
                  plain (file "memos.org")
                  "* %?%U"
                  :empty-lines 1 :jump-to-captured 1)
