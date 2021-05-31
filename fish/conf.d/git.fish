@@ -39,7 +39,6 @@ set fish_prompt_git_status_ahead '>'
 # tide
 # color setting
 set tide_prompt_char_success_color normal
-set tide_pwd_
 
 # set git information of tide prompt
 if functions -q tide _tide_item_git
