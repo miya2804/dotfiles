@@ -5,7 +5,7 @@ function gl --description 'git log' --wraps='git log'
     end
 
     if test -z "$argv"
-        if functions -q __fzf_git_log; and command -sq fzf
+        if command -sq fzf
             __fzf_git_log
         else
             command git log --oneline --graph --color=always \

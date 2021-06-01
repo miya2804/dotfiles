@@ -4,7 +4,7 @@ function ga --description 'git add' --wraps='git add'
         return 1
     end
 
-    if functions -q __fzf_git_add; and test -z "$argv"
+    if test -z "$argv"; and command -sq fzf
         __fzf_git_add
     else
         command git add $argv

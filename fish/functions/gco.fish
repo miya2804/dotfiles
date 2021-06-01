@@ -4,7 +4,7 @@ function gco --description 'git checkout' --wraps='git checkout'
         return 1
     end
 
-    if functions -q __fzf_git_checkout; and test -z "$argv"
+    if test -z "$argv"; and command -sq fzf
         __fzf_git_checkout
     else
         command git checkout $argv

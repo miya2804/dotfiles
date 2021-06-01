@@ -5,7 +5,7 @@ function gla --description 'git log --all' --wraps='git log --all'
     end
 
     if test -z "$argv"
-        if functions -q __fzf_git_log_all; and command -sq fzf
+        if command -sq fzf
             __fzf_git_log_all
         else
             command git log --oneline --graph --all --color=always \
