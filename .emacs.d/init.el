@@ -133,8 +133,8 @@ If there are multiple windows, 'other-window' is called."
 (eval-and-compile
   (defvar gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
   ;; proxy
-  ;; ~/.emacs.d/elisp/secret/myproxy.elにプロキシ設定を書き込む
-  (load "secret/myproxy" t))
+  ;; ~/.local/emacs/proxy.elにプロキシ設定を書き込む
+  (load "~/.local/emacs/proxy" t))
 
 ;;;;; package manager
 (eval-and-compile
