@@ -391,16 +391,18 @@ if ! shopt -oq posix; then
     fi
 fi
 
+# additional prompt commands
 export PROMPT_COMMAND_ADDITIONAL='new_line_prompt;'
 
+# fzf settings
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
-
 if is_exists 'fzf'; then
     export FZF_DEFAULT_OPTS="--multi --cycle --height=60% --layout=reverse \
                              --border=rounded --info=inline --ansi --exit-0 \
                              --bind ctrl-v:half-page-down,alt-v:half-page-up,alt-p:toggle-preview,ctrl-k:kill-line,ctrl-d:delete-char,ctrl-x:delete-char"
 fi
 
+# symlink setting of msys
 if [ "$PLATFORM" = 'msys' ]; then
     export MSYS=winsymlinks:nativestrict
 fi
@@ -412,6 +414,7 @@ elif is_exists 'vim'; then
     export MANPAGER='/bin/sh -c "col -bx | vim -MRn -c \"set ft=man ts=8 nolist nomod nonu noma\" -"'
 fi
 
+# startup
 if bashrc_startup; then
     _shopt_setup
 fi
