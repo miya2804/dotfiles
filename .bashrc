@@ -449,6 +449,11 @@ elif is_exists 'vim'; then
     export VISUAL='vim'
 fi
 
+# fzf_ghq keybind (Ctrl-g)
+if is_exists 'fzf' && is_exists 'ghq'; then
+    bind '"\C-g": "_fzf_ghq\n"'
+fi
+
 # startup
 if bashrc_startup; then
     _shopt_setup
