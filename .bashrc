@@ -414,6 +414,15 @@ elif is_exists 'vim'; then
     export MANPAGER='/bin/sh -c "col -bx | vim -MRn -c \"set ft=man ts=8 nolist nomod nonu noma\" -"'
 fi
 
+# editor, visual
+if is_exists 'emacs'; then
+    export EDITOR='emacs -nw --qq'
+    export VISUAL='emacs -nw'
+elif is_exists 'vim'; then
+    export EDITOR='vim'
+    export VISUAL='vim'
+fi
+
 # startup
 if bashrc_startup; then
     _shopt_setup
