@@ -35,6 +35,7 @@ autocmd VimEnter,WinEnter * match IdeographicSpace /　/ " Highlight zenkaku spa
 set backspace=indent,eol,start
 
 " Color settings
-autocmd Colorscheme * hi SpecialKey ctermbg=darkblue ctermfg=lightgray
-autocmd Colorscheme * hi IdeographicSpace term=underline ctermbg=darkgray
+autocmd Colorscheme * hi Visual ctermbg=lightgray ctermfg=black
+autocmd Colorscheme * hi SpecialKey term=underline ctermbg=darkblue ctermfg=lightgray
+autocmd Colorscheme * hi IdeographicSpace term=underline ctermbg=darkmagenta
 colorscheme default
