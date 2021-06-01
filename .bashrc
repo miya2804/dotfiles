@@ -22,6 +22,8 @@ if ! is_vitalize 2>/dev/null; then
     return 1
 fi
 
+source "${DOTDIR_PATH}/etc/lib/fzf-functions.bash" 2>/dev/null
+
 
 
 # functions
@@ -119,56 +121,6 @@ function tmux_autostart() {
             : cat "${HOME}/.dotfiles/etc/ascii-art/tmux.txt"
         fi
     fi
-}
-
-# --- fzf ---
-
-function _fzf_preview_binds() {
-    local binds="alt-j:preview-down,alt-k:preview-up,alt-d:preview-half-page-down,alt-u:preview-half-page-up"
-    echo "$binds"
-}
-
-function fzf_ghq() {
-
-    # list and move local github repository dir with fzf.
-
-    if ! is_exists 'fzf'; then
-        e_error 'fzf command not found'
-        return 1
-    fi
-
-    if ! is_exists 'ghq'; then
-        e_error 'ghq command not found'
-        return 1
-    fi
-
-    local repository=$(ghq list | \
-                           fzf --preview "ls -al --full-time --color $(ghq root)/{} | awk '{if (NR==1) print \$0; else print \$6 \" \" \$9}'" \
-                               --bind "$(_fzf_preview_binds)")
-    local repo_full_path="$(ghq root | sed "s#\\\\#/#g")/${repository}"
-
-    [ ! -z "$repository" ] && [ -d "$repo_full_path" ] && cd "$repo_full_path"
-}
-
-function fzf_gls () {
-
-    # list the repository commit log using fzf,
-    # and preview it with git show.
-
-    if ! is_exists 'fzf'; then
-        e_error 'fzf command not found'
-        return 1
-    fi
-
-    git log --graph --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr" | \
-        fzf --ansi --no-sort --no-multi --no-cycle --reverse --tiebreak=index \
-            --preview 'f() { set -- $(echo -- "$@" | grep -o "[a-f0-9]\{7\}"); [ $# -eq 0 ] || git show --color=always $1 ; }; f {}' \
-            --bind "$(_fzf_preview_binds),ctrl-y:execute(echo {} | grep -o '[a-f0-9]\{7\}')+abort,enter:execute:
-                       (grep -o '[a-f0-9]\{7\}' | head -1 |
-                        xargs -I % sh -c 'git show --color=always % | less -R') << 'FZF-EOF'
-                        {}
-FZF-EOF" \
-            --preview-window=down:50% --height=100%
 }
 
 # --- setup functions ---
@@ -304,8 +256,82 @@ function _alias_setup() {
     alias du='du -h'
     alias less='less -XF'
 
-    alias gls='fzf_gls'
-    alias repos='fzf_ghq'
+    # git (require DOTDIR/etc/lib/fzf-functions.bash)
+    function gl() {
+        if ! is_exists 'git'; then
+            e_error 'gl: git command not found'
+            return 1
+        fi
+
+        if [ "$#" -eq 0 ]; then
+            if is_exists 'fzf'; then
+                _fzf_git_log
+            else
+                git log --oneline --graph --color=always \
+                    --data=format-local:'%Y-%m-%d %H:%M:%S' \
+                    --format="%C(auto)%h%d %s %C(black)%C(bold)%cd"
+            fi
+        else
+            git log "$@"
+        fi
+    }
+    function gla() {
+        if ! is_exists 'git'; then
+            e_error 'gla: git command not found'
+            return 1
+        fi
+
+        if [ "$#" -eq 0 ]; then
+            if is_exists 'fzf'; then
+                _fzf_git_log_all
+            else
+                git log --all --oneline --graph --color=always \
+                    --data=format-local:'%Y-%m-%d %H:%M:%S' \
+                    --format="%C(auto)%h%d %s %C(black)%C(bold)%cd"
+            fi
+        else
+            git log --all "$@"
+        fi
+    }
+    function ga() {
+        if ! is_exists 'git'; then
+            e_error 'ga: git command not found'
+            return 1
+        fi
+
+        if [ "$#" -eq 0 ] && is_exists 'fzf'; then
+            _fzf_git_add
+        else
+            git add "$@"
+        fi
+    }
+    function gd() {
+        if ! is_exists 'git'; then
+            e_error 'gd: git command not found'
+            return 1
+        fi
+
+        if [ "$#" -eq 0 ] && is_exists 'fzf'; then
+            _fzf_git_diff_including_staged
+        else
+            git diff "$@"
+        fi
+    }
+    function gco() {
+        if ! is_exists 'git'; then
+            e_error 'gco: git command not found'
+            return 1
+        fi
+
+        if [ "$#" -eq 0 ] && is_exists 'fzf'; then
+            _fzf_git_checkout
+        else
+            git checkout "$@"
+        fi
+    }
+    alias gb='git branch'
+    alias gst='git status'
+    alias gc='git commit -v'
 
     if [ "$PLATFORM" = 'msys' ]; then
         alias open='start'

@@ -160,6 +160,8 @@ function platform_detect() {
     export PLATFORM
 }
 
+export -f is_exists e_error
+
 # *** dotfiles ***
 
 function dotfiles_download() {
