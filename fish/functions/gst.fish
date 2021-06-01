@@ -3,6 +3,5 @@ function gst --description 'git status'
         __echo_error 'gst: git command not found.'
         return 1
     end
-
     command git status $argv
 end

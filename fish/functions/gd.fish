@@ -6,7 +6,6 @@ function gd --description 'git diff' --wraps='git diff'
 
     if functions -q __fzf_git_diff_including_staged; and test -z "$argv"
         __fzf_git_diff_including_staged
-        return
     else
         command git diff $argv
     end
