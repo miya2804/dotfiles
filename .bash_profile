@@ -1,8 +1,3 @@
-# local settings
-if [ -f "${HOME}/.local_profile" ]; then
-   source "${HOME}/.local_profile"
-fi
-
 # path settings
 if [ -d "${HOME}/bin" ]; then
     PATH="${HOME}/bin:${PATH}"
@@ -12,6 +7,14 @@ if [ -d "${HOME}/.local/bin" ]; then
     PATH="${HOME}/.local/bin:${PATH}"
 fi
 export PATH
+
+# local settings
+if [ -f "${HOME}/.local_profile" ]; then
+    source "${HOME}/.local_profile"
+fi
+
+source "${DOTDIR_PATH}/etc/vital.sh" 2>/dev/null \
+&& platform_detect
 
 # load bashrc
 if [ -n "$BASH_VERSION" ]; then
