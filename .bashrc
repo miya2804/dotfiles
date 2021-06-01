@@ -405,6 +405,13 @@ if [ "$PLATFORM" = 'msys' ]; then
     export MSYS=winsymlinks:nativestrict
 fi
 
+# manpager setting
+if is_exists 'bat'; then
+    export MANPAGER='sh -c "col -bx | bat -l man -p"'
+elif is_exists 'vim'; then
+    export MANPAGER='/bin/sh -c "col -bx | vim -MRn -c \"set ft=man ts=8 nolist nomod nonu noma\" -"'
+fi
+
 if bashrc_startup; then
     _shopt_setup
 fi
