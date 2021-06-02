@@ -268,7 +268,7 @@ function _alias_setup() {
                 _fzf_git_log
             else
                 git log --oneline --graph --color=always \
-                    --data=format-local:'%Y-%m-%d %H:%M:%S' \
+                    --date=format-local:'%Y-%m-%d %H:%M:%S' \
                     --format="%C(auto)%h%d %s %C(black)%C(bold)%cd"
             fi
         else
@@ -286,7 +286,7 @@ function _alias_setup() {
                 _fzf_git_log_all
             else
                 git log --all --oneline --graph --color=always \
-                    --data=format-local:'%Y-%m-%d %H:%M:%S' \
+                    --date=format-local:'%Y-%m-%d %H:%M:%S' \
                     --format="%C(auto)%h%d %s %C(black)%C(bold)%cd"
             fi
         else
