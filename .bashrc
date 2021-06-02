@@ -449,7 +449,7 @@ fi
 
 # fzf_ghq keybind (Ctrl-g)
 if is_exists 'fzf' && is_exists 'ghq'; then
-    bind '"\C-g": "_fzf_ghq\n"'
+    bind -x '"\C-g": _fzf_ghq'
 fi
 
 # startup
