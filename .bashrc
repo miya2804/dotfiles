@@ -312,7 +312,11 @@ function _alias_setup() {
         fi
 
         if [ "$#" -eq 0 ] && is_exists 'fzf'; then
-            _fzf_git_diff_including_staged
+            if [ "$PLATFORM" = 'msys' ]; then
+                git diff "$@"
+            else
+                _fzf_git_diff_including_staged
+            fi
         else
             git diff "$@"
         fi
