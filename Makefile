@@ -4,8 +4,8 @@ CANDIDATES  := $(wildcard .??*) bin
 EXCLUSIONS  := .git
 DOTFILES    := $(filter-out $(EXCLUSIONS), $(CANDIDATES))
 
+SCRIPT_DIR := $(DOTDIR_PATH)/etc/script/make
 SPECIALS  := fish
-FISH_ROOT := $(HOME)/.config/fish
 
 .DEFAULT_GOAL := help
 
@@ -17,16 +17,9 @@ list: ## Show dotfiles link target to your home of this repo
 	@-$(foreach val, $(DOTFILES), /bin/ls -dF $(val);)
 	@$(foreach val, $(SPECIALS), /bin/ls -dF $(val);)
 
-init: ## Run initialization scripts (.dotfiles/etc/init/*.sh)
-	@read -p "Run initialize scripts? (y/n): " reply; \
-	if [ "$$reply" = 'y' ]; then \
-		echo 'Initializing...'"\n"; \
-		$(foreach val, $(wildcard ./etc/init/*.sh), \
-			echo "--- script: $(shell basename $(val)) ---"; \
-			bash $(val);) \
-	else \
-		echo "terminated."; \
-	fi
+init: ## Run initialization scripts
+	@echo
+	@$(SCRIPT_DIR)/initialize.sh
 
 help: ## Self-documented Makefile
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
@@ -35,32 +28,31 @@ help: ## Self-documented Makefile
 
 
 # DEPLOY
-.PHONY: deploy default_deploy specials_deploy fish
+.PHONY: deploy default_deploy specials_deploy fish_deploy
 
 deploy: default_deploy specials_deploy ## Create symlink of all targets
 
-default_deploy: ## Create symlink of general dotfiles to home directory
-	@echo 'Dotfiles depoloying...'
+default_deploy: default_unlink ## Create symlink of general dotfiles to home directory
+	@echo
+	@echo '--- Dotfiles deploy ---'
 	@$(foreach val, $(DOTFILES), \
 		if [ -d $(abspath $(HOME))/$(val) ]; then \
 			mv $(abspath $(HOME))/$(val) $(abspath $(HOME))/$(val).bak; \
-			ln -nsv --backup=numbered $(abspath $(val)) $(abspath $(HOME))/$(val); \
-		else \
-			ln -nsv --backup=numbered $(abspath $(val)) $(abspath $(HOME))/$(val); \
-		fi;)
+		fi; \
+		ln -ns --backup=numbered $(abspath $(val)) $(abspath $(HOME))/$(val) \
+			&& echo "symlink created '$(abspath $(HOME))/$(val)'";)
+	@echo
+	@printf " \033[37;1m✔ Dotfiles deploy\033[m...\033[32mOK\033[m\n"
 
-specials_deploy: $(SPECIALS) ## Create symlink in the corresponding location
+specials_deploy: $(SPECIALS)_deploy ## Create symlink in the corresponding location
 
-fish:
-	@echo 'Fish config file deploying...'
-	@-mkdir -pv $(FISH_ROOT)/conf.d $(FISH_ROOT)/functions
-	@for src in $$(find $(DOTDIR_PATH)/$@ -type f); do \
-		ln -nsv --backup=numbered $$src $(FISH_ROOT)/$$(realpath --relative-to $(DOTDIR_PATH)/$@ $$src);\
-	done
+fish_deploy: fish_unlink
+	@echo
+	@$(SCRIPT_DIR)/fish_config.sh --deploy
 
 
 # CLEAN
-.PHONY: clean unlink default_unlink specials_unlink
+.PHONY: clean unlink default_unlink specials_unlink fish_unlink
 
 clean: unlink ## Remove the dot files and this repository
 	@-read -p "Remove dotfiles repository? (y/n): " reply; \
@@ -73,22 +65,20 @@ clean: unlink ## Remove the dot files and this repository
 		echo "terminated."; \
 	fi
 
-unlink: default_unlink specials_unlink fish_unlink ## Remove symlink of all targets
+unlink: default_unlink specials_unlink ## Remove symlink of all targets
 
 default_unlink: ## Remove symlink of general dotfiles from home directory
-	@echo 'Removing symlinks of dotfiles in your home directory...'
-# 	check whether link and remove.
+	@echo
+	@echo '--- Remove symlinks of dotfiles in your home directory ---'
 	@-$(foreach val, $(DOTFILES), \
 		if [ -L $(abspath $(HOME))/$(val) ]; then \
 			rm -vrf $(abspath $(HOME))/$(val); \
 		fi;)
+	@echo
+	@printf " \033[37;1m✔ Remove symlinks of dotfiles in your home directory\033[m...\033[32mOK\033[m\n"
 
 specials_unlink: $(SPECIALS)_unlink ## Remove symlink in the corresponding location
 
 fish_unlink:
-	@echo 'Removing symlinks of fish config file...'
-	@for src in $$(find $(DOTDIR_PATH)/fish -type f); do \
-		if [ -L $(FISH_ROOT)/$$(realpath --relative-to $(DOTDIR_PATH)/fish $$src) ]; then \
-			rm -vrf $(FISH_ROOT)/$$(realpath --relative-to $(DOTDIR_PATH)/fish $$src); \
-		fi; \
-	done
+	@echo
+	@$(SCRIPT_DIR)/fish_config.sh --unlink
