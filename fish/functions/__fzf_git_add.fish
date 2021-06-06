@@ -6,9 +6,9 @@ function __fzf_git_add --description 'Use fzf to interactively add modified cont
 
     if functions -q __fzf_preview_git_diff
         command git status --short | awk '{if (substr($0,2,1) !~ / /) print $0}' | \
-          fzf --height 90% --prompt 'GIT ADD > ' --exit-0 \
+          fzf --height 100% --prompt 'GIT ADD > ' --exit-0 \
           --preview "__fzf_preview_git_diff {}" \
-          --preview-window=right:60%:wrap \
+          --preview-window=down:85%:wrap \
           --bind "$fzf_preview_bind" | awk '\
             {
               if (substr($0,1,2) !~ /R/) {\
