@@ -9,7 +9,14 @@ function __fzf_git_add --description 'Use fzf to interactively add modified cont
           fzf --height 90% --prompt 'GIT ADD > ' --exit-0 \
           --preview "__fzf_preview_git_diff {}" \
           --preview-window=right:60%:wrap \
-          --bind "$fzf_preview_bind" | awk '{print $2}' | \
+          --bind "$fzf_preview_bind" | awk '\
+            {
+              if (substr($0,1,2) !~ /R/) {\
+                print $2 \
+              } else {
+                print $4 \
+              }
+            }' | \
           while read staged_file
               echo 'Staged: '$staged_file
               command git add $staged_file
