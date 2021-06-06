@@ -91,6 +91,7 @@ function my_fish_git_prompt --description 'Write out the git prompt'
     end
 
     # Print branch name
+    set -l space ' '
     set -l bare ''
     set -l gitdir_char 'GIT_DIR!'
     if test -n "$branch"
@@ -114,8 +115,6 @@ function my_fish_git_prompt --description 'Write out the git prompt'
             set branch (set_color $fish_color_git_dirty)$branch
         end
     end
-
-    set -l space ' '
     test false = "$space_branch_prefix"
     and set space ''
     echo -n "$space$bare$branch"
