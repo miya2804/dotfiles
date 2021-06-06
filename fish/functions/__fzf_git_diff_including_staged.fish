@@ -17,7 +17,7 @@ function __fzf_git_diff_including_staged --description 'Fizzy-find and show chan
                  print $4
                }
              }' | \
-        xargs git diff --color=always | less -XFR
+        read -l result; and git diff --color=always "$result" | less -XFR
     else
         __echo_error '__fzf_git_diff_including_staged: __fzf_preview_git_diff_including_staged function not found.'
         return 1
