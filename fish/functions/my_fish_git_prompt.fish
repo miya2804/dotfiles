@@ -126,7 +126,7 @@ function my_fish_git_prompt --description 'Write out the git prompt'
         set -a git_action_status (set_color $fish_color_git_commit_hash)"$commit"
     end
     if test -n "$action"
-        set -a git_action_status (set_color normal)':'(set_color -o $fish_color_git_action)"$action"
+        set -a git_action_status (set_color normal)':'(set_color $fish_color_git_action)"$action"
     end
     if test -n "$git_action_status"
         set_color normal
@@ -173,7 +173,6 @@ function my_fish_git_prompt --description 'Write out the git prompt'
         set -a git_info (set_color $fish_color_git_ahead)$fish_prompt_git_status_ahead
     end
 
-    set_color -o
     if test -n "$git_info"
         echo -n ' '
         for i in $git_info
