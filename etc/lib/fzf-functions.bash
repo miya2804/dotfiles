@@ -114,7 +114,15 @@ function _fzf_git_diff_including_staged() {
         fzf --height 100% --exit-0 --no-multi --prompt 'GIT DIFFS > ' \
             --preview "_fzf_preview_git_diff_including_staged {}" \
             --preview-window=down:85%:wrap \
-            --bind "$(_fzf_preview_bind),tab:toggle-preview" >/dev/null
+            --bind "$(_fzf_preview_bind),tab:toggle-preview" | \
+        awk '{
+               if (substr($0,1,2) !~ /R/) {
+                 print $2
+               } else {
+                 print $4
+               }
+             }' | \
+        xargs git diff --color=always | less -XFR
 }
 
 function _fzf_git_checkout() {
