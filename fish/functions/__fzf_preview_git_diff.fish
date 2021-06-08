@@ -14,9 +14,13 @@ function __fzf_preview_git_diff --description 'Show changes between commits for 
         echo (set_color red)'Untracked: '(set_color -o)$file(set_color normal)
         echo '----'
         echo
-        command -sq bat
-        and bat --plain --color=always $file
-        or cat $file
+        if test ! -d "$file"
+            command -sq bat
+            and bat --plain --color=always $file
+            or cat $file
+        else
+            ls -al --color=always "$file"
+        end
     else
         echo "$git_status_short_format" | grep R >/dev/null
         and set file $rename_file
