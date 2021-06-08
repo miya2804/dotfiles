@@ -200,22 +200,39 @@ function _fzf_preview_git_diff_including_staged() {
     local git_index_status=$(echo "$git_status_short_format" | awk '{print substr($0,1,1)}')
     local git_workingtree_status=$(echo "$git_status_short_format" | awk '{print substr($0,2,1)}')
     local file=$(echo "$@" | awk '{print $2}')
-    local staged_color=$'\e[37;42m' # green
-    local not_staged_color=$'\e[37;41m' # red
+    local rename_file=$(echo "$@" | awk '{print $4}')
+    local staged_color=$'\e[37;42m' # backgound/green
+    local not_staged_color=$'\e[37;41m' # background/red
+    local green=$'\e[37;32m'
+    local red=$'\e[37;31m'
     local color_reset=$'\e[m'
 
-    echo "Change of ${file}"
+    echo "$@"
     echo
 
     if [ "$git_index_status" != ' ' ]; then
         echo ${staged_color}'<<<<<<<<<< STAGED <<<<<<<<<<'${color_reset}
-        git diff --staged --color=always "$file"
+
+        if [ "$git_index_status" == 'R' ]; then
+            echo "${green}renamed: ${file} -> ${rename_file}${color_reset}"
+            file="$rename_file"
+            git diff --staged --color=always --diff-filter=R "$file"
+        elif [ "$git_index_status" == 'D' ]; then
+            echo "${green}deleted: ${file}${color_reset}"
+        else
+            git diff --staged --color=always "$file"
+        fi
         echo
     fi
 
     if [ "$git_workingtree_status" != ' ' ]; then
         echo ${not_staged_color}'>>>>>>>>>> NOT STAGED >>>>>>>>>>'${color_reset}
-        git diff --color=always "$file"
+
+        if [ "$git_workingtree_status" == 'D' ]; then
+            echo "${red}deleted: ${file}"
+        else
+            git diff --color=always "$file"
+        fi
         echo
     fi
 }
