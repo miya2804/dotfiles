@@ -85,7 +85,14 @@ function _fzf_git_add() {
         fzf --height 90% --prompt 'GIT ADD > ' --exit-0 \
             --preview "_fzf_preview_git_diff {}" \
             --preview-window=right:60%:wrap \
-            --bind $(_fzf_preview_bind) | awk '{print $2}' | \
+            --bind $(_fzf_preview_bind) | \
+        awk '{
+               if (substr($0,1,2) !~ /R/) {\
+                 print $2 \
+               } else {
+                 print $4 \
+               }
+             }' | \
         while read staged_file; do
             echo "Staged: ${staged_file}"
             git add "$staged_file"
@@ -152,7 +159,12 @@ function _fzf_preview_git_diff() {
     fi
 
     local git_status_short_format=$(echo "$@" | awk '{print substr($0,1,2)}')
+    local git_index_status=$(echo "$git_status_short_format" | awk '{print substr($0,1,1)}')
+    local git_workingtree_status=$(echo "$git_status_short_format" | awk '{print substr($0,2,1)}')
     local file=$(echo "$@" | awk '{print $2}')
+    local rename_file=$(echo "$@" | awk '{print $4}')
+    local red=$'\e[37;31m'
+    local color_reset=$'\e[m'
 
     if [ "$git_status_short_format" == '??' ]; then
         echo "Untracked: ${file}"
@@ -167,7 +179,14 @@ function _fzf_preview_git_diff() {
             ls -al --color=always "$file"
         fi
     else
-        git diff --color=always "$file"
+        echo "$git_status_short_format" | grep R >/dev/null \
+          && file="$rename_file"
+
+        if [ "$git_workingtree_status" == 'D' ]; then
+            echo "${red}deleted: ${file}${color_reset}"
+        else
+            git diff --color=always "$file"
+        fi
     fi
 }
 
