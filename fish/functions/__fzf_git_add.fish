@@ -11,10 +11,10 @@ function __fzf_git_add --description 'Use fzf to interactively add modified cont
           --preview-window=down:85%:wrap \
           --bind "$fzf_preview_bind" | \
         awk '{
-               if (substr($0,1,2) !~ /R/) {\
-                 print $2 \
+               if (substr($0,1,2) !~ /R/) {
+                 print $2
                } else {
-                 print $4 \
+                 print $4
                }
              }' | \
         while read staged_file
