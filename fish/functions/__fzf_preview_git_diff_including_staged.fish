@@ -30,6 +30,10 @@ function __fzf_preview_git_diff_including_staged --description 'Input: line of g
             set_color green
             echo "deleted: $file"
             set_color normal
+        else if test "$git_index_status" = 'A'
+            set_color green
+            echo "new file: $file"
+            set_color normal
         else
             command git diff --staged --color=always $file
         end
