@@ -224,6 +224,8 @@ function _fzf_preview_git_diff_including_staged() {
             git diff --staged --color=always --diff-filter=R "$file"
         elif [ "$git_index_status" == 'D' ]; then
             echo "${green}deleted: ${file}${color_reset}"
+        elif [ "$git_index_status" == 'A' ]; then
+            echo "${green}new file: ${file}${color_reset}"
         else
             git diff --staged --color=always "$file"
         fi
