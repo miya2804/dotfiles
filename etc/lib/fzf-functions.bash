@@ -132,7 +132,8 @@ function _fzf_git_checkout() {
         fzf --no-clear --height 90% --prompt 'GIT CHECKOUT > ' \
             --preview "git log --color=always {}" \
             --preview-window=right:60%:wrap:hidden \
-            --bind $(_fzf_preview_bind) | xargs git checkout
+            --bind "$(_fzf_preview_bind),tab:toggle-preview" | \
+        (read result; [ -n "$result" ] && git checkout "$result")
 }
 
 ### fzf preview commands
