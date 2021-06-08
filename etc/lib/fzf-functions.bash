@@ -34,11 +34,11 @@ function _fzf_git_log() {
     git log --oneline --graph --color=always \
         --date=format-local:'%Y-%m-%d %H:%M:%S' \
         --format="%C(auto)%h%d %s %C(black)%C(bold)%cd" | \
-        fzf --color=dark --no-sort --no-multi --no-cycle --reverse --tiebreak=index \
+        fzf --color=dark --no-sort --no-multi --no-cycle --tiebreak=index \
             --height=100% --prompt='GIT LOG GRAPH > ' \
-            --preview-window=right:70%:wrap:hidden \
+            --preview-window=down:85%:wrap:hidden \
             --preview "_fzf_preview_git_show {}" \
-            --bind "$(_fzf_preview_bind),ctrl-y:execute(echo {} | grep -o '[a-f0-9]\{7\}')+abort,enter:execute:
+            --bind "$(_fzf_preview_bind),tab:toggle-preview,ctrl-y:execute(echo {} | grep -o '[a-f0-9]\{7\}')+abort,enter:execute:
                        (grep -o '[a-f0-9]\{7\}' | head -1 |
                         xargs -I % sh -c 'git show --color=always % | less -R') << 'FZF-EOF'
                         {}
@@ -59,11 +59,11 @@ function _fzf_git_log_all() {
     git log --all --oneline --graph --color=always \
         --date=format-local:'%Y-%m-%d %H:%M:%S' \
         --format="%C(auto)%h%d %s %C(black)%C(bold)%cd" | \
-        fzf --color=dark --no-sort --no-multi --no-cycle --reverse --tiebreak=index \
+        fzf --color=dark --no-sort --no-multi --no-cycle --tiebreak=index \
             --height=100% --prompt='GIT LOG GRAPH > ' \
-            --preview-window=right:70%:wrap:hidden \
+            --preview-window=down:85%:wrap:hidden \
             --preview "_fzf_preview_git_show {}" \
-            --bind "$(_fzf_preview_bind),ctrl-y:execute(echo {} | grep -o '[a-f0-9]\{7\}')+abort,enter:execute:
+            --bind "$(_fzf_preview_bind),tab:toggle-preview,ctrl-y:execute(echo {} | grep -o '[a-f0-9]\{7\}')+abort,enter:execute:
                        (grep -o '[a-f0-9]\{7\}' | head -1 |
                         xargs -I % sh -c 'git show --color=always % | less -R') << 'FZF-EOF'
                         {}
@@ -82,9 +82,9 @@ function _fzf_git_add() {
     fi
 
     git status --short | awk '{if (substr($0,2,1) !~ / /) print $0}' | \
-        fzf --height 90% --prompt 'GIT ADD > ' --exit-0 \
+        fzf --height 100% --prompt 'GIT ADD > ' --exit-0 \
             --preview "_fzf_preview_git_diff {}" \
-            --preview-window=right:60%:wrap \
+            --preview-window=down:85%:wrap \
             --bind $(_fzf_preview_bind) | \
         awk '{
                if (substr($0,1,2) !~ /R/) {\
@@ -111,10 +111,10 @@ function _fzf_git_diff_including_staged() {
     fi
 
     git status --short | awk '{if(substr($0,1,2) != "??") print $0}' | \
-        fzf --height 90% --exit-0 --prompt 'GIT DIFFS > ' \
+        fzf --height 100% --exit-0 --no-multi --prompt 'GIT DIFFS > ' \
             --preview "_fzf_preview_git_diff_including_staged {}" \
-            --preview-window=right:70%:wrap \
-            --bind $(_fzf_preview_bind) >/dev/null
+            --preview-window=down:85%:wrap \
+            --bind "$(_fzf_preview_bind),tab:toggle-preview" >/dev/null
 }
 
 function _fzf_git_checkout() {
@@ -129,9 +129,9 @@ function _fzf_git_checkout() {
     fi
 
     git branch --all --color=always | grep -v HEAD | cut -c 3- | \
-        fzf --no-clear --height 90% --prompt 'GIT CHECKOUT > ' \
+        fzf --no-multi --height 100% --prompt 'GIT CHECKOUT > ' \
             --preview "git log --color=always {}" \
-            --preview-window=right:60%:wrap:hidden \
+            --preview-window=down:70%:wrap \
             --bind "$(_fzf_preview_bind),tab:toggle-preview" | \
         (read result; [ -n "$result" ] && git checkout "$result")
 }
