@@ -1,4 +1,3 @@
-*~
 *.elc
 *.log
 /.backup/
@@ -13,5 +12,3 @@
 /transient/
 /url/
 custom.el
-myproxy.el
-!.gitkeep
