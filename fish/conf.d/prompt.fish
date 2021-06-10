@@ -1,8 +1,11 @@
 ### PROMPT ###
 
 # tide
+set tide_left_prompt_items pwd git newline prompt_char
+set tide_right_prompt_items status cmd_duration context jobs virtual_env time
 set tide_prompt_char_success_color normal
 set tide_prompt_char_icon '>'
+set tide_pwd_truncate_margin 30
 set tide_time_format '%H:%M'
 
 ### GIT PROMPT ###
