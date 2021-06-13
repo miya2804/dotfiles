@@ -1061,12 +1061,14 @@ If there are multiple windows, 'other-window' is called."
   :custom (mozc-candidate-style 'popup))
 
 (use-package neotree
-  ;; memo
-  ;; neotree-find (カレントバッファのファイルをneotree上で表示)
   :ensure t
   :bind (("C-q" . neotree-toggle)
          :map neotree-mode-map
               ("a" . neotree-hidden-file-toggle)
+              ("j" . neotree-next-line)
+              ("k" . neotree-previous-line)
+              ("h" . neotree-select-up-node)
+              ("l" . neotree-change-root)
               ("C-b" . neotree-select-up-node)
               ("C-f" . neotree-change-root))
   :custom
