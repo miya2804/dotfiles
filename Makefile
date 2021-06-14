@@ -4,7 +4,7 @@ CANDIDATES  := $(wildcard .??*) bin
 EXCLUSIONS  := .git
 DOTFILES    := $(filter-out $(EXCLUSIONS), $(CANDIDATES))
 
-SCRIPT_DIR := $(DOTDIR_PATH)/etc/script/make
+SCRIPT_DIR := $(DOTDIR_PATH)/etc/scripts/make
 SPECIALS  := fish
 
 .DEFAULT_GOAL := help
