@@ -367,10 +367,16 @@ function _alias_setup() {
     alias em='emacs -nw'
 
     function fssh() {
+        if ! is_exists 'fzf'; then
+            e_error 'fssh: fzf command not found'
+            return 1
+        fi
+
         if ! is_exists 'ag'; then
             e_error 'fssh: ag command not found'
             return 1
         fi
+
         local ssh_target=$(ag --ignore-case '^host [^*]' ~/.ssh/ | \
                                cut -d ' ' -f 2 | fzf)
         [ -n "$ssh_target" ] && ssh "$ssh_target"
