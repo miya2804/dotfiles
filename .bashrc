@@ -366,6 +366,16 @@ function _alias_setup() {
 
     alias em='emacs -nw'
 
+    function fssh() {
+        if ! is_exists 'ag'; then
+            e_error 'fssh: ag command not found'
+            return 1
+        fi
+        local ssh_target=$(ag --ignore-case '^host [^*]' ~/.ssh/ | \
+                               cut -d ' ' -f 2 | fzf)
+        [ -n "$ssh_target" ] && ssh "$ssh_target"
+    }
+
     # Add an "alert" alias for long running commands.  Use like so:
     #   sleep 10; alert
     #alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
