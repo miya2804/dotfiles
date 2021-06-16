@@ -54,14 +54,34 @@ function eval_prompt_commands() {
 
 # --- tmux ---
 
-function _tmux_autostart_info() {
+function _tmux_autostart_message() {
     local header='tmux_autostart:'
-    printf "%s %s\n" "$header" "$*"
-}
+    local nl
+    local param=()
 
-function _tmux_autostart_error() {
-    local header='tmux_autostart:'
-    printf "%s %s\n" "$header" "$*" 1>&2
+    for OPT in "$@"
+    do
+        case "$OPT" in
+            -n)
+                nl=1
+                shift
+                ;;
+            -*)
+                echo "${header} illegal option -- '$(echo $1 | sed 's/^-*//')'" 1>&2
+                return 1
+                ;;
+            *)
+                param=("${param[@]}" "$1")
+                shift
+                ;;
+        esac
+    done
+
+    if [ "$nl" = 1 ]; then
+        echo -n "${header} ${param[@]}"
+    else
+        echo "${header} ${param[@]}"
+    fi
 }
 
 function tmux_autostart() {
@@ -77,7 +97,7 @@ function tmux_autostart() {
     #   $TMUX_DISABLE_AUTO_NEW_SESSION=1
 
     if ! is_exists 'tmux'; then
-        _tmux_autostart_error 'tmux is not exists'
+        e_error $(_tmux_autostart_message 'tmux is not exists')
         return 1
     fi
 
@@ -90,17 +110,18 @@ function tmux_autostart() {
         if is_interactive_shell && ! is_ssh_running; then
             if tmux has-session >/dev/null 2>&1 && tmux list-sessions | grep -qE '.*]$'; then
                 e_newline
-                _tmux_autostart_info 'detached session exists'
+                _tmux_autostart_message 'detached session exists'
                 tmux list-sessions
+                e_newline
                 echo -n 'Attach? (Y/n/num): '; read
                 if [[ "$REPLY" =~ ^[Yy][Ee]*[Ss]*$ ]] || [[ "$REPLY" == '' ]]; then
-                    _tmux_autostart_info 'tmux attaching session...'
+                    _tmux_autostart_message 'attach session'
                     tmux attach-session
                     if [ $? -eq 0 ]; then
                         return 0
                     fi
                 elif [[ "$REPLY" =~ ^[0-9]+$ ]]; then
-                    _tmux_autostart_info 'tmux attaching session...'
+                    _tmux_autostart_message "attach to session ${REPLY}"
                     tmux attach -t "$REPLY"
                     if [ $? -eq 0 ]; then
                         return 0
@@ -110,7 +131,7 @@ function tmux_autostart() {
                 fi
             elif [ ! "$TMUX_DISABLE_AUTO_NEW_SESSION" = 1 ]; then
                 e_newline
-                _tmux_autostart_info 'create a new session automatically'
+                _tmux_autostart_message 'create a new session automatically'
                 tmux new-session
             fi
         fi
