@@ -390,7 +390,7 @@ function bashrc_startup() {
     e_bashrc_message 'SHELL' "bash ${BASH_VERSION%.*} / pid $$"
     e_bashrc_message 'DISPLAY' "${DISPLAY:-not set}"
 
-    if is_exists 'tmux'; then tmux_autostart; fi
+    is_exists 'tmux' && tmux_autostart
     e_newline
 }
 
