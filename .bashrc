@@ -392,6 +392,20 @@ function _alias_setup() {
     if [ -f ~/.bash_aliases ]; then
         source ~/.bash_aliases
     fi
+
+    function zz() {
+        if ! is_exists 'fzf'; then
+            e_error 'fssh: fzf command not found'
+            return 1
+        fi
+
+        if [ -z "$@" ]; then
+            local dir=$(z --list | sort -rn | cut -c 12- | fzf) && \
+            [ -n "$dir" ] && echo "Move to ${dir}"; cd "$dir"
+        else
+            z "$@"
+        fi
+    }
 }
 
 function _shopt_setup() {
