@@ -855,6 +855,11 @@ If there are multiple windows, 'other-window' is called."
   (with-eval-after-load 'migemo
     (helm-migemo-mode 1)))
 
+(use-package helm-ag
+  :ensure t
+  :after helm
+  :bind ("M-s a" . helm-do-ag))
+
 (use-package helm-flycheck
   :ensure t
   :after helm
