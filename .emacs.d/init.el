@@ -389,6 +389,10 @@ If there are multiple windows, 'other-window' is called."
 (when (member "Source Han Code JP" (font-family-list))
   (push '(font . "SourceHanCodeJp-9:weight=normal:slant=normal")
         default-frame-alist))
+(when (member "SauceCodePro NF" (font-family-list))
+  (push '(font . "SauceCodePro NF-10:weight=normal:slant=normal")
+        default-frame-alist))
+
 ;; (when (display-graphic-p)
 ;;   (when (x-list-fonts "SourceHanCodeJP")
 ;;     ;;; create fontset
