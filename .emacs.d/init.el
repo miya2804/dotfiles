@@ -778,6 +778,10 @@ If there are multiple windows, 'other-window' is called."
   (elscreen-create) ; create scratch tab
   )
 
+(use-package fish-mode
+  :ensure t
+  :mode "\\.fish\\'")
+
 ;; dockerfile
 ;;   checker: hadolint(https://github.com/hadolint/hadolint)
 ;; python
