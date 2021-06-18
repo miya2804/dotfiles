@@ -706,6 +706,26 @@ If there are multiple windows, 'other-window' is called."
                           " - "
                           "Kernel " (shell-command-to-string "uname -smo")))))
 
+(use-package dimmer
+  :ensure t
+  :custom
+  (dimmer-fraction 0.4)
+  (dimmer-exclusion-regexp-list
+       '(".*Minibuf.*"
+         ".*Messages.*"
+         ".*NeoTree.*"
+         ".*auto-async.*"
+         ".*Warnings.*"
+         ".*magit-diff:.*"
+         ".*Process List.*"))
+  :config
+  (dimmer-configure-company-box)
+  (dimmer-configure-helm)
+  (dimmer-configure-hydra)
+  (dimmer-configure-magit)
+  (dimmer-configure-which-key)
+  (dimmer-mode t))
+
 (use-package docker
   :ensure t
   :bind ("C-c d" . docker))
