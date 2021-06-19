@@ -125,6 +125,26 @@ If there are multiple windows, 'other-window' is called."
 ;;;; -----------------------------------
 ;;;; Environments
 
+;;;; variables
+(eval-and-compile
+  (defvar package-dir-local "~/.local/emacs/elpa")
+  (defvar shortcut-file-path "~/Dropbox/documents/note/note.txt")
+  (defvar my-recentf-file "~/.local/emacs/recentf")
+  (defvar my-bookmarks-file "~/.local/emacs/bookmarks")
+
+  ;; backup and auto-save
+  (defvar backup-and-auto-save-dir-dropbox
+    (expand-file-name "~/Dropbox/documents/apps/emacs/backups/"))
+  (defvar backup-and-auto-save-dir-local
+    (expand-file-name "~/.emacs.d/.backup/"))
+
+  ;; org
+  (defvar my-org-dir "~/Dropbox/documents/org")
+  ;; default is "my-org-dir/agenda"
+  ;; if you want to add the agenda file,
+  ;; please add it to the list below.
+  (defvar my-org-agenda-files '()))
+
 ;;;;; load-path
 (eval-and-compile
   (setq load-path (cons "~/.emacs.d/elisp" load-path)))
@@ -140,7 +160,7 @@ If there are multiple windows, 'other-window' is called."
 (eval-and-compile
   ;; package.el
   (when (require 'package nil t)
-    (setq package-user-dir "~/.local/emacs/elpa")
+    (setq package-user-dir package-dir-local)
     (setq package-archives
      '(("melpa" . "https://melpa.org/packages/")
        ;;("melpa-stable" . "https://stable.melpa.org/packages/")
@@ -231,23 +251,6 @@ If there are multiple windows, 'other-window' is called."
 
 ;;;; -----------------------------------
 ;;;; General settings
-
-;; variables
-(eval-and-compile
-  (defvar shortcut-file-path "~/Dropbox/document/note/note.txt")
-
-  ;; backup and auto-save
-  (defvar backup-and-auto-save-dir-dropbox
-    (expand-file-name "~/Dropbox/backup/emacs/"))
-  (defvar backup-and-auto-save-dir-local
-    (expand-file-name "~/.emacs.d/.backup/"))
-
-  ;; org
-  (defvar my-org-dir "~/Dropbox/document/org")
-  ;; default is "my-org-dir/agenda"
-  ;; if you want to add the agenda file,
-  ;; please add it to the list below.
-  (defvar my-org-agenda-files '()))
 
 (setq-default tab-width 4 indent-tabs-mode nil)
 (setq default-directory "~/")
@@ -543,14 +546,14 @@ If there are multiple windows, 'other-window' is called."
 
 (use-package recentf
   :custom
-  (recentf-save-file "~/.local/emacs/recentf")
+  (recentf-save-file my-recentf-file)
   (recentf-max-saved-items 500)
   (recentf-auto-cleanup 'never)
   (recentf-exclude '("/recentf\\'" "/bookmarks\\'")))
 
 (use-package bookmark
   :custom
-  (bookmark-file "~/.local/emacs/bookmarks"))
+  (bookmark-file my-bookmarks-file))
 
 (use-package whitespace
   :custom
