@@ -140,10 +140,13 @@ If there are multiple windows, 'other-window' is called."
 
   ;; org
   (defvar my-org-dir "~/Dropbox/documents/org")
+  (defvar org-dir-local "~/.emacs.d/.org")
   ;; default is "my-org-dir/agenda"
   ;; if you want to add the agenda file,
   ;; please add it to the list below.
-  (defvar my-org-agenda-files '()))
+  (defvar my-org-agenda-files '())
+  ;; org-journal
+  (defvar my-org-journal-dir "~/Dropbox/documents/org/journal"))
 
 ;;;;; load-path
 (eval-and-compile
@@ -496,9 +499,9 @@ If there are multiple windows, 'other-window' is called."
       (setq org-agenda-files
                     (list (concat my-org-dir "/agenda"))))
   (progn
-    (setq org-directory "~/.emacs.d/.org")
+    (setq org-directory org-dir-local)
     (setq org-agenda-files
-                  '("~/.emacs.d/.org"))))
+                  '(org-dir-local))))
 (setq org-agenda-files (append org-agenda-files my-org-agenda-files))
 
 (defvar org-default-notes-file
@@ -1131,7 +1134,7 @@ If there are multiple windows, 'other-window' is called."
   :ensure t
   :bind ("C-c j" . org-journal-new-entry)
   :custom
-  (org-journal-dir "~/Dropbox/document/org/journal")
+  (org-journal-dir my-org-journal-dir)
   (org-journal-date-format "%Y-%m-%d %A")
   ;;(org-journal-time-format "%R")
   (org-journal-file-format "%Y%m%d.org")
