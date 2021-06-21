@@ -128,7 +128,7 @@ If there are multiple windows, 'other-window' is called."
 ;;;; variables
 (eval-and-compile
   (defvar package-dir-local "~/.local/emacs/elpa")
-  (defvar shortcut-file-path "~/Dropbox/documents/note/note.txt")
+  (defvar shortcut-file-path "~/Dropbox/documents/notes/note.txt")
   (defvar my-recentf-file "~/.local/emacs/recentf")
   (defvar my-bookmarks-file "~/.local/emacs/bookmarks")
 
