@@ -786,8 +786,9 @@ If there are multiple windows, 'other-window' is called."
   (column-number-mode 0))
 
 (use-package elscreen
-  :ensure t :defer nil :no-require t
-  :functions (elscreen-create)
+  :ensure t :defer nil
+  ;;:no-require t
+  ;;:functions (elscreen-create)
   :bind
   ("M-q" . elscreen-next)
   ("C-M-q" . elscreen-previous)
@@ -801,7 +802,7 @@ If there are multiple windows, 'other-window' is called."
   (elscreen-tab-other-screen-face ((t (:background "aquamarine4"))))
   :config
   (elscreen-start)
-  (elscreen-create) ; create scratch tab
+  ;;(elscreen-create) ; create scratch tab
   )
 
 ;; dockerfile
