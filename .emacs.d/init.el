@@ -501,7 +501,7 @@ If there are multiple windows, 'other-window' is called."
   (progn
     (setq org-directory org-dir-local)
     (setq org-agenda-files
-                  '(org-dir-local))))
+                  (list org-dir-local))))
 (setq org-agenda-files (append org-agenda-files my-org-agenda-files))
 
 (defvar org-default-notes-file
