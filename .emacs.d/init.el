@@ -805,6 +805,10 @@ If there are multiple windows, 'other-window' is called."
   ;;(elscreen-create) ; create scratch tab
   )
 
+(use-package rotate
+  :ensure t
+  :bind ("C-c SPC" . rotate-layout))
+
 ;; dockerfile
 ;;   checker: hadolint(https://github.com/hadolint/hadolint)
 ;; python
