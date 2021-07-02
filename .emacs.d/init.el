@@ -27,6 +27,11 @@
     `(eval-after-load ,file
        `(funcall (function ,(lambda () ,@body))))))
 
+(defun scratch ()
+  "Make *Scratch* buffer."
+  (interactive)
+  (switch-to-buffer "*scratch*"))
+
 (defun set-alpha (alpha)
   "Set ALPHA value of frame parameter."
   (interactive "^NAlpha value 0 - 100: ")
