@@ -735,7 +735,7 @@ If there are multiple windows, 'other-window' is called."
                           " - "
                           "Kernel " (shell-command-to-string "uname -smo")))))
 
-(use-package dimmer
+(use-package dimmer :disabled
   :ensure t
   :custom
   (dimmer-fraction 0.4)
@@ -746,7 +746,8 @@ If there are multiple windows, 'other-window' is called."
          ".*auto-async.*"
          ".*Warnings.*"
          ".*magit-diff:.*"
-         ".*Process List.*"))
+         ".*Process List.*"
+         ".*Help.*"))
   :config
   (dimmer-configure-company-box)
   (dimmer-configure-helm)
