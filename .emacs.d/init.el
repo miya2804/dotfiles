@@ -246,6 +246,16 @@ If there are multiple windows, 'other-window' is called."
 (when (string= "Android\n" (shell-command-to-string "uname -o"))
   (setq android-flag t))
 
+;;;;; emacs-server
+(require 'server)
+(unless (server-running-p)
+  (server-start)
+  (when (display-graphic-p)
+    ;; 起動時の最小化設定
+    (defun iconify-emacs-when-server-is-done ()
+      (unless server-clients (iconify-frame)))
+    (add-hook 'after-init-hook 'iconify-emacs-when-server-is-done)))
+
 
 
 ;;;; -----------------------------------
@@ -269,12 +279,13 @@ If there are multiple windows, 'other-window' is called."
         ((shift) . 5)))
 (setq custom-file (locate-user-emacs-file "elisp/custom.el"))
 (setq select-enable-clipboard t)
+(setq confirm-kill-emacs 'yes-or-no-p)
 
 ;; terminal起動時のマウス設定
 (unless (display-graphic-p) (xterm-mouse-mode t))
 
 ;; startup window size
-(add-to-list 'initial-frame-alist '(fullscreen . maximized))
+(add-hook 'after-init-hook 'toggle-frame-maximized)
 
 ;;(windmove-default-keybindings)          ; use shift+arrow
 ;;(windmove-default-keybindings 'meta)    ; use alt+arrow
@@ -285,6 +296,7 @@ If there are multiple windows, 'other-window' is called."
 (bind-key "C-c |" 'split-window-right)
 (bind-key "C-c -" 'split-window-below)
 (bind-key "C-c k" 'delete-window)
+(bind-key "C-c w" 'delete-frame)
 (bind-key "C-o" 'other-window)
 (bind-key "M-o" 'other-window)
 (bind-key "C-c o" 'other-window-or-split)
@@ -296,8 +308,10 @@ If there are multiple windows, 'other-window' is called."
              (shortcut-file shortcut-file-path)))
 (bind-key "C-c y c" 'kill-ring-save-buffer-file-path)
 
-;; "C-x C-c" -> exit
+;; 最小化 -> C-x C-c
+;; 終了   -> exit
 (global-unset-key (kbd "C-x C-c"))
+(bind-key "C-x C-c" 'iconify-frame)
 (defalias 'exit 'save-buffers-kill-emacs)
 
 ;; helm-for-filesが後に置き換え
