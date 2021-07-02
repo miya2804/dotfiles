@@ -32,6 +32,19 @@
   (interactive)
   (switch-to-buffer "*scratch*"))
 
+(defun clean-buffers ()
+  "Kill all buffers except toolkit (*Messages*, *scratch*, etc).  Close other windows."
+  (interactive)
+  (mapc 'kill-buffer (remove-if
+                       (lambda (x)
+                         (or
+                           ;;(string-equal (buffer-name) (buffer-name x)) ; current buffer
+                           (string-equal "*Messages*" (buffer-name x))
+                           (string-equal "*scratch*" (buffer-name x))
+                           (string-equal "*dashboard*" (buffer-name x))))
+                       (buffer-list)))
+  (delete-other-windows))
+
 (defun set-alpha (alpha)
   "Set ALPHA value of frame parameter."
   (interactive "^NAlpha value 0 - 100: ")
