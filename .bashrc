@@ -364,7 +364,21 @@ function _alias_setup() {
         alias open='xdg-open'
     fi
 
-    alias em='emacs -nw'
+    # edit
+    if is_exists 'emacs'; then
+        if [ "$PLATFORM" = 'msys' ]; then
+            alias e='emacsclientw.exe -a ""'
+            #alias et='emacsclientw.exe -a "" -t'
+            alias ec='emacsclientw.exe -a "" -c'
+            alias ekill='emacsclientw.exe -e "(kill-emacs)"'
+        fi
+        # other platform
+        # else
+        #     alias e='emacsclient -a ""'
+        #     alias et='emacsclient -a "" -t'
+        #     alias ekill='emacsclient -e "(kill-emacs)"'
+        # fi
+    fi
 
     function fssh() {
         if ! is_exists 'fzf'; then
