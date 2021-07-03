@@ -11,8 +11,7 @@
 
 (defconst emacs-start-time (current-time))
 (message (format "[Startup time: %s]" (format-time-string "%Y/%m/%d %H:%M:%S")))
-(require 'cl)
-(require 'cl-lib)
+(eval-when-compile (require 'cl-lib))
 (when init-file-debug
   (setq debug-on-error t)
   (setq force-load-messages t))
@@ -36,15 +35,16 @@
 (defun clean-buffers ()
   "Kill all buffers except toolkit (*Messages*, *scratch*, etc).  Close other windows."
   (interactive)
-  (mapc 'kill-buffer (remove-if
-                       (lambda (x)
-                         (or
-                           ;;(string-equal (buffer-name) (buffer-name x)) ; current buffer
-                           (string-equal "*Messages*" (buffer-name x))
-                           (string-equal "*scratch*" (buffer-name x))
-                           (string-equal "*dashboard*" (buffer-name x))))
-                       (buffer-list)))
-  (delete-other-windows))
+  (let ((buffers (cl-loop for x in (buffer-list)
+                          collect (buffer-name x))))
+    (cl-loop for buf in buffers
+             unless (string-equal "*Messages*" buf)
+             unless (string-equal "*scratch*" buf)
+             unless (string-equal "*dashboard*" buf)
+             do (kill-buffer buf))
+    (delete-other-windows)
+    (when (member "*dashboard*" buffers)
+      (switch-to-buffer "*dashboard*"))))
 
 (defun set-alpha (alpha)
   "Set ALPHA value of frame parameter."
