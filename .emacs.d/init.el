@@ -11,7 +11,8 @@
 
 (defconst emacs-start-time (current-time))
 (message (format "[Startup time: %s]" (format-time-string "%Y/%m/%d %H:%M:%S")))
-(eval-when-compile (require 'cl-lib))
+(require 'cl)
+(require 'cl-lib)
 (when init-file-debug
   (setq debug-on-error t)
   (setq force-load-messages t))
