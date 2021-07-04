@@ -265,7 +265,7 @@ If there are multiple windows, 'other-window' is called."
 
 ;; windows
 (when (eq window-system 'w32)
-  (unless (server-running-p)
+  (unless (eq (server-running-p) 't)
     (server-start)))
 
 
