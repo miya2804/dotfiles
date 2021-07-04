@@ -309,6 +309,7 @@ If there are multiple windows, 'other-window' is called."
 (bind-key "C-c |" 'split-window-right)
 (bind-key "C-c -" 'split-window-below)
 (bind-key "C-c k" 'delete-window)
+(bind-key "C-c M-k" 'kill-buffer-and-window)
 (bind-key "C-c w" 'delete-frame)
 (bind-key "C-o" 'other-window)
 (bind-key "M-o" 'other-window)
