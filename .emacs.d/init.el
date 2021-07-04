@@ -266,12 +266,7 @@ If there are multiple windows, 'other-window' is called."
 ;; windows
 (when (eq window-system 'w32)
   (unless (server-running-p)
-    (server-start)
-    (when (display-graphic-p)
-      ;; 起動時の最小化設定
-      (defun iconify-emacs-when-server-is-done ()
-        (unless server-clients (iconify-frame)))
-      (add-hook 'emacs-startup-hook 'iconify-emacs-when-server-is-done))))
+    (server-start)))
 
 
 ;;;; -----------------------------------
@@ -301,6 +296,8 @@ If there are multiple windows, 'other-window' is called."
 (unless (display-graphic-p) (xterm-mouse-mode t))
 
 ;; startup window size
+(unless server-clients
+  (add-hook 'after-init-hook 'iconify-frame))
 (add-hook 'after-init-hook 'toggle-frame-maximized)
 
 ;;(windmove-default-keybindings)          ; use shift+arrow
