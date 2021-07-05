@@ -278,7 +278,9 @@ If there are multiple windows, 'other-window' is called."
 ;; windows
 (when (eq window-system 'w32)
   (unless (eq (server-running-p) 't)
-    (server-start)))
+    (server-start)
+    (unless server-clients
+      (add-hook 'after-init-hook 'iconify-frame))))
 
 
 ;;;; -----------------------------------
@@ -308,8 +310,6 @@ If there are multiple windows, 'other-window' is called."
 (unless (display-graphic-p) (xterm-mouse-mode t))
 
 ;; startup window size
-(unless server-clients
-  (add-hook 'after-init-hook 'iconify-frame))
 (add-hook 'after-init-hook 'toggle-frame-maximized)
 
 ;;(windmove-default-keybindings)          ; use shift+arrow
