@@ -470,9 +470,16 @@ If there are multiple windows, 'other-window' is called."
   ;;(load-theme 'doom-horizon)
   ;;(load-theme 'doom-oceanic-next)
   (load-theme 'doom-vibrant t)
+
   (doom-themes-visual-bell-config)
   (doom-themes-neotree-config)
   (doom-themes-org-config)
+
+  (unless (display-graphic-p)
+    (custom-set-faces
+     '(default ((t (:background "unspecified-bg"))))
+     ))
+
   (with-eval-after-load 'doom-dracula-theme
     (unless (display-grayscale-p)
       (custom-set-faces
