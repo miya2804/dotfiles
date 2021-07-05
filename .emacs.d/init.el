@@ -932,6 +932,7 @@ If there are multiple windows, 'other-window' is called."
 (use-package helm-ag
   :ensure t
   :after helm
+  :when (executable-find "ag")
   :bind ("M-s a" . helm-do-ag))
 
 (use-package helm-flycheck
