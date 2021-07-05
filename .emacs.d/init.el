@@ -12,6 +12,7 @@
 (defconst emacs-start-time (current-time))
 (message (format "[Startup time: %s]" (format-time-string "%Y/%m/%d %H:%M:%S")))
 (eval-when-compile (require 'cl-lib))
+(require 'server)
 (when init-file-debug
   (setq debug-on-error t)
   (setq force-load-messages t))
@@ -139,6 +140,18 @@ If there are multiple windows, 'other-window' is called."
   (interactive)
   (insert (format-time-string "%Y%m%d" (current-time))))
 
+(defun exit ()
+  "`delete-frame' if server-clients exists.
+`iconify-frame' if server-clients not exists and if GUI, `save-buffers-kill-emacs' otherwise."
+  (interactive)
+  (if server-clients
+      (when (and (delete-frame-enabled-p) (yes-or-no-p "Delete frame? "))
+        (delete-frame))
+    (progn
+      (if (display-graphic-p)
+          (iconify-frame)
+        (save-buffers-kill-emacs)))))
+
 
 
 ;;;; -----------------------------------
@@ -261,8 +274,6 @@ If there are multiple windows, 'other-window' is called."
   (setq android-flag t))
 
 ;;;;; emacs-server
-(require 'server)
-
 ;; windows
 (when (eq window-system 'w32)
   (unless (eq (server-running-p) 't)
@@ -310,7 +321,7 @@ If there are multiple windows, 'other-window' is called."
 (bind-key "C-c -" 'split-window-below)
 (bind-key "C-c k" 'delete-window)
 (bind-key "C-c M-k" 'kill-buffer-and-window)
-(bind-key "C-c w" 'delete-frame)
+(bind-key "C-c w" 'exit)
 (bind-key "C-o" 'other-window)
 (bind-key "M-o" 'other-window)
 (bind-key "C-c o" 'other-window-or-split)
@@ -323,10 +334,8 @@ If there are multiple windows, 'other-window' is called."
 (bind-key "C-c y c" 'kill-ring-save-buffer-file-path)
 
 ;; 最小化 -> C-x C-c
-;; 終了   -> exit
 (global-unset-key (kbd "C-x C-c"))
 (bind-key "C-x C-c" 'iconify-frame)
-(defalias 'exit 'save-buffers-kill-emacs)
 
 ;; helm-for-filesが後に置き換え
 ;; 置き換えられない場合コチラがセット
