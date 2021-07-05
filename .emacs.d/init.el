@@ -108,7 +108,7 @@ If there are multiple windows, 'other-window' is called."
   (run-hooks 'other-window-or-split-hook))
 
 ;; trailing-whitespace
-(defun enable-show-trailing-whitespace  ()
+(defun enable-show-trailing-whitespace ()
   "Enable display of trailing whitespace."
   (interactive) (setq show-trailing-whitespace t))
 (defun disable-show-trailing-whitespace ()
@@ -127,14 +127,14 @@ If there are multiple windows, 'other-window' is called."
         (message "%s" file))
     (find-file file)))
 
-(defun kill-ring-save-buffer-file-path()
+(defun kill-ring-save-buffer-file-path ()
   "View and copy the file path of the current buffer."
   (interactive)
   (let ((path (buffer-file-name)))
     (message "save path to kill-ring...%s" path)
     (kill-new path)))
 
-(defun today()
+(defun today ()
   "Enter today's date."
   (interactive)
   (insert (format-time-string "%Y%m%d" (current-time))))
@@ -961,14 +961,6 @@ If there are multiple windows, 'other-window' is called."
    (if (display-graphic-p) 'bitmap 'character))
   (highlight-indent-guides-suppress-auto-error t))
 
-(use-package indent-guide
-  :ensure t
-  :unless (display-graphic-p)
-  :hook ((prog-mode . indent-guide-global-mode)
-         (yaml-mode . indent-guide-global-mode))
-  :custom (indent-guide-recursive t)
-  :custom-face (indent-guide-face ((t (:foreground "brightwhite")))))
-
 (use-package hydra
   :ensure t :defer nil :no-require t
   :functions (winner-redo winner-undo
@@ -1034,6 +1026,14 @@ If there are multiple windows, 'other-window' is called."
   :custom
   (iflipb-ignore-buffers (list "^[*]" "^magit-process:"))
   (iflipb-wrap-around t))
+
+(use-package indent-guide
+  :ensure t
+  :unless (display-graphic-p)
+  :hook ((prog-mode . indent-guide-global-mode)
+         (yaml-mode . indent-guide-global-mode))
+  :custom (indent-guide-recursive t)
+  :custom-face (indent-guide-face ((t (:foreground "brightwhite")))))
 
 (use-package magit :ensure t :defer t)
 
