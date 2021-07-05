@@ -1065,7 +1065,13 @@ If not, if GUI, `iconify-frame' other than `save-buffers-kill-emacs'."
   :custom (indent-guide-recursive t)
   :custom-face (indent-guide-face ((t (:foreground "brightwhite")))))
 
-(use-package magit :ensure t :defer t)
+(use-package magit
+  :ensure t
+  :demand t
+  ;; ↑↑↑ demand t について
+  ;; shellからemacsclient経由でコミットメッセージの編集を行う際に
+  ;; git-commitパッケージ等の読み込みが終わっている必要がある
+  )
 
 ;; github flavored markdown
 ;; gem install commonmarker github-markup
