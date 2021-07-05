@@ -57,12 +57,11 @@
   "Can be used to set a default faces if the themes isn't installed."
   (interactive)
   (custom-set-faces
+   '(default ((t (:background "gray13" :foreground "ghost white"))))
    '(font-lock-function-name-face ((t (:foreground "brightgreen"))))
    '(hl-line ((t (:background "gray25"))))
    '(web-mode-html-tag-bracket-face ((t (:foreground "ghost white"))))
-   '(web-mode-html-tag-face ((t (:foreground "pale green")))))
-  (set-face-background 'default "gray13")
-  (set-face-foreground 'default "ghost white"))
+   '(web-mode-html-tag-face ((t (:foreground "pale green"))))))
 
 (defun window-resizer ()
   "Control window size and position."
