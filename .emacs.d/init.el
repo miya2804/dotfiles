@@ -141,11 +141,11 @@ If there are multiple windows, 'other-window' is called."
   (insert (format-time-string "%Y%m%d" (current-time))))
 
 (defun exit ()
-  "`delete-frame' if server-clients exists.
-`iconify-frame' if server-clients not exists and if GUI, `save-buffers-kill-emacs' otherwise."
+  "Execute `delete-frame' if possible.
+If not, if GUI, `iconify-frame' other than `save-buffers-kill-emacs'."
   (interactive)
-  (if server-clients
-      (when (and (delete-frame-enabled-p) (yes-or-no-p "Delete frame? "))
+  (if (delete-frame-enabled-p)
+      (when (yes-or-no-p "Delete frame? ")
         (delete-frame))
     (progn
       (if (display-graphic-p)
@@ -313,6 +313,9 @@ If there are multiple windows, 'other-window' is called."
 
 ;;(windmove-default-keybindings)          ; use shift+arrow
 ;;(windmove-default-keybindings 'meta)    ; use alt+arrow
+
+;;;;; aliases
+(defalias 'quit 'save-buffers-kill-emacs)
 
 ;;;;; my-keybinds
 (bind-key "C-h" 'undo)
