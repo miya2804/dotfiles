@@ -36,16 +36,17 @@
 (defun clean-buffers ()
   "Kill all buffers except toolkit (*Messages*, *scratch*, etc).  Close other windows."
   (interactive)
-  (let ((buffers (cl-loop for x in (buffer-list)
-                          collect (buffer-name x))))
-    (cl-loop for buf in buffers
-             unless (string-equal "*Messages*" buf)
-             unless (string-equal "*scratch*" buf)
-             unless (string-equal "*dashboard*" buf)
-             do (kill-buffer buf))
-    (delete-other-windows)
-    (when (member "*dashboard*" buffers)
-      (switch-to-buffer "*dashboard*"))))
+  (when (yes-or-no-p "Kill all buffers? ")
+    (let ((buffers (cl-loop for x in (buffer-list)
+                            collect (buffer-name x))))
+      (cl-loop for buf in buffers
+               unless (string-equal "*Messages*" buf)
+               unless (string-equal "*scratch*" buf)
+               unless (string-equal "*dashboard*" buf)
+               do (kill-buffer buf))
+      (delete-other-windows)
+      (when (member "*dashboard*" buffers)
+        (switch-to-buffer "*dashboard*")))))
 
 (defun set-alpha (alpha)
   "Set ALPHA value of frame parameter."
