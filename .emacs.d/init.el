@@ -1071,7 +1071,9 @@ If not, if GUI, `iconify-frame' other than `save-buffers-kill-emacs'."
   ;; ↑↑↑ demand t について
   ;; shellからemacsclient経由でコミットメッセージの編集を行う際に
   ;; git-commitパッケージ等の読み込みが終わっている必要がある
-  )
+  :custom
+  (magit-log-margin
+   '(t " %Y-%m-%d %H:%M:%S " magit-log-margin-width t 18)))
 
 ;; github flavored markdown
 ;; gem install commonmarker github-markup
