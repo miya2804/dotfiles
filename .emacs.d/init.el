@@ -887,6 +887,11 @@ If there are multiple windows, 'other-window' is called."
   (git-gutter:added    ((t (:background "#50fa7b"))))
   (git-gutter:deleted  ((t (:background "#ff79c6")))))
 
+(use-package goto-chg
+  :ensure t
+  :bind (("<f8>" . goto-last-change)
+         ("<M-f8>" . goto-last-change-reverse)))
+
 (use-package helm
   :ensure t
   :diminish helm-migemo-mode
