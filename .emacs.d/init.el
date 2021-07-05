@@ -1202,11 +1202,6 @@ If there are multiple windows, 'other-window' is called."
 
 (use-package org-preview-html :ensure t :defer t)
 
-(use-package point-undo
-  :pin manual
-  :bind (("<f7>" . point-undo)
-         ("<S-f7>" . point-redo)))
-
 (use-package rainbow-delimiters
   :ensure t
   :hook (prog-mode . rainbow-delimiters-mode)
