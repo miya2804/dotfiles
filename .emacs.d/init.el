@@ -28,11 +28,6 @@
     `(eval-after-load ,file
        `(funcall (function ,(lambda () ,@body))))))
 
-(defun scratch ()
-  "Make *Scratch* buffer."
-  (interactive)
-  (switch-to-buffer "*scratch*"))
-
 (defun clean-buffers ()
   "Kill all buffers except toolkit (*Messages*, *scratch*, etc).  Close other windows."
   (interactive)
@@ -1246,6 +1241,10 @@ If not, if GUI, `iconify-frame' other than `save-buffers-kill-emacs'."
 (use-package restart-emacs
   :ensure t
   :commands (restart-emacs))
+
+(use-package scratch-pop
+  :ensure t
+  :bind ("C-c s" . scratch-pop))
 
 (use-package smart-newline
   :ensure t :defer t
