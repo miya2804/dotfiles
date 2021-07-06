@@ -282,6 +282,7 @@ If not, if GUI, `iconify-frame' other than `save-buffers-kill-emacs'."
 
 (require 'color)
 (use-package diminish :ensure t :demand t)
+(use-package s :ensure t)
 (use-package popup :ensure t :defer t)
 
 
@@ -720,9 +721,11 @@ If not, if GUI, `iconify-frame' other than `save-buffers-kill-emacs'."
 
 (use-package dashboard
   :ensure t
+  :functions s-chop-prefix
   :custom
-  (dashboard-banner-logo-title nil)
+  (dashboard-banner-logo-title "\n\n")
   (dashboard-center-content t)
+  (dashboard-page-separator "\n\n\n")
 
   ;; custom banner
   ;; You can be "path/to/your/image.png"
@@ -739,12 +742,13 @@ If not, if GUI, `iconify-frame' other than `save-buffers-kill-emacs'."
   ;; 9: Slant Relief
   ;; 10: Chunky
   ;; 11: Cricket
-  (dashboard-startup-banner "~/.emacs.d/dashboard-banners/10.txt")
+  (dashboard-startup-banner "~/.emacs.d/dashboard-banners/3.txt")
 
   ;; dashboard items
-  (dashboard-items '((recents  . 15)
-                     (bookmarks . 5)
-                     (agenda . 5)))
+  (dashboard-items '((recents  . 20)
+                     (bookmarks . 8)
+                     ;;(agenda . 5)
+                     ))
 
   ;; icon
   (dashboard-set-heading-icons t)
@@ -762,11 +766,17 @@ If not, if GUI, `iconify-frame' other than `save-buffers-kill-emacs'."
   ;;                                              :face 'font-lock-keyword-face))
   :hook (after-init . dashboard-setup-startup-hook)
   :config
-  (when (eq system-type 'gnu/linux)
-    (setq dashboard-init-info
-                  (concat "Welcome to Emacs " emacs-version
-                          " - "
-                          "Kernel " (shell-command-to-string "uname -smo")))))
+  (case system-type
+    (gnu/linux
+     (setq dashboard-init-info
+           (concat "Welcome to Emacs" emacs-version
+                   " - "
+                   (shell-command-to-string "uname -smo"))))
+    (windows-nt
+     (setq dashboard-init-info
+           (concat "Welcome to Emacs" emacs-version
+                   " - "
+                   "Kernel " (s-chop-prefix "\n" (shell-command-to-string "cmd.exe /c ver")))))))
 
 (use-package dimmer :disabled
   :ensure t
