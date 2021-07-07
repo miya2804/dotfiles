@@ -470,7 +470,8 @@ If not, if GUI, `iconify-frame' other than `save-buffers-kill-emacs'."
   (load-theme 'doom-vibrant t)
 
   (doom-themes-visual-bell-config)
-  (doom-themes-neotree-config)
+  (when (display-graphic-p)             ; For cui, leave the settings to neotree
+    (doom-themes-neotree-config))
   (doom-themes-org-config)
 
   (unless (display-graphic-p)
@@ -1190,9 +1191,16 @@ If not, if GUI, `iconify-frame' other than `save-buffers-kill-emacs'."
               ("C-f" . neotree-change-root))
   :custom
   (neo-window-width 35)
-  (neo-theme (if (display-graphic-p) 'nerd2 'arrow))
   (neo-show-hidden-files t)
-  (neo-smart-open t))
+  (neo-smart-open t)
+  :config
+  ;; If the doom-themes is enabled, doom-themes-neotree-config
+  ;; take priority over the settings below.
+  (if (display-graphic-p)
+      (if (member "all-the-icons" (font-family-list))
+          (setq neo-theme 'icons)
+        (setq neo-theme 'classic))
+    (setq neo-theme 'nerd2)))
 
 (use-package nyan-mode
   :ensure t
