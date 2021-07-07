@@ -766,7 +766,7 @@ If not, if GUI, `iconify-frame' other than `save-buffers-kill-emacs'."
   ;;                                              :face 'font-lock-keyword-face))
   :hook (after-init . dashboard-setup-startup-hook)
   :config
-  (case system-type
+  (cl-case system-type
     (gnu/linux
      (setq dashboard-init-info
            (concat "Welcome to Emacs" emacs-version
