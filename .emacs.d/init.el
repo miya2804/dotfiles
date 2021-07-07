@@ -745,8 +745,8 @@ If not, if GUI, `iconify-frame' other than `save-buffers-kill-emacs'."
   (dashboard-startup-banner "~/.emacs.d/dashboard-banners/3.txt")
 
   ;; dashboard items
-  (dashboard-items '((recents  . 20)
-                     (bookmarks . 8)
+  (dashboard-items '((recents  . 10)
+                     (bookmarks . 10)
                      ;;(agenda . 5)
                      ))
 
