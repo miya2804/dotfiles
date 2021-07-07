@@ -20,6 +20,39 @@
 
 
 ;;;; -----------------------------------
+;;;; Variables
+
+(eval-and-compile
+  (defvar package-dir-local "~/.local/emacs/elpa")
+  (defvar shortcut-file-path "~/Dropbox/documents/notes/note.txt")
+  (defvar my-recentf-file "~/.local/emacs/recentf")
+  (defvar my-bookmarks-file "~/.local/emacs/bookmarks")
+
+  ;; backup and auto-save
+  (defvar backup-and-auto-save-dir-dropbox
+    (expand-file-name "~/Dropbox/documents/apps/emacs/backups/"))
+  (defvar backup-and-auto-save-dir-local
+    (expand-file-name "~/.emacs.d/.backup/"))
+
+  ;; org
+  (defvar my-org-dir "~/Dropbox/documents/org")
+  (defvar org-dir-local "~/.emacs.d/.org")
+  ;; default is "my-org-dir/agenda"
+  ;; if you want to add the agenda file,
+  ;; please add it to the list below.
+  (defvar my-org-agenda-files '())
+  ;; org-journal
+  (defvar my-org-journal-dir "~/Dropbox/documents/org/journal")
+
+  (defvar clean-buffers-exclude-list
+    (list "*Messages*"
+          "*scratch*"
+          "*dashboard*")
+    "List of exclude buffer from the function `clean-buffers'."))
+
+
+
+;;;; -----------------------------------
 ;;;; Functions
 
 ;; with-eval-after-load (Emacs 24.4 以上)
@@ -29,19 +62,22 @@
        `(funcall (function ,(lambda () ,@body))))))
 
 (defun clean-buffers ()
-  "Kill all buffers except toolkit (*Messages*, *scratch*, etc).  Close other windows."
+  "Kill all buffers except toolkit (*Messages*, *scratch*, etc).
+And close other windows. If you have buffers that you don't want to kill,
+add it to the variable `clean-buffers-exclude-list'."
   (interactive)
   (when (yes-or-no-p "Kill all buffers? ")
-    (let ((buffers (cl-loop for x in (buffer-list)
-                            collect (buffer-name x))))
-      (cl-loop for buf in buffers
-               unless (string-equal "*Messages*" buf)
-               unless (string-equal "*scratch*" buf)
-               unless (string-equal "*dashboard*" buf)
-               do (kill-buffer buf))
+    (let ((bufs))
+      (setq bufs (mapcar 'buffer-name (buffer-list)))
+      (cl-loop for b in bufs
+               do
+               (unless (string-equal (cl-subseq b 0 1) " ")
+                 (unless (member b clean-buffers-exclude-list)
+                   (kill-buffer b))))
       (delete-other-windows)
-      (when (member "*dashboard*" buffers)
-        (switch-to-buffer "*dashboard*")))))
+      (if (member "*dashboard*" bufs)
+          (switch-to-buffer "*dashboard*")
+        (switch-to-buffer "*scratch*")))))
 
 (defun set-alpha (alpha)
   "Set ALPHA value of frame parameter."
@@ -151,29 +187,6 @@ If not, if GUI, `iconify-frame' other than `save-buffers-kill-emacs'."
 
 ;;;; -----------------------------------
 ;;;; Environments
-
-;;;; variables
-(eval-and-compile
-  (defvar package-dir-local "~/.local/emacs/elpa")
-  (defvar shortcut-file-path "~/Dropbox/documents/notes/note.txt")
-  (defvar my-recentf-file "~/.local/emacs/recentf")
-  (defvar my-bookmarks-file "~/.local/emacs/bookmarks")
-
-  ;; backup and auto-save
-  (defvar backup-and-auto-save-dir-dropbox
-    (expand-file-name "~/Dropbox/documents/apps/emacs/backups/"))
-  (defvar backup-and-auto-save-dir-local
-    (expand-file-name "~/.emacs.d/.backup/"))
-
-  ;; org
-  (defvar my-org-dir "~/Dropbox/documents/org")
-  (defvar org-dir-local "~/.emacs.d/.org")
-  ;; default is "my-org-dir/agenda"
-  ;; if you want to add the agenda file,
-  ;; please add it to the list below.
-  (defvar my-org-agenda-files '())
-  ;; org-journal
-  (defvar my-org-journal-dir "~/Dropbox/documents/org/journal"))
 
 ;;;;; load-path
 (eval-and-compile
