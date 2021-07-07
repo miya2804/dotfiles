@@ -591,14 +591,25 @@ If not, if GUI, `iconify-frame' other than `save-buffers-kill-emacs'."
 (defvar show-paren-when-point-inside-paren t)
 (defvar show-paren-when-point-in-periphery t)
 ;; faces
-(with-eval-after-load 'doom-dracula-theme
-  (custom-set-faces
-   '(show-paren-match ((t (:foreground "yellow"))))
-   ))
-(with-eval-after-load 'doom-vibrant-theme
-  (custom-set-faces
-   '(show-paren-match ((t (:foreground "yellow"))))
-   ))
+(if (display-graphic-p)
+    (progn
+      (with-eval-after-load 'doom-dracula-theme
+        (custom-set-faces
+         '(show-paren-match ((t (:foreground "yellow"))))
+         ))
+      (with-eval-after-load 'doom-vibrant-theme
+        (custom-set-faces
+         '(show-paren-match ((t (:foreground "yellow"))))
+         )))
+  (progn
+    (with-eval-after-load 'doom-dracula-theme
+      (custom-set-faces
+       '(show-paren-match ((nil (:background "yellow" :foreground "black"))))
+       ))
+    (with-eval-after-load 'doom-vibrant-theme
+      (custom-set-faces
+       '(show-paren-match ((nil (:background "yellow" :foreground "black"))))
+       ))))
 (show-paren-mode t)                ; illuminate corresponding brackets
 
 (use-package recentf
