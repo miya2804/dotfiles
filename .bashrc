@@ -368,7 +368,7 @@ function _alias_setup() {
     if is_exists 'emacs'; then
         if [ "$PLATFORM" = 'msys' ]; then
             alias e='emacsclientw.exe -n'
-            alias et='emacsclientw.exe -t'
+            alias et='emacs -nw'
             alias ec='emacsclientw.exe -c -n'
             alias ekill='emacsclientw.exe -e "(kill-emacs)"'
         fi
