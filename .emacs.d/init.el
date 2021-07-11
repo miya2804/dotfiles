@@ -748,6 +748,8 @@ If not, if GUI, `iconify-frame' other than `save-buffers-kill-emacs'."
   :ensure t
   :functions s-chop-prefix
   :custom
+  (initial-buffer-choice
+   (lambda () (switch-to-buffer "*dashboard*")))
   (dashboard-banner-logo-title "\n\n")
   (dashboard-center-content t)
   (dashboard-page-separator "\n\n\n")
