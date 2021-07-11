@@ -377,9 +377,6 @@ If you add mount after Emacs startup, Re-execute this function."
 (add-hook 'after-init-hook 'toggle-frame-maximized)
 (add-hook 'after-make-frame-functions #'reset-frame-parameter)
 
-;;(windmove-default-keybindings)          ; use shift+arrow
-;;(windmove-default-keybindings 'meta)    ; use alt+arrow
-
 ;;;;; aliases
 (defalias 'quit 'save-buffers-kill-emacs)
 
@@ -409,6 +406,9 @@ If you add mount after Emacs startup, Re-execute this function."
 ;; helm-for-filesが後に置き換え
 ;; 置き換えられない場合コチラがセット
 (bind-key "C-x C-b" 'buffer-menu)
+
+;;(windmove-default-keybindings)          ; use shift+arrow
+;;(windmove-default-keybindings 'meta)    ; use alt+arrow
 
 ;;;;; backup, auto-save, lock
 (eval-and-compile
