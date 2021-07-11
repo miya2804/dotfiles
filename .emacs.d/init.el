@@ -63,7 +63,7 @@
 
 (defun clean-buffers ()
   "Kill all buffers except toolkit (*Messages*, *scratch*, etc).
-And close other windows. If you have buffers that you don't want to kill,
+And close other windows.  If you have buffers that you don't want to kill,
 add it to the variable `clean-buffers-exclude-list'."
   (interactive)
   (when (yes-or-no-p "Kill all buffers? ")
