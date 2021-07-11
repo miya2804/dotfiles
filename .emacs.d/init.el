@@ -282,10 +282,10 @@ If not, if GUI, `iconify-frame' other than `save-buffers-kill-emacs'."
   (setq android-flag t))
 
 ;;;;; emacs-server
-;; windows
-(when (eq window-system 'w32)
-  (unless (eq (server-running-p) 't)
-    (server-start)
+(unless (eq (server-running-p) 't)
+  (server-start)
+  ;; windows
+  (when (eq window-system 'w32)
     (unless server-clients
       (add-hook 'after-init-hook 'iconify-frame))))
 
