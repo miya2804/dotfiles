@@ -183,6 +183,11 @@ If not, if GUI, `iconify-frame' other than `save-buffers-kill-emacs'."
           (iconify-frame)
         (save-buffers-kill-emacs)))))
 
+(defun reset-frame-parameter (frame)
+  "Reset FRAME height."
+  (sleep-for 0.1)
+  (set-frame-parameter frame 'height 32))
+
 ;; windows path & UNC path
 ;; quoted from https://w.atwiki.jp/ntemacs/pages/74.html
 (defvar drvfs-alist)
@@ -370,6 +375,7 @@ If you add mount after Emacs startup, Re-execute this function."
 
 ;; startup window size
 (add-hook 'after-init-hook 'toggle-frame-maximized)
+(add-hook 'after-make-frame-functions #'reset-frame-parameter)
 
 ;;(windmove-default-keybindings)          ; use shift+arrow
 ;;(windmove-default-keybindings 'meta)    ; use alt+arrow
