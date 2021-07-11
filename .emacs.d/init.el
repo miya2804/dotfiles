@@ -1379,6 +1379,7 @@ If not, if GUI, `iconify-frame' other than `save-buffers-kill-emacs'."
 
 (use-package zoom
   :ensure t
+  :bind ("C-c z" . zoom-mode)
   :config
   (defun auto-toggle-zoom ()
     (defvar bound-width 120)
@@ -1389,7 +1390,7 @@ If not, if GUI, `iconify-frame' other than `save-buffers-kill-emacs'."
       (when (eq zoom-mode t)
         (custom-set-variables '(zoom-mode nil))
         (message "zoom-mode disabled."))))
-  (add-hook 'other-window-or-split-hook 'auto-toggle-zoom)
+  ;;(add-hook 'other-window-or-split-hook 'auto-toggle-zoom)
   (custom-set-variables '(zoom-mode t)))
 
 
