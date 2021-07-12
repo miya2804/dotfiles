@@ -145,18 +145,22 @@ function log_info() { logging INFO "$1"; }
 function log_echo() { logging TITLE "$1"; }
 
 function platform_detect() {
-    unamestr="$(uname -o)"
-    case "$unamestr" in
-        *GNU/Linux*)
-            PLATFORM='linux'
-            ;;
-        *Msys*)
-            PLATFORM='msys'
-            ;;
-        *)
-            PLATFORM='unknown'
-            ;;
-    esac
+    if uname -r | grep -q "microsoft"; then
+        PLATFORM='wsl'
+    else
+        unamestr="$(uname -o)"
+        case "$unamestr" in
+            *GNU/Linux*)
+                PLATFORM='linux'
+                ;;
+            *Msys*)
+                PLATFORM='msys'
+                ;;
+            *)
+                PLATFORM='unknown'
+                ;;
+        esac
+    fi
     export PLATFORM
 }
 
