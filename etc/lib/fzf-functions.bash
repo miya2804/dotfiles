@@ -118,7 +118,7 @@ function _fzf_git_diff_including_staged() {
              print $4
            }
          }' | \
-    xargs git diff --color=always | less -XFR
+    (read result; [ -n "$result" ] && git diff --color=always "$result")
 }
 
 function _fzf_git_checkout() {
