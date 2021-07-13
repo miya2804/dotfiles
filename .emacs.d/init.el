@@ -714,6 +714,9 @@ If you add mount after Emacs startup, Re-execute this function."
   :config
   (global-whitespace-mode 1))
 
+(use-package sh-script
+  :mode ("\\.local_profile" . shell-script-mode))
+
 
 
 ;;;; -----------------------------------
