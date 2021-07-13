@@ -96,6 +96,8 @@ function tmux_autostart() {
     # disable automatically create new session automatically
     #   $TMUX_DISABLE_AUTO_NEW_SESSION=1
 
+    [ -n "$BASH_EXECUTION_STRING" ] && return 0
+
     if ! is_exists 'tmux'; then
         e_error $(_tmux_autostart_message 'tmux is not exists')
         return 1
