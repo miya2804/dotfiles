@@ -36,7 +36,7 @@ function _fzf_git_log() {
         --format="%C(auto)%h%d %s %C(black)%C(bold)%cd" | \
     fzf --color=dark --no-sort --no-multi --no-cycle --tiebreak=index \
         --height=100% --prompt='GIT LOG GRAPH > ' \
-        --preview-window=down:85%:wrap:hidden \
+        --preview-window=down:85%:wrap \
         --preview "_fzf_preview_git_show {}" \
         --bind "$(_fzf_preview_bind),tab:toggle-preview,ctrl-y:execute(echo {} | grep -o '[a-f0-9]\{7\}')+abort,enter:execute:(grep -o '[a-f0-9]\{7\}' | head -1 | xargs -I % sh -c 'git show --color=always % | less -R') << 'FZF-EOF'
 {}
