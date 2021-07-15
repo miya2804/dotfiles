@@ -373,13 +373,43 @@ function _alias_setup() {
             alias et='emacs -nw'
             alias ec='emacsclientw.exe -c -n'
             alias ekill='emacsclientw.exe -e "(kill-emacs)"'
+        elif [ "$PLATFORM" = 'wsl' ]; then
+            function is_esrv() {
+                if emacsclient -e "t" > /dev/null 2>&1; then
+                    echo 'Emacs server is already running.'
+                    return 0
+                else
+                    echo 'Emacs server is not running.' 1>&2
+                    return 1
+                fi
+            }
+            function e() {
+                if [ -z "$*" ]; then
+                    emacsclient -c -n
+                elif is_esrv 1> /dev/null; then
+                    for f in "$@"; do
+                        emacsclient -n "$f"
+                    done
+                fi
+            }
+            alias et='emacsclient -t'
+            alias ec='emacsclient -c -n'
+            if is_exists 'wslemacs-start.exe'; then
+                function estart() {
+                    if ! is_esrv 2> /dev/null; then
+                        wslemacs-start.exe &
+                    fi
+                }
+                alias ekill='wslemacs-stop.exe'
+            else
+                function estart() {
+                    if ! is_esrv 2> /dev/null; then
+                        emacs --daemon
+                    fi
+                }
+                alias ekill='emacsclient -e "(kill-emacs)"'
+            fi
         fi
-        # other platform
-        # else
-        #     alias e='emacsclient -a ""'
-        #     alias et='emacsclient -a "" -t'
-        #     alias ekill='emacsclient -e "(kill-emacs)"'
-        # fi
     fi
 
     function fssh() {
