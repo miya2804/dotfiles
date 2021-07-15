@@ -285,6 +285,22 @@ function _alias_setup() {
         alias open='xdg-open'
     fi
 
+    function fssh() {
+        if ! is_exists 'fzf'; then
+            e_error 'fssh: fzf command not found'
+            return 1
+        fi
+
+        if ! is_exists 'ag'; then
+            e_error 'fssh: ag command not found'
+            return 1
+        fi
+
+        local ssh_target=$(ag --ignore-case '^host [^*]' ~/.ssh/ | \
+                               cut -d ' ' -f 2 | fzf)
+        [ -n "$ssh_target" ] && ssh "$ssh_target"
+    }
+
     function zz() {
         if ! is_exists 'fzf'; then
             e_error 'fssh: fzf command not found'
@@ -468,22 +484,6 @@ function _alias_setup() {
             alias ekill='wsl emacsclient -e "(kill-emacs)"'
         fi
     fi
-
-    function fssh() {
-        if ! is_exists 'fzf'; then
-            e_error 'fssh: fzf command not found'
-            return 1
-        fi
-
-        if ! is_exists 'ag'; then
-            e_error 'fssh: ag command not found'
-            return 1
-        fi
-
-        local ssh_target=$(ag --ignore-case '^host [^*]' ~/.ssh/ | \
-                               cut -d ' ' -f 2 | fzf)
-        [ -n "$ssh_target" ] && ssh "$ssh_target"
-    }
 
     # Add an "alert" alias for long running commands.  Use like so:
     #   sleep 10; alert
