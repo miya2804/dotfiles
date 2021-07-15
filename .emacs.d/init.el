@@ -188,57 +188,6 @@ If not, if GUI, `iconify-frame' other than `save-buffers-kill-emacs'."
   (sleep-for 0.1)
   (set-frame-parameter frame 'height 32))
 
-;; windows path & UNC path
-;; quoted from https://w.atwiki.jp/ntemacs/pages/74.html
-(defvar drvfs-alist)
-(defun set-drvfs-alist ()
-  "Set drvfs alist.
-If you add mount after Emacs startup, Re-execute this function."
-  (interactive)
-  (setq drvfs-alist
-        (mapcar (lambda (x)
-                  (when (string-match "\\(.*\\)|\\(.*?\\)/?$" x)
-                    (cons (match-string 1 x) (match-string 2 x))))
-                (split-string (concat
-                               ;; //wsl$ パス情報の追加
-                               (when (or (not (string-match "Microsoft" (shell-command-to-string "uname -v")))
-                                         (>= (string-to-number (nth 1 (split-string operating-system-release "-"))) 18362))
-                                 (concat "/|" (shell-command-to-string "wslpath -m /")))
-                               (shell-command-to-string
-                                "mount | grep -E ' type (9p|drvfs) ' | grep -v '^tools on /init type 9p' | sed -r 's/(.*) on (.*) type (9p|drvfs) .*/\\2\\|\\1/' | sed 's!\\\\!/!g'"))
-                              "\n" t))))
-
-(defconst windows-path-style-regexp "\\`\\(.*/\\)?\\([a-zA-Z]:\\\\.*\\|[a-zA-Z]:/.*\\|\\\\\\\\.*\\|//.*\\)")
-
-(defun windows-path-convert-file-name (name)
-  "Convert windows-path NAME to a state can be interpreted by wsl."
-  (setq name (replace-regexp-in-string windows-path-style-regexp "\\2" name t nil))
-  (setq name (replace-regexp-in-string "\\\\" "/" name))
-  (let ((case-fold-search t))
-    (cl-loop for (mountpoint . source) in drvfs-alist
-             if (string-match (concat "^\\(" (regexp-quote source) "\\)\\($\\|/\\)") name)
-             return (replace-regexp-in-string "^//" "/" (replace-match mountpoint t t name 1))
-             finally return name)))
-
-(defun windows-path-run-real-handler (operation args)
-  "Run OPERATION with ARGS."
-  (let ((inhibit-file-name-handlers
-         (cons 'windows-path-map-drive-hook-function
-               (and (eq inhibit-file-name-operation operation)
-                    inhibit-file-name-handlers)))
-        (inhibit-file-name-operation operation))
-    (apply operation args)))
-
-(defun windows-path-map-drive-hook-function (operation name &rest args)
-  "Run OPERATION on cygwin NAME with ARGS."
-  (windows-path-run-real-handler
-   operation
-   (cons (windows-path-convert-file-name name)
-         (if (stringp (car args))
-             (cons (windows-path-convert-file-name (car args))
-                   (cdr args))
-           args))))
-
 
 
 ;;;; -----------------------------------
@@ -473,12 +422,6 @@ If you add mount after Emacs startup, Re-execute this function."
 ;;(set-keyboard-coding-system 'utf-8-unix)
 ;;(set-file-name-coding-system 'utf-8-unix)
 ;;(set-terminal-coding-system 'utf-8-unix)
-
-;;;;; wsl settings
-(set-drvfs-alist)
-(add-to-list 'file-name-handler-alist
-             (cons windows-path-style-regexp
-                   'windows-path-map-drive-hook-function))
 
 
 
