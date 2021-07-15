@@ -279,7 +279,28 @@ function _alias_setup() {
     alias du='du -h'
     alias less='less -XF'
 
-    # git (require DOTDIR/etc/lib/fzf-functions.bash)
+    if [ "$PLATFORM" = 'msys' ]; then
+        alias open='start'
+    else
+        alias open='xdg-open'
+    fi
+
+    function zz() {
+        if ! is_exists 'fzf'; then
+            e_error 'fssh: fzf command not found'
+            return 1
+        fi
+
+        if [ -z "$@" ]; then
+            local dir=$(z --list | sort -rn | cut -c 12- | fzf) && \
+            [ -n "$dir" ] && echo "Move to ${dir}"; cd "$dir"
+        else
+            z "$@"
+        fi
+    }
+
+    # --- git --- (require DOTDIR/etc/lib/fzf-functions.bash)
+
     function gl() {
         if ! is_exists 'git'; then
             e_error 'gl: git command not found'
@@ -360,13 +381,8 @@ function _alias_setup() {
     alias gst='git status'
     alias gc='git commit -v'
 
-    if [ "$PLATFORM" = 'msys' ]; then
-        alias open='start'
-    else
-        alias open='xdg-open'
-    fi
+    # --- Emacs ---
 
-    # edit
     if is_exists 'emacs'; then
         if [ "$PLATFORM" = 'msys' ]; then
             alias e='emacsclientw.exe -n'
@@ -438,20 +454,6 @@ function _alias_setup() {
     if [ -f ~/.bash_aliases ]; then
         source ~/.bash_aliases
     fi
-
-    function zz() {
-        if ! is_exists 'fzf'; then
-            e_error 'fssh: fzf command not found'
-            return 1
-        fi
-
-        if [ -z "$@" ]; then
-            local dir=$(z --list | sort -rn | cut -c 12- | fzf) && \
-            [ -n "$dir" ] && echo "Move to ${dir}"; cd "$dir"
-        else
-            z "$@"
-        fi
-    }
 }
 
 function _shopt_setup() {
