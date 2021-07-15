@@ -1,6 +1,3 @@
-source "${DOTDIR_PATH}/etc/vital.sh" 2>/dev/null \
-    && platform_detect
-
 # path settings
 if [ -d "${HOME}/bin" ]; then
     PATH="${HOME}/bin:${PATH}"
@@ -10,6 +7,14 @@ if [ -d "${HOME}/.local/bin" ]; then
     PATH="${HOME}/.local/bin:${PATH}"
 fi
 export PATH
+
+# local settings
+if [ -f "${HOME}/.local_profile" ]; then
+    source "${HOME}/.local_profile"
+fi
+
+source "${DOTDIR_PATH}/etc/vital.sh" 2>/dev/null \
+    && platform_detect
 
 # x server settings of wsl
 if [ "$PLATFORM" = 'wsl' ]; then
@@ -24,12 +29,9 @@ if [ "$PLATFORM" = 'wsl' ]; then
             ./xauth.exe extract - $display | xauth merge -
         )
     fi
-    export DISPLAY=$(ip route | awk '/^default/ {print $3; exit}'):0.0
-fi
-
-# local settings
-if [ -f "${HOME}/.local_profile" ]; then
-    source "${HOME}/.local_profile"
+    if [ -z "$DISPLAY" ]; then
+        export DISPLAY=$(ip route | awk '/^default/ {print $3; exit}'):0.0
+    fi
 fi
 
 # load bashrc
