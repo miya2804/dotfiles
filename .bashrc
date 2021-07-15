@@ -426,6 +426,47 @@ function _alias_setup() {
                 alias ekill='emacsclient -e "(kill-emacs)"'
             fi
         fi
+    elif [ "$PLATFORM" = 'msys' ] && is_exists 'wsl' \
+            && where 'emacsclient-cn.bat' >/dev/null 2>&1; then
+
+        # alias for emacs on wsl
+        # when no local windows emacs
+
+        function is_esrv() {
+            if wsl emacsclient -e "t" > /dev/null 2>&1; then
+                echo 'Emacs server is already running.'
+                return 0
+            else
+                echo 'Emacs server is not running.' 1>&2
+                return 1
+            fi
+        }
+        function e() {
+            if [ -z "$*" ]; then
+                emacsclient-cn.bat
+            elif is_esrv 1> /dev/null; then
+                for f in "$@"; do
+                    emacsclient-n.bat "$f"
+                done
+            fi
+        }
+        alias et='wsl emacsclient -t'
+        alias ec='emacsclient-cn.bat'
+        if is_exists 'wslemacs-start.exe'; then
+            function estart() {
+                if ! is_esrv 2> /dev/null; then
+                    wslemacs-start.exe &
+                fi
+            }
+            alias ekill='wslemacs-stop.exe'
+        else
+            function estart() {
+                if ! is_esrv 2> /dev/null; then
+                    wsl emacs --daemon
+                fi
+            }
+            alias ekill='wsl emacsclient -e "(kill-emacs)"'
+        fi
     fi
 
     function fssh() {
