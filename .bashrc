@@ -400,7 +400,34 @@ function _alias_setup() {
     # --- Emacs ---
 
     if is_exists 'emacs'; then
-        if [ "$PLATFORM" = 'msys' ]; then
+        if [ "$PLATFORM" = 'linux' ]; then
+            function is_esrv() {
+                if emacsclient -e "t" > /dev/null 2>&1; then
+                    echo 'Emacs server is already running.'
+                    return 0
+                else
+                    echo 'Emacs server is not running.' 1>&2
+                    return 1
+                fi
+            }
+            function e() {
+                if [ -z "$*" ]; then
+                    emacsclient -c -n
+                elif is_esrv 1> /dev/null; then
+                    for f in "$@"; do
+                        emacsclient -n "$f"
+                    done
+                fi
+            }
+            alias et='emacsclient -t'
+            alias ec='emacsclient -c -n'
+            function estart() {
+                if ! is_esrv 2> /dev/null; then
+                    emacs --daemon
+                fi
+            }
+            alias ekill='emacsclient -e "(kill-emacs)"'
+        elif [ "$PLATFORM" = 'msys' ]; then
             alias e='emacsclientw.exe -n'
             alias et='emacs -nw'
             alias ec='emacsclientw.exe -c -n'
