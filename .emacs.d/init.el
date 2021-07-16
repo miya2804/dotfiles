@@ -631,6 +631,12 @@ If not, if GUI, `iconify-frame' other than `save-buffers-kill-emacs'."
        ))))
 (show-paren-mode t)                ; illuminate corresponding brackets
 
+(use-package autorevert
+  :diminish auto-revert-mode)
+
+(use-package eldoc
+  :diminish eldoc-mode)
+
 (use-package recentf
   :custom
   (recentf-save-file my-recentf-file)
@@ -643,6 +649,7 @@ If not, if GUI, `iconify-frame' other than `save-buffers-kill-emacs'."
   (bookmark-file my-bookmarks-file))
 
 (use-package whitespace
+  :diminish global-whitespace-mode
   :custom
   (whitespace-style '(face
                       spaces
@@ -728,6 +735,7 @@ If not, if GUI, `iconify-frame' other than `save-buffers-kill-emacs'."
 
 (use-package company
   :ensure t
+  :diminish company-mode
   :bind (:map company-active-map
               ("C-p" . company-select-previous)
               ("C-n" . company-select-next))
@@ -744,6 +752,7 @@ If not, if GUI, `iconify-frame' other than `save-buffers-kill-emacs'."
 
 (use-package company-box
   :ensure t
+  :diminish company-box-mode
   :hook (company-mode . company-box-mode)
   :config
   (with-eval-after-load 'all-the-icons
@@ -1098,6 +1107,7 @@ If not, if GUI, `iconify-frame' other than `save-buffers-kill-emacs'."
 
 (use-package indent-guide
   :ensure t
+  :diminish indent-guide-mode
   :unless (display-graphic-p)
   :hook ((prog-mode . indent-guide-global-mode)
          (yaml-mode . indent-guide-global-mode))
