@@ -23,28 +23,28 @@
 ;;;; Variables
 
 (eval-and-compile
-  (defvar package-dir-local "~/.local/emacs/elpa")
-  (defvar shortcut-file-path "~/Dropbox/documents/notes/note.txt")
-  (defvar my-recentf-file "~/.local/emacs/recentf")
-  (defvar my-bookmarks-file "~/.local/emacs/bookmarks")
+  (defconst package-dir-local "~/.local/emacs/elpa")
+  (defconst shortcut-file-path "~/Dropbox/documents/notes/note.txt")
+  (defconst my-recentf-file "~/.local/emacs/recentf")
+  (defconst my-bookmarks-file "~/.local/emacs/bookmarks")
 
   ;; backup and auto-save
-  (defvar backup-and-auto-save-dir-dropbox
+  (defconst backup-and-auto-save-dir-dropbox
     (expand-file-name "~/Dropbox/documents/apps/emacs/backups/"))
-  (defvar backup-and-auto-save-dir-local
+  (defconst backup-and-auto-save-dir-local
     (expand-file-name "~/.emacs.d/.backup/"))
 
   ;; org
-  (defvar my-org-dir "~/Dropbox/documents/org")
-  (defvar org-dir-local "~/.emacs.d/.org")
+  (defconst my-org-dir "~/Dropbox/documents/org")
+  (defconst org-dir-local "~/.emacs.d/.org")
   ;; default is "my-org-dir/agenda"
   ;; if you want to add the agenda file,
   ;; please add it to the list below.
-  (defvar my-org-agenda-files '())
+  (defconst my-org-agenda-files '())
   ;; org-journal
-  (defvar my-org-journal-dir "~/Dropbox/documents/org/journal")
+  (defconst my-org-journal-dir "~/Dropbox/documents/org/journal")
 
-  (defvar clean-buffers-exclude-list
+  (defconst clean-buffers-exclude-list
     (list "*Messages*"
           "*scratch*"
           "*dashboard*")
