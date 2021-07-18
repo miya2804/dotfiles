@@ -200,7 +200,16 @@ If not, if GUI, `iconify-frame' other than `save-buffers-kill-emacs'."
   (set-frame-parameter frame 'height 32))
 
 (defun setup-window-system (&optional frame)
-  ""
+  "Initialize configurations for window system.
+Configurations, which require X (there exists a FRAME), are
+placed in this function.
+
+When Emacs is started as a GUI application, just running this
+function initializes the configurations.
+
+When Emacs is started as a daemon, this function should be called
+just after the first frame is created by a client.  For this,
+this function is added to `after-make-frame-functions'."
   (with-selected-frame (or frame (selected-frame))
     (when (display-graphic-p)
       (let* ((fontset-name default-fontset-name)
