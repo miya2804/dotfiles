@@ -744,6 +744,7 @@ If not, if GUI, `iconify-frame' other than `save-buffers-kill-emacs'."
   (eshell-mode . (lambda () (company-mode -1)))
   :custom
   (company-idle-delay 0)
+  (company-tooltip-align-annotations t)
   (company-selection-wrap-around t)     ; 候補の最後の次は先頭に戻る
   (completion-ignore-case t)
   (company-require-match 'never)
