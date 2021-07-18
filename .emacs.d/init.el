@@ -1093,6 +1093,7 @@ If not, if GUI, `iconify-frame' other than `save-buffers-kill-emacs'."
            manage   | [_0_]: delete [_1_]: delete-other [_h_]: redo [_l_]: undo
     buffer          | [_b_]: menu [_k_]: kill
     window & buffer | [_4_]: kill
+    text size       | [_-_]: decrease [_+_]: increase
     other           | [_z_]: zoom-mode
     "
     ;; frame
@@ -1112,6 +1113,9 @@ If not, if GUI, `iconify-frame' other than `save-buffers-kill-emacs'."
     ("k" kill-buffer)
     ;; window & buffer
     ("4" kill-buffer-and-window)
+    ;; text size
+    ("-" text-scale-decrease :exit nil)
+    ("+" text-scale-increase :exit nil)
     ;; other
     ("z" zoom-mode))
 
