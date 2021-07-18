@@ -48,7 +48,18 @@
     (list "*Messages*"
           "*scratch*"
           "*dashboard*")
-    "List of exclude buffer from the function `clean-buffers'."))
+    "List of exclude buffer from the function `clean-buffers'.")
+
+  ;; fonts
+  (defconst default-fontset-name "myfontset")
+  (defconst default-base-font-name "SourceCodePro")
+  (defconst default-base-font-size 10)
+  (defconst default-base-font-weight "normal")
+  (defconst default-base-font-slant "normal")
+  (defconst default-ja-font-name "SourceCodePro")
+  (defconst default-ja-font-pattern ".*Source Code Pro.*") ; regular expression matting
+  (defconst default-ja-font-scale 1.0)    ; 英語フォントと日本語フォントの比を設定
+  )
 
 
 
@@ -187,6 +198,34 @@ If not, if GUI, `iconify-frame' other than `save-buffers-kill-emacs'."
   "Reset FRAME height."
   (sleep-for 0.1)
   (set-frame-parameter frame 'height 32))
+
+(defun setup-window-system (&optional frame)
+  ""
+  (with-selected-frame (or frame (selected-frame))
+    (when (display-graphic-p)
+      (let* ((fontset-name default-fontset-name)
+             (base default-base-font-name)
+             (size default-base-font-size)
+             (weight default-base-font-weight)
+             (slant default-base-font-slant)
+             (ja default-ja-font-name)
+             (ja-pat default-ja-font-pattern)
+             (scale default-ja-font-scale)
+             (base-font (format "%s-%d:weight=%s:slant=%s" base size weight slant))
+             (ja-font (font-spec :family ja))
+             (fsn (concat "fontset-" fontset-name))
+             (elt (list (cons 'font fsn))))
+        ;; create font
+        (create-fontset-from-ascii-font base-font nil fontset-name)
+        (set-fontset-font fsn 'unicode ja-font nil 'append)
+        (add-to-list 'default-frame-alist '(font . "fontset-myfontset"))
+        (add-to-list 'face-font-rescale-alist (cons ja-pat scale))
+        ;; default
+        (set-frame-font fsn)
+        (setq-default initial-frame-alist (append elt initial-frame-alist)
+                      default-frame-aliat (append elt default-frame-alist))
+        ;; current frame
+        (set-frame-parameter (selected-frame) 'font fsn)))))
 
 
 
@@ -447,26 +486,9 @@ If not, if GUI, `iconify-frame' other than `save-buffers-kill-emacs'."
 (setq-default show-trailing-whitespace t)
 (add-hook 'dashboard-mode-hook 'disable-show-trailing-whitespace)
 
-
-
-;;;; -----------------------------------
-;;;; Fonts
-
-(when (member "Source Han Code JP" (font-family-list))
-  (push '(font . "SourceHanCodeJp-9:weight=normal:slant=normal")
-        default-frame-alist))
-(when (member "SauceCodePro NF" (font-family-list))
-  (push '(font . "SauceCodePro NF-10:weight=normal:slant=normal")
-        default-frame-alist))
-
-;; (when (display-graphic-p)
-;;   (when (x-list-fonts "SourceHanCodeJP")
-;;     ;;; create fontset
-;;     (create-fontset-from-ascii-font "SourceHanCodeJp-9:weight=normal:slant=normal" nil "SourceHanCodeJp")
-;;     ;;; set font
-;;     (set-fontset-font "fontset-SourceHanCodeJp" 'unicode "SourceHanCodeJp" nil 'append)
-;;     ;;; apply fontset to frame
-;;     (add-to-list 'default-frame-alist '(font . "fontset-SourceHanCodeJp"))))
+;; fonts
+(add-hook 'after-init-hook #'setup-window-system)
+(add-hook 'after-make-frame-functions #'setup-window-system)
 
 
 
