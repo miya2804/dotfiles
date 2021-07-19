@@ -236,6 +236,55 @@ this function is added to `after-make-frame-functions'."
         ;; current frame
         (set-frame-parameter (selected-frame) 'font fsn)))))
 
+;; windows path & UNC path
+;; quoted from https://w.atwiki.jp/ntemacs/pages/74.html"
+(defvar drvfs-alist)
+(defun set-drvfs-alist ()
+  "Set wsl path and other mounts to drvfs-alist."
+  (interactive)
+  (setq drvfs-alist
+        (mapcar (lambda (x)
+                  (when (string-match "\\(.*\\)|\\(.*?\\)/?$" x)
+                    (cons (match-string 1 x) (match-string 2 x))))
+                (split-string (concat
+                               ;; //wsl$ パス情報の追加
+                               (when (or (not (string-match "Microsoft" (shell-command-to-string "uname -v")))
+                                         (>= (string-to-number (nth 1 (split-string operating-system-release "-"))) 18362))
+                                 (concat "/|" (shell-command-to-string "wslpath -m /")))
+                               (shell-command-to-string
+                                "mount | grep -E ' type (9p|drvfs) ' | grep -v '^tools on /init type 9p' | sed -r 's/(.*) on (.*) type (9p|drvfs) .*/\\2\\|\\1/' | sed 's!\\\\!/!g'"))
+                              "\n" t))))
+
+(defconst windows-path-style-regexp "\\`\\(.*/\\)?\\([a-zA-Z]:\\\\.*\\|[a-zA-Z]:/.*\\|\\\\\\\\.*\\|//.*\\)")
+(defun windows-path-convert-file-name (name)
+  "Convert windows path NAME to filename."
+  (setq name (replace-regexp-in-string windows-path-style-regexp "\\2" name t nil))
+  (setq name (replace-regexp-in-string "\\\\" "/" name))
+  (let ((case-fold-search t))
+    (cl-loop for (mountpoint . source) in drvfs-alist
+             if (string-match (concat "^\\(" (regexp-quote source) "\\)\\($\\|/\\)") name)
+             return (replace-regexp-in-string "^//" "/" (replace-match mountpoint t t name 1))
+             finally return name)))
+
+(defun windows-path-run-real-handler (operation args)
+  "Run OPERATION with ARGS."
+  (let ((inhibit-file-name-handlers
+         (cons 'windows-path-map-drive-hook-function
+               (and (eq inhibit-file-name-operation operation)
+                    inhibit-file-name-handlers)))
+        (inhibit-file-name-operation operation))
+    (apply operation args)))
+
+(defun windows-path-map-drive-hook-function (operation name &rest args)
+  "Run OPERATION on cygwin NAME with ARGS."
+  (windows-path-run-real-handler
+   operation
+   (cons (windows-path-convert-file-name name)
+         (if (stringp (car args))
+             (cons (windows-path-convert-file-name (car args))
+                   (cdr args))
+           args))))
+
 
 
 ;;;; -----------------------------------
@@ -341,6 +390,13 @@ this function is added to `after-make-frame-functions'."
   (when (eq window-system 'w32)
     (unless server-clients
       (add-hook 'after-init-hook 'iconify-frame))))
+
+;;;;; windows path, UNC path
+(set-drvfs-alist)
+(add-to-list 'file-name-handler-alist
+             (cons windows-path-style-regexp
+                   'windows-path-map-drive-hook-function))
+
 
 
 ;;;; -----------------------------------
