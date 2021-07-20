@@ -1308,10 +1308,19 @@ this function is added to `after-make-frame-functions'."
                 :before (lambda ()
                           (deactivate-input-method)))))
 
-(use-package mozc-popup
+(use-package mozc-popup :disabled
   :ensure t
   :after mozc
   :custom (mozc-candidate-style 'popup))
+
+(use-package mozc-posframe
+  :pin manual
+  :after mozc
+  :functions mozc-posframe-register
+  :custom (mozc-candidate-style 'posframe)
+  :config
+  (when (fboundp 'mozc-posframe-register)
+    (mozc-posframe-register)))
 
 (use-package neotree
   :ensure t
